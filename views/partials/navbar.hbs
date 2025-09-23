@@ -1,0 +1,67 @@
+<nav class="navbar navbar-expand-lg navbar-light fixed-top bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand font-weight-bold" href="#">StepSphere</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Left Side Menu -->
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active"><a class="nav-link" href="/home">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/men">Men</a></li>
+        <li class="nav-item"><a class="nav-link" href="/women">Women</a></li>
+        <li class="nav-item"><a class="nav-link" href="/kids">Kids</a></li>
+      </ul>
+
+      <!-- Search -->
+      <form class="form-inline my-2 my-lg-0 mr-3">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search" />
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Cart -->
+      <a href="/cart" class="btn btn-outline-dark mr-3">
+        <i class="fas fa-shopping-cart"></i>
+        Cart <span class="badge badge-primary">0</span>
+      </a>
+
+      <!-- User Section -->
+      <ul class="navbar-nav">
+        {{#if req.session.user}}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-toggle="dropdown">
+              <i class="fas fa-user-circle"></i> {{user.name}}
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <div class="dropdown-header text-center">
+                <h6>Hello, {{user.name}}</h6>
+                <small class="text-muted">{{user.email}}</small>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/profile"><i class="fas fa-user mr-2"></i> Profile</a>
+              <a class="dropdown-item" href="/orders"><i class="fas fa-box-open mr-2"></i> Orders</a>
+              <a class="dropdown-item" href="/wishlist"><i class="far fa-heart mr-2"></i> Wishlist</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+            </div>
+          </li>
+        {{else}}
+          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+          <li class="nav-item"><a class="btn btn-dark ml-2" href="/register">Sign Up</a></li>
+        {{/if}}
+      </ul>
+    </div>
+  </div>
+</nav> 

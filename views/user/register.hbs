@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StepSphere - Registration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link  rel="stylesheet" href="/style/user/users.css">
+</head>
+
+    <div class="brand-header">
+  <h1>
+    <i class="fas fa-shoe-prints"></i> <span>StepSphere</span>
+  </h1>
+  <p>Create your account</p>
+</div>
+    {{#if message}}
+      <div style="color: green; text-align: center; margin-bottom: 10px;">
+        {{message}}
+      </div>
+    {{/if}}
+
+    
+    <form action="" method="post" novalidate>
+      <div class="form-group">
+        <p style="color: red;" id="validation" name="validation"></p>
+        <label for="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="form-control"
+          placeholder="Your Full Name"
+          
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <div class="phone-input">
+          <select class="country-code">
+            <option value="+91">+91</option>
+          </select>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            class="form-control"
+            placeholder="Phone Number"
+            
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="Your Email Address"
+          
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="Create a Password"
+          
+          required
+        />
+        <div class="password-strength">
+          <div class="strength-bar" id="strengthBar"></div>
+        </div>
+      </div>
+
+      <div>
+        <button type="submit" class="submit-button">Register</button>
+        <p class="login-link">
+          Already have an account? <a href="/">Log in</a>
+        </p>
+      </div>
+
+      <div class="social-login">
+        <button class="social-button">Continue with Google</button>
+      </div>
+    </form>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const passwordInput = document.getElementById('password');
+    const strengthBar = document.getElementById('strengthBar');
+    
+    // Password strength indicator
+    passwordInput.addEventListener('input', function() {
+      const strength = calculatePasswordStrength(this.value);
+      strengthBar.style.width = strength + '%';
+      strengthBar.style.backgroundColor = getStrengthColor(strength);
+    });
+    
+    function calculatePasswordStrength(password) {
+      let strength = 0;
+      if (password.length >= 8) strength += 25;
+      if (/[A-Z]/.test(password)) strength += 25;
+      if (/[0-9]/.test(password)) strength += 25;
+      if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+      return Math.min(strength, 100);
+    }
+    
+    function getStrengthColor(strength) {
+      if (strength < 40) return '#ef4444'; // red
+      if (strength < 70) return '#f59e0b'; // amber
+      return '#10b981'; // green
+    }
+    
+    // Form validation
+    form.addEventListener('submit', function(e) {
+      let isValid = true;
+      
+      // Name validation
+      const name = document.getElementById('name').value.trim();
+      if (name.length < 5 || name.length > 20) {
+        isValid = false;
+        //alert('Name must be between 5-20 characters');
+       let validation= document.getElementById("validation")
+       validation.textContent='Name must be between 5-20 characters'
+      }
+      
+      // Phone validation
+      const phone = document.getElementById('phone').value.trim();
+      if (!/^\d{10}$/.test(phone)) {
+        isValid = false;
+        //alert('Please enter a valid 10-digit phone number');
+        let validation= document.getElementById("validation")
+       validation.textContent='Please enter a valid 10-digit phone number'
+      }
+      
+      // Email validation
+      const email = document.getElementById('email').value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        isValid = false;
+        //alert('Please enter a valid email address');
+        let validation= document.getElementById("validation")
+       validation.textContent='Please enter a valid email address';
+      }
+      
+      // Password validation
+      const password = passwordInput.value;
+      if (password.length < 8) {
+        isValid = false;
+       // alert('Password must be at least 8 characters long');
+        let validation= document.getElementById("validation")
+       validation.textContent='Password must be at least 8 characters long'
+      }
+      
+      if (!isValid) {
+        e.preventDefault();
+      }
+    });
+  });
+</script>
+</html>
