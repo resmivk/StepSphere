@@ -7,14 +7,33 @@
           <div class="col-lg-6 mx-auto text-center">
             <h4>Stay Updated</h4>
             <p class="text-white-50 mb-3">Subscribe to our newsletter for exclusive offers and updates.</p>
-            <form class="form-inline justify-content-center">
+            {{!-- <form class="form-inline justify-content-center">
               <div class="input-group w-75">
                 <input type="email" class="form-control" placeholder="Your email" aria-label="Email">
                 <div class="input-group-append">
                   <button class="btn btn-primary" type="submit">Subscribe</button>
                 </div>
               </div>
-            </form>
+            </form> --}}
+            <form class="d-flex justify-content-center">
+  <div class="input-group input-group-lg" style="max-width: 500px;">
+    <input 
+      type="email" 
+      class="form-control rounded-start" 
+      placeholder="Enter your email" 
+      aria-label="Email" 
+      required
+    >
+    <button 
+      class="btn btn-primary rounded-end px-4" 
+      type="submit"
+    >
+      Subscribe
+    </button>
+  </div>
+</form>
+
+
           </div>
         </div>
 

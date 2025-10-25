@@ -59,7 +59,7 @@ exports.insertUser = async (req, res) => {
 
     // Email options
     const mailOptions = {
-      from: `"Sike" <${process.env.SMTP_USER}>`,
+      from: `"Stepsphere" <${process.env.SMTP_USER}>`,
       to: email,
       subject: "Verify Your Email for Sike Registration",
       text: `Hello ${name},\n\nPlease verify your email by clicking the link: ${verificationUrl}\n\nThank you!`,
@@ -163,13 +163,11 @@ exports.verifyLogin = async (req, res) => {
 
     req.session.userId = user._id;
      req.session.user = {
-      _id: user._id,
-      name: user.name,
-       email: user.email,
-    };
-    res.locals.user=req.session.user
-    console.log("User logged in:", req.session.user);
-    console.log("This is locals",res.locals.user)
+       _id: user._id,
+       name: user.name,
+        email: user.email,
+     };
+     //res.locals.user=req.session.user
 
     res.redirect("/home");
   } catch (error) {
@@ -178,20 +176,30 @@ exports.verifyLogin = async (req, res) => {
 };
 
 
+///////home page  ............
+
+
 exports.loadHome = async (req, res) => {
   try {
+    let user = null;
+
+    if (req.session.userId) {
+      user = await User.findById(req.session.userId).lean();
+    }
+
     res.render("user/home", {
-  title: "Home",
-  showNavbar: true,
-  showfooter: true
-});
+      title: "Home",
+      showNavbar: true,
+      showfooter: true,
+      user
+    });
   } catch (error) {
     console.log(error.message);
-
   }
 };
 
-//logout
+
+
 exports.userLogout = async (req, res) => {
   try {
     req.session.destroy();

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stepsphere - Admin Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="/style/admin/adminlogin.css" />
+</head>
+<body>
+
+    <div class="brand-header">
+      <h1><i class="fas fa-shoe-prints"></i> <span>Steps</span></h1>
+      <p>Welcome back, Admin! Please sign in.</p>
+    </div>
+
+    {{#if message}}
+      <div class="alert-message">{{message}}</div>
+    {{/if}}
+
+    <form action="/admin/adminlogin" method="POST" novalidate>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <i class="fas fa-envelope input-icon"></i>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="your.email@example.com"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <i class="fas fa-lock input-icon"></i>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+
+      <div class="remember-me">
+        <input type="checkbox" id="remember" name="remember" />
+        <label for="remember">Remember me</label>
+      </div>
+
+      <button type="submit" class="submit-button">Sign In</button>
+
+      <p class="register-link">
+        Don't have an account?
+        <a href="/admin/adminregister">Register now</a>
+      </p>
+    </form>
+
+
+  <script>
+    document.querySelector("form").addEventListener("submit", function (e) {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      let message = "";
+
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
+        message += "Please enter a valid email address.\n";
+      }
+      if (password.length < 8) {
+        message += "Password must be at least 8 characters.\n";
+      }
+
+      if (message) {
+        alert(message);
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>

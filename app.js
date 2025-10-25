@@ -48,10 +48,10 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Routes
 const userRoute = require('./routes/userRoute');
-// const adminRoute = require('./routes/adminRoute');
+const adminRoute = require('./routes/adminRoute');
 
 app.use('/', userRoute);
-// app.use('/admin', adminRoute);
+ app.use('/admin', adminRoute);
 
 // Start server
 const PORT = process.env.PORT || 3000;

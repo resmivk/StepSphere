@@ -1,0 +1,105 @@
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 40px;
+  width: 350px;
+  text-align: center;
+ 
+}
+
+.brand-header h1 {
+  color: #222;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.brand-header span {
+  color: #8b5cf6
+}
+
+.brand-header p {
+  color: #555;
+  font-size: 14px;
+}
+
+.form-group {
+  text-align: left;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.input-icon {
+  position: absolute;
+  right: 10px;
+  top: 35px;
+  color: #aaa;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  padding-right: 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #6366f1;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  background: #8b5cf6;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-button:hover {
+  background: #6366f1;
+}
+
+.register-link {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.register-link a {
+  color: #6366f1;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+.alert-message {
+  background: #e1f7e7;
+  color: #2e7d32;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
