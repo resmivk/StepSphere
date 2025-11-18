@@ -26,8 +26,7 @@
     }
     .profile-page {
   display: flex;
-  flex: 1; /* ensures it takes available height before footer */
-  min-height: calc(100vh - 80px); /* adjust if your navbar is 80px */
+  
 }
 
     /* Sidebar */
@@ -36,6 +35,8 @@
       background: white;
       border-right: 1px solid var(--border-color);
       padding: 20px 0;
+       
+  
     }
     .sidebar a {
       display: flex;
@@ -67,10 +68,11 @@
 
     /* Main Content */
     .main-content {
-      flex: 1;
-      padding: 30px;
-       background: #fff
-      
+       padding: 60px;
+      background: #fff;
+       margin-left: 250px; 
+      flex: 1; 
+  
     }
 
     .profile-header {
@@ -234,21 +236,35 @@ footer {
       }
     }
   </style>
-  <div style="display:flex; gap:10px;">
-   <div class="sidebar" > 
+</head>
 
-  <a href="/profile/profile" class="{{#ifEquals activePage 'profile'}}active{{/ifEquals}}">
-    <i class="fas fa-user"></i> Profile
-  </a>
-  
-  <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
-  <a href="#"><i class="fas fa-box"></i> Orders</a>
-  <a href="/profile/addressList" class="{{#ifEquals activePage 'addresses'}}active{{/ifEquals}}">
-    <i class="fas fa-map-marker-alt"></i> Addresses
-  </a>
-  <a href="/login" class="danger"><i class="fas fa-trash"></i> Logout</a>
+<body>
+
+<div class="profile-page">
+
+  <div class="sidebar">
+
+    <a href="/profile/" class="{{#ifEquals activePage 'profile'}}active{{/ifEquals}}">
+      <i class="fas fa-user"></i> Profile
+    </a>
+
+    <a href="#"><i class="fas fa-wallet"></i> Wallet</a>
+    <a href="#"><i class="fas fa-box"></i> Orders</a>
+
+    <a href="/profile/addressList" class="{{#ifEquals activePage 'addresses'}}active{{/ifEquals}}">
+      <i class="fas fa-map-marker-alt"></i> Addresses
+    </a>
+
+    <a href="/login" class="danger"><i class="fas fa-trash"></i> Logout</a>
+
+  </div>
+
+  <div class="main-content">
+    {{{body}}}
+  </div>
+
 </div>
-<div>
-  {{{body}}}
-</div>
-</div>
+
+</body>
+
+

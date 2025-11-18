@@ -1,6 +1,7 @@
 const User = require("../models/customerModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const product = require("../models/productModel")
 const crypto = require("crypto");
 
 const transporter = nodemailer.createTransport({
@@ -178,33 +179,135 @@ exports.verifyLogin = async (req, res) => {
 
 ///////home page  ............
 
-
 exports.loadHome = async (req, res) => {
   try {
     let user = null;
 
+    // ✅ Get user details if logged in
     if (req.session.userId) {
       user = await User.findById(req.session.userId).lean();
     }
 
+    // ✅ Always fetch products (even for non-logged users)
+    const products = await product.find({ stock: { $gt: 0 } }).lean();
+
+    // ✅ Pass both user and products to view
     res.render("user/home", {
       title: "Home",
       showNavbar: true,
       showfooter: true,
-      user
+      user,
+      products,
     });
+  } catch (error) {
+    console.log("Error in loadHome:", error.message);
+  }
+};
+
+   ////Logout
+exports.userLogout = async (req, res) => {
+  try {
+    req.session.destroy();
+
+    res.redirect("/login");
   } catch (error) {
     console.log(error.message);
   }
 };
 
 
-
-exports.userLogout = async (req, res) => {
+/// forgot password
+exports.loadForgot = async (req, res) => {
   try {
-    req.session.destroy();
+    res.render("user/forgot-password");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-    res.redirect("/login");
+exports.forgotpassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({email: email });
+
+    if (!user) {
+      return res.render("user/forgot-password", { message: "User not found", email });
+    }
+
+    if (!user.is_Verified) {
+      return res.render("user/forgot-password", {
+        message: "Please verify your email first",
+        email,
+      });
+    }
+
+    const token = crypto.randomBytes(32).toString("hex");
+    user.resetToken = token;
+    user.resetTokenExpiry = Date.now() + 3600000;
+    await user.save();
+
+    const resetLink = `http://localhost:3000/reset-password/${token}`;
+
+    const mailOptions = {
+      to: user.email,
+      subject: "Password Reset",
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
+      from: `"Sike" <${process.env.SMTP_USER}>`
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error("Email sending failed:", err);
+        return res.status(500).send("Failed to send email. Try again later.");
+      }
+
+      console.log("Reset email sent:", info.response);
+      return res.send("Reset link sent to your email.");
+    });
+  } catch (error) {
+    console.log("Error in forgotpassword:", error.message);
+    return res.status(500).send("Internal server error");
+  }
+};
+
+
+exports.showResetForm = async (req, res) => {
+  const { token } = req.params;
+  const user = await User.findOne({
+    resetToken: token,
+    resetTokenExpiry: { $gt: Date.now() },
+  });
+
+  if (!user) return res.status(400).send("Invalid or expired token");
+
+  res.render("user/reset-password", { token });
+};
+
+
+exports.resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  const user = await User.findOne({
+    resetToken: token,
+    resetTokenExpiry: { $gt: Date.now() },
+  });
+
+  if (!user) return res.status(400).send("Invalid or expired token");
+
+  user.password = await bcrypt.hash(password, 10);
+  user.resetToken = undefined;
+  user.resetTokenExpiry = undefined;
+  await user.save();
+
+  res.send("Password reset successful!");
+
+};
+
+exports.showProducts = async (req, res) => {
+  try {
+    const products = await product.find().lean();
+    res.render('user/products'); 
   } catch (error) {
     console.log(error.message);
   }

@@ -12,6 +12,7 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
+    "connect-flash": "^0.1.1",
     "crypto": "^1.0.1",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
@@ -20,6 +21,7 @@
     "handlebars-helpers": "^0.10.0",
     "hbs": "^4.2.0",
     "mongoose": "^8.18.1",
+    "multer": "^2.0.2",
     "nodemailer": "^7.0.6"
   }
 }

@@ -1,0 +1,18 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Our Products</h2>
+
+  <div class="row">
+    {{#each products}}
+      <div class="col-md-3 mb-4">
+        <div class="card">
+          <img src="/uploads/{{this.image}}" class="card-img-top" alt="{{this.name}}">
+          <div class="card-body">
+            <h5 class="card-title">{{this.name}}</h5>
+            <p class="card-text">₹{{this.price}}</p>
+            <p class="text-muted">{{this.brand}}</p>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>

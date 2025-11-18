@@ -152,102 +152,36 @@
       </section>
 
       <!-- Best Sellers -->
-      <section class="py-5">
-        <div class="container">
-          <div class="text-center mb-5">
-            <h2 class="section-title">Best Sellers</h2>
-            <p>Our most popular products this season</p>
+     <section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Best Sellers</h2>
+      <p>Our most popular products this season</p>
+    </div>
+
+    <div class="row">
+      {{#each products}}
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card product-card h-100">
+          <img src="/uploads/{{this.image}}" class="card-img-top product-img" alt="{{this.name}}" loading="lazy" />
+          <div class="card-body">
+            <h5 class="card-title">{{this.name}}</h5>
+            <p class="card-text text-muted">{{this.category}}</p>
+            <p class="font-weight-bold">₹{{this.price}}</p>
           </div>
-          <div class="row">
-            <!-- Product 1 -->
-            <div class="col-lg-3 col-md-6 mb-4">
-              <div class="card product-card h-100">
-                <img
-                  src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                  class="card-img-top product-img"
-                  alt="Women's Boots"
-                  loading="lazy"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">Women's Boots</h5>
-                  <p class="card-text text-muted">Maca Collection</p>
-                  <p class="font-weight-bold">$139.00</p>
-                </div>
-                <div class="card-footer bg-transparent border-top-0">
-                  <a href="#" class="btn btn-outline-primary btn-block">Add to
-                    Cart</a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Product 2 -->
-            <div class="col-lg-3 col-md-6 mb-4">
-              <div class="card product-card h-100">
-                <img
-                  src="https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                  class="card-img-top product-img"
-                  alt="Women's Sneakers"
-                  loading="lazy"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">Women's Sneakers</h5>
-                  <p class="card-text text-muted">Minam Meaghan</p>
-                  <p class="font-weight-bold">$139.00</p>
-                </div>
-                <div class="card-footer bg-transparent border-top-0">
-                  <a href="#" class="btn btn-outline-primary btn-block">Add to
-                    Cart</a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="col-lg-3 col-md-6 mb-4">
-              <div class="card product-card h-100">
-                <img
-                  src="https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                  class="card-img-top product-img"
-                  alt="Men's Dress Shoes"
-                  loading="lazy"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">Men's Dress Shoes</h5>
-                  <p class="card-text text-muted">Taja Commissioner</p>
-                  <p class="font-weight-bold">$139.00</p>
-                </div>
-                <div class="card-footer bg-transparent border-top-0">
-                  <a href="#" class="btn btn-outline-primary btn-block">Add to
-                    Cart</a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Product 4 -->
-            <div class="col-lg-3 col-md-6 mb-4">
-              <div class="card product-card h-100">
-                <img
-                  src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                  class="card-img-top product-img"
-                  alt="Men's Sneakers"
-                  loading="lazy"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">Men's Sneakers</h5>
-                  <p class="card-text text-muted">Russ Collection</p>
-                  <p class="font-weight-bold">$139.00</p>
-                </div>
-                <div class="card-footer bg-transparent border-top-0">
-                  <a href="#" class="btn btn-outline-primary btn-block">Add to
-                    Cart</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="text-center mt-4">
-            <a href="#" class="btn btn-primary btn-lg">View All Products</a>
+          <div class="card-footer bg-transparent border-top-0">
+            <a href="/addToCart/{{this._id}}" class="btn btn-outline-primary btn-block">Add to Cart</a>
           </div>
         </div>
-      </section>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="/products" class="btn btn-primary btn-lg">View All Products</a>
+    </div>
+  </div>
+</section>
 
       <!-- Trusted Partners Section -->
       <section class="py-5 bg-light">

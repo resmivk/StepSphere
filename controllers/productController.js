@@ -3,7 +3,8 @@ const Product = require('../models/productModel');
 const multer = require('multer');
 const path = require('path');
 
-// ==================== Multer Setup ====================
+//////////////////////// Multer Setup //////////////////////
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/uploads');
@@ -16,12 +17,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 exports.upload = upload;
 
-// ==================== Load Add Product Page ====================
+/////////////////////// Load Add Product Page ///////////////////////
 exports.loadAddProduct = (req, res) => {
   res.render('admin/addProduct', { admin: true });
 };
 
-// ==================== Load All Products ====================
+
 exports.loadProducts = async (req, res) => {
   try {
     const products = await Product.find().lean();
@@ -31,7 +32,7 @@ exports.loadProducts = async (req, res) => {
   }
 };
 
-// ==================== Insert Product ====================
+////////////////Insert Product ///////////////
 exports.insertProduct = async (req, res) => {
   try {
     const imageFile = req.file ? req.file.filename : null;
@@ -68,32 +69,54 @@ exports.insertProduct = async (req, res) => {
 exports.loadEditProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).lean();
-    res.render('admin/editProduct', { product, admin: true });
+    if (!product) {
+      return res.status(404).render('error', { message: 'Product not found' });
+    }
+    res.render('admin/edit-product', { 
+      product, 
+      admin: true 
+    });
   } catch (error) {
-    console.log(error);
+    console.error('Error loading product:', error);
+    res.status(500).render('error', { message: 'Server error' });
   }
 };
 
-// ==================== Update Product ====================
 exports.updateProduct = async (req, res) => {
   try {
     const updateData = {
       name: req.body.name,
       brand: req.body.brand,
-      price: req.body.price,
+      price: parseFloat(req.body.price),
       description: req.body.description,
-      stock: req.body.stock,
-      category: req.body.category
+      stock: parseInt(req.body.stock),
+      category: req.body.category,
+      size: req.body.size.split(',').map(s => s.trim()) 
     };
 
+    // Handle file upload
     if (req.file) {
       updateData.image = req.file.filename;
     }
 
-    await Product.findByIdAndUpdate(req.params.id, updateData);
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id, 
+      updateData, 
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).render('error', { message: 'Product not found' });
+    }
+
     res.redirect('/admin/products');
   } catch (error) {
-    console.log(error);
+    console.error('Error updating product:', error);
+    res.status(500).render('admin/edit-product', { 
+      product: { ...req.body, _id: req.params.id }, 
+      admin: true,
+      error: 'Error updating product' 
+    });
   }
 };
 

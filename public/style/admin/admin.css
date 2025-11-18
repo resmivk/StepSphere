@@ -18,10 +18,30 @@
       color: var(--dark);
     }
     
-    .dashboard {
-      display: flex;
-      min-height: 100vh;
-    }
+    /* Quick fix for layout */
+.layout-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    position: fixed;
+    height: 100vh;
+   
+    
+  top: 0;
+  left: 0;
+  width: 350px; /* adjust if your sidebar is wider */
+  height: 100vh;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  z-index: 1000;
+}
+
+.main-content {
+    margin-left: 260px;
+    flex: 1;
+}
     
     /* Sidebar Styles */
     .sidebar {
@@ -199,6 +219,12 @@
       font-size: 0.75rem;
       color: var(--gray);
     }
+    .container {
+  margin-left: 260px; /* same or slightly more than sidebar width */
+  padding: 30px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
     
     /* Content Area */
     .content {

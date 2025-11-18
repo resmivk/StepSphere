@@ -1,8 +1,9 @@
 const express = require('express');
 const routes = express.Router();
 
-// const productController = require('../controllers/productController');
+const productController = require('../controllers/productController');
 const adminController = require('../controllers/adminController');
+const customerController=require('../controllers/customerController')
 // const categoryController=require('../controllers/categoryController')
 const { isAdminLoggedin } = require('../middleware/adminAuth');
 
@@ -21,22 +22,19 @@ routes.get('/logout', adminController.userLogout);
 
 //  DASHBOARD & USERS
 routes.get('/admindashboard', isAdminLoggedin, adminController.loadDashboard);
-routes.get('/customer', isAdminLoggedin, adminController.addCustomers);
+routes.get(['/customers', '/customer'], isAdminLoggedin, customerController.customerInfo);
 routes.post('/users/block/:id', isAdminLoggedin, adminController.blockUser);
 routes.post('/users/unblock/:id', isAdminLoggedin, adminController.unblockUser);
 
 //// PRODUCT ROUTES 
 
-//  routes.get('/add-product', productController.loadAddProduct);
-//  routes.post('/add-product', productController.upload.single('image'), productController.insertProduct);
-//  routes.get('/products', productController.loadProducts);
-//  routes.get('/edit-product/:id', productController.loadEditProduct);
-//  routes.post('/edit-product/:id', productController.upload.single('image'),productController.updateProduct);
-//  routes.get('/delete-product/:id', productController.deleteProduct);
+  routes.get('/add-product', productController.loadAddProduct);
+  routes.post('/add-product', productController.upload.single('image'), productController.insertProduct);
+  routes.get('/products', productController.loadProducts);
+  routes.get('/edit-product/:id', productController.loadEditProduct);
+  routes.post('/edit-product/:id', productController.upload.single('image'),productController.updateProduct);
+  routes.get('/delete-product/:id', productController.deleteProduct);
 
-// /// category
-// routes.get('/categories/category',categoryController.listCategory)
-// routes.get('/categories/categoryAdd',categoryController.loadAddCategory)
-// routes.post('/categories/categoriesAdd',categoryController.addCategory)
+
 
 module.exports = routes;

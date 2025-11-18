@@ -16,6 +16,14 @@ user_Routes.get('/login',auths.loadlogout,userController.loadLogin)
 user_Routes.post('/login',userController.verifyLogin)
 user_Routes.get('/logout',userController.userLogout)
 user_Routes.get('/home',auths.loadloging,userController.loadHome)
+user_Routes.get('/products',userController.showProducts);
+
+//// password
+user_Routes.get('/forgot-password',userController.loadForgot)
+user_Routes.post("/forgot-password", userController.forgotpassword);
+user_Routes.get("/reset-password/:token", userController.showResetForm);
+user_Routes.post("/reset-password/:token", userController.resetPassword);
+
 
 
 //// profile 
@@ -29,8 +37,8 @@ user_Routes.get('/profile/addressList', auths.loadloging, addressController.geta
 user_Routes.get('/profile/addAddress', auths.loadloging, addressController.showAddAddress);    
 user_Routes.post('/profile/addAddress', auths.loadloging,addressController.addAddress);       
 user_Routes.get('/profile/EditeAddress/:id/edit', auths.loadloging, addressController.editAddress); 
-user_Routes.post('profile/addresses/:id/edit', auths.loadloging, addressController.updateAddress); 
-user_Routes.get('profile/address/:id/delete', auths.loadloging, addressController.deleteAddress); 
+user_Routes.post('/profile/EditeAddress/:id/edit', auths.loadloging, addressController.updateAddress); 
+user_Routes.get('/profile/:id/delete', auths.loadloging, addressController.deleteAddress); 
 
 
 module.exports = user_Routes

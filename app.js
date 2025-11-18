@@ -4,6 +4,9 @@ const exphbs = require('express-handlebars');
 const hbshelpers = require('handlebars-helpers');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const multer = require('multer');
+const flash = require('connect-flash');
+
 
 // Load environment variables
 require("dotenv").config();
@@ -31,18 +34,34 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(flash());
+
 // View engine setup with handlebars
- app.engine('hbs', exphbs.engine({
+
+app.engine('hbs', exphbs.engine({
   extname: '.hbs',
   defaultLayout: 'main',
-     layoutsDir: path.join(__dirname, 'views', 'layouts'),
+  layoutsDir: path.join(__dirname, 'views', 'layouts'),
   partialsDir: path.join(__dirname, 'views', 'partials'),
   helpers: {
-   ifEquals: function(arg1, arg2, options) {
+    eq: (a, b) => a === b,
+    ne: (a, b) => a !== b,
+    gt: (a, b) => a > b,
+    lt: (a, b) => a < b,
+    ifEquals: function (arg1, arg2, options) {
       return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+    },
+    formatDate: function (date) {
+      if (!date) return '';
+      return new Date(date).toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
     }
-   }
- }));
+  }
+}));
+
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 

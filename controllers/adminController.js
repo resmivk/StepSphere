@@ -1,6 +1,6 @@
 
 const  Admin=require('../models/adminModel')
-// const  Products=require('../models/productModel')
+ const  Products=require('../models/productModel')
 const User=require('../models/customerModel')
 const bcrypt=require('bcrypt');
 
