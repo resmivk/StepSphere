@@ -4,7 +4,7 @@ const routes = express.Router();
 const productController = require('../controllers/productController');
 const adminController = require('../controllers/adminController');
 const customerController=require('../controllers/customerController')
-// const categoryController=require('../controllers/categoryController')
+ const categoryController=require('../controllers/categoryController')
 const { isAdminLoggedin } = require('../middleware/adminAuth');
 
 
@@ -35,6 +35,14 @@ routes.post('/users/unblock/:id', isAdminLoggedin, adminController.unblockUser);
   routes.post('/edit-product/:id', productController.upload.single('image'),productController.updateProduct);
   routes.get('/delete-product/:id', productController.deleteProduct);
 
+///// CATEGORY rOUTES
 
+routes.get('/categories/category',categoryController.loadCategories)
+routes.get('/categories/addcategory',categoryController.loadAddCategory)
+routes.post('/categories/addcategory',    categoryController.insertCategory);
+routes.get('/categories/editCategory/:id', categoryController.editCategories);
+routes.post('/categories/editCategory/:id', categoryController.updateCategory);
+routes.get('/categories/deleteCategory/:id', categoryController.deleteCategory);
+routes.get('/categories/toggle/:id',      categoryController.toggleCategoryStatus);
 
 module.exports = routes;

@@ -1,0 +1,83 @@
+<div class="container mt-4">
+
+  <!-- Title + Back Button -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Edit Category</h2>
+    <a href="/admin/categories/category" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i> Back to Categories
+    </a>
+  </div>
+
+  <!-- Breadcrumb -->
+  <p class="text-muted mb-3">
+    <a href="/admin/categories/category" class="text-decoration-none">Categories</a>
+    / Editing: <strong>{{category.name}}</strong>
+  </p>
+
+  <!-- Error Message -->
+  {{#if message}}
+    <div class="alert alert-danger alert-dismissible fade show">
+      ⚠️ {{message}}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+  {{/if}}
+
+  <!-- Form -->
+  <div class="shadow-sm rounded bg-white p-4" style="max-width: 600px;">
+    <form action="/admin/categories/editCategory/{{category._id}}" method="POST">
+
+      <!-- Category Name -->
+      <div class="form-group">
+        <label class="font-weight-bold">Category Name *</label>
+        <input type="text" class="form-control" name="name"
+               value="{{category.name}}" required />
+      </div>
+
+      <!-- Parent Category -->
+      <div class="form-group">
+        <label class="font-weight-bold">Parent Category
+          <small class="text-muted font-weight-normal">(leave empty for main category)</small>
+        </label>
+        <select class="form-control" name="parent">
+          <option value="">— No Parent (Main Category) —</option>
+          {{#each parents}}
+            <option value="{{this._id}}"
+              {{#if (eq this._id ../category.parent)}}selected{{/if}}>
+              {{this.name}}
+            </option>
+          {{/each}}
+        </select>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="font-weight-bold">Description
+          <small class="text-muted font-weight-normal">(optional)</small>
+        </label>
+        <textarea class="form-control" name="description" rows="3">{{category.description}}</textarea>
+      </div>
+
+      <!-- Active Status -->
+      <div class="form-group">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="isActive"
+                 id="isActive" value="true"
+                 {{#if category.isActive}}checked{{/if}} />
+          <label class="form-check-label font-weight-bold" for="isActive">
+            Active Category
+          </label>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="d-flex justify-content-between mt-4">
+        <a href="/admin/categories/category" class="btn btn-danger px-4">Cancel</a>
+        <button type="submit" class="btn btn-primary px-4">
+          <i class="fas fa-save"></i> Update Category
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>

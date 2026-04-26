@@ -48,6 +48,8 @@ app.engine('hbs', exphbs.engine({
     ne: (a, b) => a !== b,
     gt: (a, b) => a > b,
     lt: (a, b) => a < b,
+    addOne: (index) => index + 1,
+    eq: (a, b) => a?.toString() === b?.toString(),
     ifEquals: function (arg1, arg2, options) {
       return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
     },
@@ -59,6 +61,7 @@ app.engine('hbs', exphbs.engine({
         day: 'numeric'
       });
     }
+ 
   }
 }));
 
