@@ -50,6 +50,8 @@ app.engine('hbs', exphbs.engine({
     lt: (a, b) => a < b,
     addOne: (index) => index + 1,
     eq: (a, b) => a?.toString() === b?.toString(),
+     eq: (a, b) => a?.toString() === b?.toString(),
+    isInArray: (arr, val) => Array.isArray(arr) && arr.includes(String(val)),
     ifEquals: function (arg1, arg2, options) {
       return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
     },

@@ -28,11 +28,11 @@ routes.post('/users/unblock/:id', isAdminLoggedin, adminController.unblockUser);
 
 //// PRODUCT ROUTES 
 
-  routes.get('/add-product', productController.loadAddProduct);
-  routes.post('/add-product', productController.upload.single('image'), productController.insertProduct);
+  routes.get('/add-products', productController.loadAddProduct);
+  routes.post('/add-products', productController.upload.array('images',5), productController.insertProduct);
   routes.get('/products', productController.loadProducts);
   routes.get('/edit-product/:id', productController.loadEditProduct);
-  routes.post('/edit-product/:id', productController.upload.single('image'),productController.updateProduct);
+  routes.post('/edit-product/:id', productController.upload.array('images',5),productController.updateProduct);
   routes.get('/delete-product/:id', productController.deleteProduct);
 
 ///// CATEGORY rOUTES

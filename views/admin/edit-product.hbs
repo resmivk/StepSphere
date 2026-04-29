@@ -1,73 +1,274 @@
-<div class="header">
-    <h1>Edit Product</h1>
-    <div class="breadcrumb">
-        <a href="/admin/products">Products</a> / Editing: {{product.name}}
+<div class="container mt-4">
+
+  <!-- Title + Back Button -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Edit Product</h2>
+    <a href="/admin/products" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i> Back to Products
+    </a>
+  </div>
+
+  <!-- Breadcrumb -->
+  <p class="text-muted mb-3">
+    <a href="/admin/products" class="text-decoration-none">Products</a>
+    / Editing: <strong>{{product.name}}</strong>
+  </p>
+
+  <!-- Error Message -->
+  {{#if error}}
+    <div class="alert alert-danger alert-dismissible fade show">
+      ⚠️ {{error}}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
     </div>
-</div>
-<div class="main-content">
+  {{/if}}
 
-<div class="form-container">
-    <form action="/admin/edit-product/{{product._id}}" method="POST" enctype="multipart/form-data">
+  <form action="/admin/edit-product/{{product._id}}" method="POST" enctype="multipart/form-data">
+    <div class="table-responsive shadow-sm">
+      <table class="table table-bordered text-center align-middle mb-0 bg-white">
 
-        <div class="form-row">
-            <div class="form-group">
-                <label for="name">Product Name</label>
-                <input type="text" id="name" name="name" value="{{product.name}}" class="form-control" required>
-            </div>
+        <!-- BASIC INFO -->
+        <thead class="table-dark">
+          <tr><th colspan="2">BASIC INFORMATION</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-start w-50">
+              <label class="font-weight-bold mb-1">Product Name *</label>
+              <input type="text" class="form-control" name="name"
+                     value="{{product.name}}" required />
+            </td>
+            <td class="text-start w-50">
+              <label class="font-weight-bold mb-1">Brand *</label>
+              <input type="text" class="form-control" name="brand"
+                     value="{{product.brand}}" required />
+            </td>
+          </tr>
+          <tr>
+            <td class="text-start">
+              <label class="font-weight-bold mb-1">Price (₹) *</label>
+              <input type="number" class="form-control" name="price"
+                     value="{{product.price}}" min="1" step="0.01" required />
+            </td>
+            <td class="text-start">
+              <label class="font-weight-bold mb-1">Stock *</label>
+              <input type="number" class="form-control" name="stock"
+                     value="{{product.stock}}" min="0" required />
+            </td>
+          </tr>
+        </tbody>
 
-            <div class="form-group">
-                <label for="brand">Brand</label>
-                <input type="text" id="brand" name="brand" value="{{product.brand}}" class="form-control" required>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group">
-                <label for="price">Price ($)</label>
-                <input type="number" id="price" name="price" value="{{product.price}}" class="form-control" step="0.01" required>
-            </div>
-
-            <div class="form-group">
-                <label for="stock">Stock Quantity</label>
-                <input type="number" id="stock" name="stock" value="{{product.stock}}" class="form-control" required>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="category">Category</label>
-            <input type="text" id="category" name="category" value="{{product.category}}" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label for="size">Sizes (comma separated)</label>
-            <input type="text" id="size" name="size" value="{{product.size}}" class="form-control" placeholder="S, M, L, XL" required>
-
-            <div class="size-tags">
-                {{#each product.size}}
-                    <span class="size-tag">{{this}}</span>
+        <!-- CATEGORY -->
+        <thead class="table-dark">
+          <tr><th colspan="2">CATEGORY</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-start">
+              <label class="font-weight-bold mb-1">Main Category *</label>
+              <select class="form-control" id="parentCategory"
+                      name="parentCategory"
+                      onchange="loadSubCategories(this.value)">
+                <option value="">— Select Main Category —</option>
+                {{#each parents}}
+                  <option value="{{this._id}}"
+                    {{#if (eq this._id ../selectedParentId)}}selected{{/if}}>
+                    {{this.name}}
+                  </option>
                 {{/each}}
-            </div>
-        </div>
+              </select>
+            </td>
+            <td class="text-start">
+              <label class="font-weight-bold mb-1">
+                Sub Category <small class="text-muted">(optional)</small>
+              </label>
+              <select class="form-control" name="category" id="subCategory">
+                <option value="">— Select Sub Category —</option>
+                {{#each subcategories}}
+                  <option value="{{this._id}}"
+                    {{#if (eq this._id ../product.category._id)}}selected{{/if}}>
+                    {{this.name}}
+                  </option>
+                {{/each}}
+              </select>
+            </td>
+          </tr>
+        </tbody>
 
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" name="description" class="form-control" rows="4" required>{{product.description}}</textarea>
-        </div>
+        <!-- SIZES -->
+        <thead class="table-dark">
+          <tr><th colspan="2">AVAILABLE SIZES (UK)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2" class="text-start">
+              <div class="d-flex flex-wrap gap-3 p-1">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="size"
+                         value="6" id="sz6"
+                         {{#if (isInArray product.size "6")}}checked{{/if}} />
+                  <label class="form-check-label font-weight-bold" for="sz6">6</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="size"
+                         value="7" id="sz7"
+                         {{#if (isInArray product.size "7")}}checked{{/if}} />
+                  <label class="form-check-label font-weight-bold" for="sz7">7</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="size"
+                         value="8" id="sz8"
+                         {{#if (isInArray product.size "8")}}checked{{/if}} />
+                  <label class="form-check-label font-weight-bold" for="sz8">8</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="size"
+                         value="9" id="sz9"
+                         {{#if (isInArray product.size "9")}}checked{{/if}} />
+                  <label class="form-check-label font-weight-bold" for="sz9">9</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="size"
+                         value="10" id="sz10"
+                         {{#if (isInArray product.size "10")}}checked{{/if}} />
+                  <label class="form-check-label font-weight-bold" for="sz10">10</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" name="size"
+                         value="11" id="sz11"
+                         {{#if (isInArray product.size "11")}}checked{{/if}} />
+                  <label class="form-check-label font-weight-bold" for="sz11">11</label>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
 
-        <div class="form-group">
-            <label for="image">Product Image</label>
-            <input type="file" id="image" name="image" class="form-control" accept="image/*">
-            <div class="current-image">
-                <p><small>Current Image:</small></p>
-                <img src="/uploads/{{product.image}}" alt="{{product.name}}">
-            </div>
-        </div>
+        <!-- DESCRIPTION -->
+        <thead class="table-dark">
+          <tr><th colspan="2">DESCRIPTION</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2" class="text-start">
+              <textarea class="form-control" name="description"
+                        rows="3" required>{{product.description}}</textarea>
+            </td>
+          </tr>
+        </tbody>
 
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Update Product</button>
-            <a href="/admin/products" class="btn btn-secondary">Cancel</a>
-        </div>
+        <!-- IMAGES -->
+        <thead class="table-dark">
+          <tr><th colspan="2">PRODUCT IMAGES</th></tr>
+        </thead>
+        <tbody>
+          {{#if product.images.length}}
+          <tr>
+            <td colspan="2" class="text-start">
+              <label class="font-weight-bold mb-2">Current Images:</label>
+              <div class="d-flex flex-wrap gap-2">
+                {{#each product.images}}
+                  <img src="/uploads/{{this}}" alt="product"
+                       style="width:80px;height:80px;object-fit:cover;
+                              border-radius:6px;border:1px solid #dee2e6;" />
+                {{/each}}
+              </div>
+              <small class="text-muted">
+                ⚠️ Upload new images below to replace current ones.
+              </small>
+            </td>
+          </tr>
+          {{/if}}
+          <tr>
+            <td colspan="2" class="text-start">
+              <label class="font-weight-bold mb-1">
+                Upload New Images
+                <small class="text-muted">(optional, max 5)</small>
+              </label>
+              <input type="file" class="form-control" name="images"
+                     accept="image/*" multiple
+                     onchange="previewImages(this)" />
+              <div class="d-flex flex-wrap gap-2 mt-2" id="imgPreview"></div>
+            </td>
+          </tr>
+        </tbody>
 
-    </form>
+        <!-- EXTRA -->
+        <thead class="table-dark">
+          <tr><th colspan="2">EXTRA</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2" class="text-start">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox"
+                       name="isBestSeller" id="isBestSeller" value="true"
+                       {{#if product.isBestSeller}}checked{{/if}} />
+                <label class="form-check-label font-weight-bold" for="isBestSeller">
+                  ⭐ Mark as Best Seller (shows on Home page)
+                </label>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
+        <!-- ACTIONS -->
+        <thead class="table-dark">
+          <tr><th colspan="2">ACTIONS</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-start">
+              <a href="/admin/products" class="btn btn-danger px-4">
+                <i class="fas fa-times"></i> Cancel
+              </a>
+            </td>
+            <td class="text-end">
+              <button type="submit" class="btn btn-primary px-4">
+                <i class="fas fa-save"></i> Update Product
+              </button>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </form>
 </div>
-</div>
+
+<script>
+  // Load subcategories from API when parent changes
+  async function loadSubCategories(parentId) {
+    const subSel = document.getElementById('subCategory');
+    subSel.innerHTML = '<option value="">Loading...</option>';
+    if (!parentId) {
+      subSel.innerHTML = '<option value="">— Select Sub Category —</option>';
+      return;
+    }
+    try {
+      const res = await fetch(`/admin/api/subcategories/${parentId}`);
+      const subs = await res.json();
+      subSel.innerHTML = '<option value="">— Select Sub Category —</option>';
+      subs.forEach(sub => {
+        subSel.innerHTML += `<option value="${sub._id}">${sub.name}</option>`;
+      });
+    } catch (err) {
+      subSel.innerHTML = '<option value="">Error loading subcategories</option>';
+    }
+  }
+
+  // Preview new images before upload
+  function previewImages(input) {
+    const preview = document.getElementById('imgPreview');
+    preview.innerHTML = '';
+    Array.from(input.files).slice(0, 5).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        preview.innerHTML += `
+          <img src="${e.target.result}"
+               style="width:80px;height:80px;object-fit:cover;
+                      border-radius:6px;border:1px solid #dee2e6;" />`;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+</script>

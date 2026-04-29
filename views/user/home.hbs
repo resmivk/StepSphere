@@ -1,246 +1,332 @@
+<style>
+  body { font-family: 'Rokkitt', serif; background-color: #f8f9fa; margin: 0; padding: 0; }
+  h1,h2,h3,h4,h5,h6 { font-family: 'Montserrat', sans-serif; }
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StepSphere - Shoe Collection</title>
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-    />
-    <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    />
-    <!-- Google Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Rokkitt:wght@100;300;400;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      body { font-family: 'Rokkitt', serif; background-color: #f8f9fa; padding:
-      20px 0; margin: 0; } h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat',
-      sans-serif; } /* Hero Section */ .hero-section { height: 500px;
-      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-      url('https://images.unsplash.com/photo-1460353581641-37baddab0fa2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-      background-size: cover; background-position: center; display: flex;
-      align-items: center; color: white; margin-bottom: 30px; border-radius:
-      10px; } .hero-content { width: 100%; text-align: center; } .hero-content
-      h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); } .hero-content p {
-      font-size: 1.5rem; margin-bottom: 30px; } .btn-primary { background-color:
-      #17a2b8; border-color: #17a2b8; padding: 12px 30px; font-weight: 600;
-      border-radius: 30px; transition: all 0.3s; } .btn-primary:hover {
-      background-color: #138496; border-color: #138496; transform:
-      translateY(-3px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); } /* Featured
-      Categories */ .featured-category { height: 400px; background-size: cover;
-      background-position: center; margin-bottom: 30px; position: relative;
-      border-radius: 10px; overflow: hidden; transition: transform 0.3s;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); } .featured-category:hover {
-      transform: translateY(-10px); } .featured-category::before { content: '';
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0; background:
-      rgba(0, 0, 0, 0.3); transition: all 0.3s; }
-      .featured-category:hover::before { background: rgba(0, 0, 0, 0.1); }
-      .category-title { position: absolute; bottom: 0; left: 0; right: 0;
-      background: rgba(255, 255, 255, 0.9); padding: 20px; text-align: center; }
-      /* Products */ .product-card { margin-bottom: 30px; transition: transform
-      0.3s; border: none; border-radius: 10px; overflow: hidden; box-shadow: 0
-      5px 15px rgba(0, 0, 0, 0.08); } .product-card:hover { transform:
-      translateY(-10px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); }
-      .product-img { height: 250px; object-fit: cover; width: 100%; transition:
-      transform 0.5s; } .product-card:hover .product-img { transform:
-      scale(1.05); } .product-card .card-body { padding: 1.5rem; } .product-card
-      .card-title { font-weight: 600; margin-bottom: 0.5rem; } .product-card
-      .card-text { color: #6c757d; margin-bottom: 0.5rem; } .product-card
-      .font-weight-bold { color: #17a2b8; font-size: 1.2rem; } /* Partners */
-      .partner-logo { height: 80px; object-fit: contain; filter:
-      grayscale(100%); opacity: 0.7; transition: all 0.3s; padding: 10px; }
-      .partner-logo:hover { filter: grayscale(0); opacity: 1; } /* Section
-      titles */ .section-title { position: relative; margin-bottom: 50px;
-      font-weight: 700; text-align: center; } .section-title:after { content:
-      ''; position: absolute; bottom: -15px; left: 50%; transform:
-      translateX(-50%); width: 80px; height: 3px; background-color: #17a2b8; }
-      .navbar .form-inline .form-control { width: 200px; /* adjust as needed */
-      max-width: 100%; border-radius: 30px 0 0 30px; } /* Search button style */
-      .navbar .form-inline .btn { border-radius: 0 30px 30px 0; padding: 6px
-      15px; } footer .form-control { border: none; padding: 12px 16px; } footer
-      .form-control:focus { box-shadow: none; outline: none; } footer
-      .btn-primary { background-color: #17a2b8; /* professional teal-blue */
-      border: none; transition: 0.3s ease-in-out; } footer .btn-primary:hover {
-      background-color: #138496; /* darker hover */ } /* Responsive adjustments
-      */ @media (max-width: 767.98px) { .hero-section { height: 400px; }
-      .hero-content h1 { font-size: 2.5rem; } .hero-content p { font-size:
-      1.2rem; } .featured-category { height: 300px; } }
-    </style>
-  </head>
+  /* ── TOP OFFER BAR ── */
+  .offer-topbar {
+    background: linear-gradient(90deg, #2aecdc, #2aecdc);
+    color: white; text-align: center;
+    padding: 10px 20px; font-size: 15px; font-weight: 700;
+    position: relative; z-index: 100;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+  .offer-topbar .marquee-text {
+    overflow: hidden; white-space: nowrap;
+    flex: 1; max-width: 700px;
+  }
+  .offer-topbar .marquee-text span {
+    display: inline-block;
+    animation: marquee 18s linear infinite;
+  }
+  @keyframes marquee {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(-100%); }
+  }
+  .offer-topbar .close-offer {
+    cursor: pointer; font-size: 18px;
+    opacity: 0.8; position: absolute; right: 16px;
+  }
+  .offer-topbar .close-offer:hover { opacity: 1; }
 
-  <body>
-    <div class="container">
-      <!-- Hero Section -->
-      <section class="hero-section">
-        <div class="container hero-content">
-          <h1>Shoe Collection</h1>
-          <p>New trending shoes for the season</p>
-          <a href="#" class="btn btn-primary btn-lg">Shop Now</a>
-        </div>
-      </section>
+  /* ── HERO CAROUSEL ── */
+  .hero-carousel .carousel-item {
+    height: 550px;
+    background-size: cover;
+    background-position: center;
+  }
+  .hero-carousel .carousel-item::before {
+    content: '';
+    position: absolute; top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.45);
+  }
+  .hero-carousel .carousel-caption {
+    bottom: 50%; transform: translateY(50%);
+    text-align: center;
+  }
+  .hero-carousel .carousel-caption h1 {
+    font-size: 3.5rem; font-weight: 700;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    margin-bottom: 16px;
+  }
+  .hero-carousel .carousel-caption p {
+    font-size: 1.4rem; margin-bottom: 28px;
+  }
+  .hero-carousel .carousel-indicators li {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: white;
+  }
+  .hero-carousel .carousel-control-prev-icon,
+  .hero-carousel .carousel-control-next-icon {
+    width: 40px; height: 40px;
+  }
 
-      <!-- Intro Section -->
-      <section class="py-5">
-        <div class="container text-center">
-          <h2 class="section-title">It started with a simple idea</h2>
-          <p class="lead mx-auto" style="max-width: 800px;">Create quality,
-            well-designed products that combine comfort, style, and
-            sustainability. At StepSphere, we believe every step should be a
-            statement.</p>
-        </div>
-      </section>
+  /* ── SECTION TITLE ── */
+  .section-title {
+    position: relative; margin-bottom: 50px;
+    font-weight: 700; text-align: center;
+  }
+  .section-title:after {
+    content: ''; position: absolute;
+    bottom: -15px; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 3px; background-color: #17a2b8;
+  }
 
-      ////fearchercategories
-      <section class="py-5 bg-light">
-        <div class="container">
-          <h2 class="text-center section-title">Shop By Category</h2>
-          <div class="row">
-            <div class="col-md-6 mb-4">
-              <div
-                class="featured-category"
-                style="background-image: url('https://images.unsplash.com/photo-1463100099107-aa0980c362e6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"
-              >
-                <div class="category-title">
-                  <h3>Men's Collection</h3>
-                  <a href="#" class="btn btn-outline-dark">Shop Now</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 mb-4">
-              <div
-                class="featured-category"
-                style="background-image: url('https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"
-              >
-                <div class="category-title">
-                  <h3>Women's Collection</h3>
-                  <a href="#" class="btn btn-outline-dark">Shop Now</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 mb-4">
-              <div
-                class="featured-category running-shoes-light"
-                style="background-image: url('https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"
-              >
-                <div class="category-title">
-                  <h3>Running Shoes</h3>
-                  <a href="#" class="btn btn-outline-dark">Shop Now</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 mb-4">
-              <div
-                class="featured-category"
-                style="background-image: url('https://images.unsplash.com/photo-1608231387042-66d1773070a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"
-              >
-                <div class="category-title">
-                  <h3>Casual Collection</h3>
-                  <a href="#" class="btn btn-outline-dark">Shop Now</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+  /* ── CATEGORIES ── */
+  .featured-category {
+    height: 350px; background-size: cover; background-position: center;
+    margin-bottom: 24px; position: relative; border-radius: 10px;
+    overflow: hidden; transition: transform 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer;
+  }
+  .featured-category:hover { transform: translateY(-8px); }
+  .featured-category::before {
+    content: ''; position: absolute;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.3); transition: all 0.3s;
+  }
+  .featured-category:hover::before { background: rgba(0,0,0,0.1); }
+  .category-title {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(255,255,255,0.92);
+    padding: 18px; text-align: center;
+  }
+  .category-title h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
 
-      <!-- Best Sellers -->
-     <section class="py-5">
-  <div class="container">
-    <div class="text-center mb-5">
-      <h2 class="section-title">Best Sellers</h2>
-      <p>Our most popular products this season</p>
-    </div>
+  /* ── PRODUCT CARDS ── */
+  .product-card {
+    margin-bottom: 30px; transition: transform 0.3s;
+    border: none; border-radius: 10px;
+    overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  }
+  .product-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+  .product-img-wrap { overflow: hidden; height: 250px; background: #f0f0f0; }
+  .product-img {
+    height: 250px; object-fit: cover; width: 100%;
+    transition: transform 0.5s;
+  }
+  .product-card:hover .product-img { transform: scale(1.08); }
+  .product-card .card-body { padding: 1.5rem; }
+  .product-card .card-title { font-weight: 600; margin-bottom: 0.5rem; }
+  .product-price { color: #17a2b8; font-size: 1.2rem; font-weight: 700; }
 
-    <div class="row">
-      {{#each products}}
-      <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card product-card h-100">
-          <img src="/uploads/{{this.image}}" class="card-img-top product-img" alt="{{this.name}}" loading="lazy" />
-          <div class="card-body">
-            <h5 class="card-title">{{this.name}}</h5>
-            <p class="card-text text-muted">{{this.category}}</p>
-            <p class="font-weight-bold">₹{{this.price}}</p>
-          </div>
-          <div class="card-footer bg-transparent border-top-0">
-            <a href="/addToCart/{{this._id}}" class="btn btn-outline-primary btn-block">Add to Cart</a>
-          </div>
-        </div>
+  /* ── BUTTONS ── */
+  .btn-primary {
+    background-color: #17a2b8; border-color: #17a2b8;
+    border-radius: 30px; font-weight: 600; transition: all 0.3s;
+  }
+  .btn-primary:hover {
+    background-color: #138496; border-color: #138496;
+    transform: translateY(-2px);
+  }
+  .btn-outline-primary { border-color: #17a2b8; color: #17a2b8; border-radius: 30px; }
+  .btn-outline-primary:hover { background-color: #17a2b8; color: white; }
+  .btn-outline-dark { border-radius: 20px; }
+
+  /* ── PARTNERS ── */
+  .partner-logo {
+    height: 80px; object-fit: contain;
+    filter: grayscale(100%); opacity: 0.7;
+    transition: all 0.3s; padding: 10px;
+  }
+  .partner-logo:hover { filter: grayscale(0); opacity: 1; }
+
+  /* ── NEWSLETTER ── */
+  .newsletter-section {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white; padding: 60px 0;
+  }
+  .newsletter-section h2 { font-weight: 700; }
+  .newsletter-section .form-control {
+    border-radius: 30px 0 0 30px; border: none; padding: 14px 20px;
+  }
+  .newsletter-section .btn-subscribe {
+    border-radius: 0 30px 30px 0;
+    background: #0d6574; color: white;
+    border: none; padding: 14px 24px; font-weight: 600;
+    cursor: pointer;
+  }
+  .newsletter-section .btn-subscribe:hover { background: #0a4f59; }
+
+  @media (max-width: 767px) {
+    .hero-carousel .carousel-item { height: 400px; }
+    .hero-carousel .carousel-caption h1 { font-size: 2.2rem; }
+    .hero-carousel .carousel-caption p  { font-size: 1.1rem; }
+    .featured-category { height: 260px; }
+  }
+</style>
+
+<!-- ── TOP OFFER BAR ── -->
+{{#if showOffer}}
+<div class="offer-topbar" id="offerTopbar">
+  <span>🔥</span>
+  <div class="marquee-text">
+    <span>
+      🎉 SPECIAL OFFER — 20% OFF on all orders! &nbsp;&nbsp;&nbsp;
+      👟 Free delivery on orders above ₹999! &nbsp;&nbsp;&nbsp;
+      🏷️ Use code: STEPSPHERE20 at checkout! &nbsp;&nbsp;&nbsp;
+      🔥 Limited time only — Shop Now!
+    </span>
+  </div>
+  <span class="close-offer" onclick="closeOffer()">✕</span>
+</div>
+{{/if}}
+
+<!-- ── HERO CAROUSEL ── -->
+<div id="heroCarousel" class="carousel slide hero-carousel" data-ride="carousel" data-interval="4000">
+
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#heroCarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#heroCarousel" data-slide-to="1"></li>
+    <li data-target="#heroCarousel" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Slides -->
+  <div class="carousel-inner">
+
+    <!-- Slide 1 -->
+    <div class="carousel-item active"
+         style="background-image: url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1600&q=80');">
+      <div class="carousel-caption">
+        <h1>{{heroTitle}}</h1>
+        <p>{{heroSubtitle}}</p>
+        <a href="/products" class="btn btn-primary btn-lg px-5">Shop Now</a>
       </div>
-      {{/each}}
     </div>
 
-    <div class="text-center mt-4">
-      <a href="/products" class="btn btn-primary btn-lg">View All Products</a>
+    <!-- Slide 2 -->
+    <div class="carousel-item"
+         style="background-image: url('https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=1600&q=80');">
+      <div class="carousel-caption">
+        <h1>New Arrivals</h1>
+        <p>Fresh styles for every season</p>
+        <a href="/products" class="btn btn-primary btn-lg px-5">Explore Now</a>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="carousel-item"
+         style="background-image: url('https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1600&q=80');">
+      <div class="carousel-caption">
+        <h1>Run Further</h1>
+        <p>Premium running shoes for peak performance</p>
+        <a href="/men" class="btn btn-primary btn-lg px-5">Shop Men's</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Controls -->
+  <a class="carousel-control-prev" href="#heroCarousel" data-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </a>
+  <a class="carousel-control-next" href="#heroCarousel" data-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </a>
+
+</div>
+
+<!-- ── INTRO ── -->
+<section class="py-5">
+  <div class="container text-center">
+    <h2 class="section-title">It started with a simple idea</h2>
+    <p class="lead mx-auto mt-4" style="max-width:800px;">
+      Create quality, well-designed products that combine comfort, style, and sustainability.
+      At StepSphere, we believe every step should be a statement.
+    </p>
+  </div>
+</section>
+
+<!-- ── SHOP BY CATEGORY ── -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="section-title">Shop By Category</h2>
+    <div class="row mt-4">
+      {{#each categories}}
+      <div class="col-md-4 mb-4">
+        <a href="{{this.shopLink}}" class="text-decoration-none">
+          <div class="featured-category"
+               style="background-image: url('{{this.image}}');">
+            <div class="category-title">
+              <h3>{{this.name}}</h3>
+              <span class="btn btn-outline-dark btn-sm">Shop Now</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      {{else}}
+      <div class="col-12 text-center text-muted py-4">No categories found.</div>
+      {{/each}}
     </div>
   </div>
 </section>
 
-      <!-- Trusted Partners Section -->
-      <section class="py-5 bg-light">
-        <div class="container">
-          <div class="text-center mb-4">
-            <h2 class="section-title">Our Trusted Partners</h2>
-            <p class="lead text-muted">Collaborating with the best in the
-              industry</p>
+<!-- ── BEST SELLERS ── -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Best Sellers</h2>
+      <p class="mt-3 text-muted">Our most popular products this season</p>
+    </div>
+    <div class="row">
+      {{#each products}}
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card product-card h-100">
+          <div class="product-img-wrap">
+            <img src="{{this.displayImage}}"
+                 class="product-img"
+                 alt="{{this.name}}"
+                 loading="lazy"
+                 onerror="this.src='/images/default-shoe.jpg'" />
           </div>
-
-          <div class="row justify-content-center align-items-center">
-            <!-- Partner 1 -->
-            <div class="col-6 col-sm-4 col-md-2 mb-4 px-3">
-              <div class="partner-logo p-3">
-                <img
-                  src="https://logos-world.net/wp-content/uploads/2020/04/Nike-Logo.png"
-                  class="img-fluid"
-                  alt="Nike"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-
-            <!-- Partner 2 -->
-            <div class="col-6 col-sm-4 col-md-2 mb-4 px-3">
-              <div class="partner-logo p-3">
-                <img
-                  src="https://logos-world.net/wp-content/uploads/2020/04/Adidas-Logo.png"
-                  class="img-fluid"
-                  alt="Adidas"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-
-            <!-- Partner 3 -->
-            <div class="col-6 col-sm-4 col-md-2 mb-4 px-3">
-              <div class="partner-logo p-3">
-                <img
-                  src="https://logos-world.net/wp-content/uploads/2020/04/Puma-Logo.png"
-                  class="img-fluid"
-                  alt="Puma"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-
+          <div class="card-body">
+            <p class="text-muted small mb-1">{{this.category.name}}</p>
+            <h5 class="card-title">{{this.name}}</h5>
+            <p class="product-price">₹{{this.price}}</p>
+          </div>
+          <div class="card-footer bg-transparent border-top-0 pb-3">
+            <form action="/cart/add/{{this._id}}" method="POST">
+              <button type="submit" class="btn btn-outline-primary btn-block">
+                <i class="fas fa-shopping-bag mr-1"></i> Add to Cart
+              </button>
+            </form>
           </div>
         </div>
-      </section>
+      </div>
+      {{else}}
+      <div class="col-12 text-center text-muted py-4">
+        No best sellers yet. Mark products as Best Seller in admin!
+      </div>
+      {{/each}}
     </div>
+    <div class="text-center mt-4">
+      <a href="/products" class="btn btn-primary btn-lg px-5">View All Products</a>
+    </div>
+  </div>
+</section>
 
-    <!-- JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
-    ></script>
-  </body>
-</html>
+<!-- ── TRUSTED PARTNERS ── -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h2 class="section-title">Our Trusted Partners</h2>
+      <p class="lead text-muted mt-3">Collaborating with the best in the industry</p>
+    </div>
+    <div class="row justify-content-center align-items-center">
+      {{#each partners}}
+      <div class="col-6 col-sm-4 col-md-2 mb-4 text-center">
+        <img src="{{this.logo}}" class="img-fluid partner-logo"
+             alt="{{this.name}}" loading="lazy" />
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
+<!-- ── NEWSLETTER ── -->
+<script>
+  function closeOffer() {
+    document.getElementById('offerTopbar').style.display = 'none';
+    document.cookie = "offerClosed=true; path=/";
+  }
+</script>

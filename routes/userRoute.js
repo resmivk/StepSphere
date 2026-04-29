@@ -29,7 +29,7 @@ user_Routes.post("/reset-password/:token", userController.resetPassword);
 //// profile 
 user_Routes.get('/profile', auths.loadloging, userProfileController.loadProfile);
 user_Routes.post('/profile', auths.loadloging, userProfileController.updateProfile);
-user_Routes.get('/profile/EditProfile', auths.loadloging,userProfileController.loadEditeprofile)
+user_Routes.get('/profile/Editprofile', auths.loadloging,userProfileController.loadEditeprofile)
 
 
 //// Address
