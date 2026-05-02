@@ -30,7 +30,7 @@ user_Routes.post("/reset-password/:token", userController.resetPassword);
 user_Routes.get('/profile', auths.loadloging, userProfileController.loadProfile);
 user_Routes.post('/profile', auths.loadloging, userProfileController.updateProfile);
 user_Routes.get('/profile/Editprofile', auths.loadloging,userProfileController.loadEditeprofile)
-
+user_Routes.post('/profile/EditProfile',userProfileController.updateProfile)
 
 //// Address
 user_Routes.get('/profile/addressList', auths.loadloging, addressController.getaddress);       

@@ -39,8 +39,8 @@ exports.updateProfile = async (req, res) => {
 
     const updatedUser = await User.findByIdAndUpdate(
       req.session.userId, 
-      { name, phone, address: addressData }, // Ensure 'address' is a field in your User schema
-      { new: true } // Returns the updated document
+      { name, phone, address: addressData }, 
+      { new: true } 
     );
 
     res.redirect("/profile");
