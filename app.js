@@ -49,6 +49,7 @@ app.engine('hbs', exphbs.engine({
     gt: (a, b) => a > b,
     lt: (a, b) => a < b,
     addOne: (index) => index + 1,
+     range: (start, end) => Array.from({length: end - start}, (_, i) => start + i),
     eq: (a, b) => a?.toString() === b?.toString(),
      eq: (a, b) => a?.toString() === b?.toString(),
     isInArray: (arr, val) => Array.isArray(arr) && arr.includes(String(val)),

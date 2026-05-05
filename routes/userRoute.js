@@ -17,6 +17,10 @@ user_Routes.post('/login',userController.verifyLogin)
 user_Routes.get('/logout',userController.userLogout)
 user_Routes.get('/home',auths.loadloging,userController.loadHome)
 user_Routes.get('/products',userController.showProducts);
+user_Routes.get('/men',userController.loadMen)
+user_Routes.get('/women',userController.loadWomen)
+user_Routes.get('/kids',userController.loadkids)
+
 
 //// password
 user_Routes.get('/forgot-password',userController.loadForgot)

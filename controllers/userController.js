@@ -412,7 +412,9 @@ exports.forgotpassword = async (req, res) => {
   }
 };
 
-//////////////////////rest password
+//////////////////////rest password////////////////////
+ 
+
 exports.showResetForm = async (req, res) => {
   const { token } = req.params;
   const user = await User.findOne({
@@ -446,7 +448,7 @@ exports.resetPassword = async (req, res) => {
 
 };
 
-////////////////products/////////////
+////////////////products////////////////////
 
 exports.showProducts = async (req, res) => {
   try {
@@ -492,6 +494,9 @@ exports.productsDetaling = async (req, res) => {
   }
 };
 
+
+//////////////////MEN//////////////////////
+
 exports.loadMen = async (req, res) => {
     try {
         let pageData = {
@@ -502,7 +507,7 @@ exports.loadMen = async (req, res) => {
             user: req.session ? req.session.user : null
         };
 
-        // 1. Find the "men" Parent Category
+        
         const menCategory = await Category.findOne({ name: { $regex: new RegExp("^men$", "i") } });
 
         if (!menCategory) {
@@ -510,18 +515,16 @@ exports.loadMen = async (req, res) => {
             return res.render("user/men", pageData); 
         }
         
-        // 2. Find all sub-categories (Running, Casual, etc.) linked to Women
         const subCategories = await Category.find({ parent: menCategory._id });
         const allCategoryIds = subCategories.map(cat => cat._id); 
         allCategoryIds.push(menCategory._id); 
 
-        // 3. Get Products
+        
         const rawProducts = await product.find({ 
             category: { $in: allCategoryIds },
-            isActive: { $ne: false } // Only show active products
+            isActive: { $ne: false } 
         }).lean();
 
-        // 4. Process Images (Using displayImage to match your Home logic)
         pageData.products = rawProducts.map(p => {
             let imagePath = '/uploads/default-shoe.jpg';
             if (p.images && p.images.length > 0) {
