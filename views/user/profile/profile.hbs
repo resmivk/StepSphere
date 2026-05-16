@@ -1,4 +1,4 @@
-<div class="profile-header">
+{{!-- <div class="profile-header">
   <div class="profile-avatar">
     {{#if user.avatar}}
       <img src="{{user.avatar}}" alt="{{user.name}}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
@@ -33,4 +33,481 @@
     <span>{{user.email}}</span>
   </div>
   <a href="/profile/Editprofile" class="edit-btn"><i class="fas fa-edit"></i> Edit Profile</a>
+</div> --}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Component – Side by Side</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f1f5f9;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    /* 
+      ====================================================
+      PROFILE CARD – SIDE BY SIDE LAYOUT (NO SIDEBAR/NAV/FOOTER)
+      Use as standalone component – your partials will provide outer structure.
+      ====================================================
+    */
+    .profile-container {
+      max-width: 1100px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 32px;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    /* Two‑column side‑by‑side layout */
+    .profile-split {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    /* LEFT COLUMN: Avatar + basic identity */
+    .profile-left {
+      flex: 1.2;
+      background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+      padding: 2.2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border-right: 1px solid #e9eef3;
+    }
+
+    /* Avatar circle with camera overlay */
+    .profile-avatar {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin-bottom: 1.5rem;
+    }
+
+    .avatar-circle {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(145deg, #2dd4bf, #0f766e);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 20px -8px rgba(15, 118, 110, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .avatar-circle i {
+      font-size: 3.2rem;
+      color: white;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+
+    /* if real image is used, we handle via img tag – we'll simulate with a default icon but code ready for dynamic image */
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .camera-icon {
+      position: absolute;
+      bottom: 6px;
+      right: 8px;
+      background: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: 0.2s;
+      border: 2px solid #fff;
+      color: #1e293b;
+    }
+
+    .camera-icon i {
+      font-size: 1rem;
+      color: #0f172a;
+    }
+
+    .camera-icon:hover {
+      background: #e2e8f0;
+      transform: scale(1.05);
+    }
+
+    .profile-name-large {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0.5rem 0 0.25rem;
+      letter-spacing: -0.3px;
+    }
+
+    .profile-email-large {
+      font-size: 0.95rem;
+      color: #475569;
+      background: #f1f5f9;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+
+    .member-since {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: #64748b;
+      background: #f8fafc;
+      padding: 0.3rem 0.8rem;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .member-since i {
+      font-size: 0.7rem;
+      color: #14b8a6;
+    }
+
+    /* RIGHT COLUMN: Personal Information fields */
+    .profile-right {
+      flex: 1.8;
+      padding: 2rem 2.2rem;
+      background: white;
+    }
+
+    .info-section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 1.4rem;
+      letter-spacing: -0.2px;
+      border-left: 5px solid #14b8a6;
+      padding-left: 1rem;
+    }
+
+    .info-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #eef2f6;
+      padding-bottom: 0.75rem;
+    }
+
+    .info-label {
+      width: 130px;
+      font-weight: 600;
+      color: #334155;
+      font-size: 0.9rem;
+      letter-spacing: -0.2px;
+    }
+
+    .info-value {
+      flex: 1;
+      color: #1e293b;
+      font-weight: 500;
+      font-size: 1rem;
+      word-break: break-word;
+    }
+
+    .edit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #0f172a;
+      color: white;
+      padding: 0.8rem 1.6rem;
+      border-radius: 60px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      margin-top: 0.8rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .edit-btn i {
+      font-size: 1rem;
+    }
+
+    .edit-btn:hover {
+      background: #2dd4bf;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -5px rgba(45, 212, 191, 0.4);
+      color: #0f172a;
+    }
+
+    /* Responsive: on smaller screens, columns stack */
+    @media (max-width: 780px) {
+      body {
+        padding: 1rem;
+      }
+      .profile-split {
+        flex-direction: column;
+      }
+      .profile-left {
+        border-right: none;
+        border-bottom: 1px solid #e9eef3;
+        padding: 2rem 1.5rem;
+      }
+      .profile-right {
+        padding: 1.8rem;
+      }
+      .info-label {
+        width: 100%;
+        margin-bottom: 4px;
+      }
+      .info-item {
+        flex-direction: column;
+      }
+    }
+
+    /* subtle decoration */
+    .profile-container {
+      transition: all 0.2s;
+    }
+
+    /* optional camera tooltip */
+    [data-tooltip] {
+      position: relative;
+    }
+    [data-tooltip]:before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.1s;
+      font-weight: 400;
+    }
+    [data-tooltip]:hover:before {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 
+  *********************************************
+  * SIDE-BY-SIDE PROFILE COMPONENT            *
+  * No sidebar, no navbar, no footer.         *
+  * Designed to be dropped into your partials *
+  * where outer layout (sidebar/nav) already  *
+  * exists.                                   *
+  *********************************************
+-->
+<div class="profile-container">
+  <div class="profile-split">
+    
+    <!-- LEFT SIDE: Avatar + core identity -->
+    <div class="profile-left">
+      <div class="profile-avatar">
+        <!-- Avatar placeholder: dynamic if user has image, else icon -->
+        <div class="avatar-circle" id="avatarPreview">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <!-- Hidden img element for dynamic update (kept for future integration) -->
+        <img id="avatarImg" src="" alt="profile" style="display:none;">
+        <span class="camera-icon" data-tooltip="Change profile photo" id="cameraTrigger">
+          <i class="fas fa-camera"></i>
+        </span>
+      </div>
+      
+      <div class="profile-name-large" id="displayName">Resmi vk</div>
+      <div class="profile-email-large" id="displayEmail">vkresmi94@gmail.com</div>
+      
+      <div class="member-since">
+        <i class="fas fa-calendar-alt"></i> 
+        <span>Member since April 2024</span>
+      </div>
+      <!-- Optional: small note that edit available on right side -->
+      <div style="margin-top: 1rem; font-size: 0.7rem; color: #94a3b8;">
+        <i class="fas fa-shield-alt"></i> Verified account
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: Personal Information fields (detailed) -->
+    <div class="profile-right">
+      <div class="info-section-title">
+        <i class="fas fa-id-card" style="margin-right: 10px; color: #14b8a6;"></i> Personal Information
+      </div>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label"><i class="fas fa-user" style="width: 20px; margin-right: 8px;"></i> Full Name:</div>
+          <div class="info-value" id="infoFullName">Resmi vk</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label"><i class="fas fa-mobile-alt" style="margin-right: 8px;"></i> Mobile Number:</div>
+          <div class="info-value" id="infoMobile">+91 8987656767</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label"><i class="fas fa-envelope" style="margin-right: 8px;"></i> Email ID:</div>
+          <div class="info-value" id="infoEmail">vkresmi94@gmail.com</div>
+        </div>
+        <!-- Address can be added optionally (from your spec but not required) -->
+        <div class="info-item">
+          <div class="info-label"><i class="fas fa-map-pin" style="margin-right: 8px;"></i> Default Address:</div>
+          <div class="info-value">📍 Not provided — <span style="color:#14b8a6;">update in addresses</span></div>
+        </div>
+      </div>
+
+      <!-- Edit Profile Button (action links to edit page) -->
+      <a href="/profile/Editprofile" class="edit-btn">
+        <i class="fas fa-edit"></i> Edit Profile
+      </a>
+      <div style="margin-top: 1rem; font-size: 0.7rem; color: #94a3b8;">
+        <i class="fas fa-lock"></i> Your information is securely stored
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Simple demo interaction for camera icon (change avatar preview) – fully optional but shows side-by-side dynamic -->
+<script>
+  (function() {
+    // This script demonstrates how the camera icon can trigger an avatar update.
+    // It does NOT require external libraries, and respects the side-by-side nature.
+    // In real integration, you would connect to your backend / API.
+    
+    const cameraBtn = document.getElementById('cameraTrigger');
+    const avatarCircle = document.getElementById('avatarPreview');
+    const hiddenImg = document.getElementById('avatarImg');
+    
+    // For demo: store current avatar state (icon mode)
+    let usingDefaultIcon = true;
+    
+    // Function to update avatar with a new image (simulated file upload behavior)
+    function triggerAvatarChange() {
+      // Create a hidden file input
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.style.display = 'none';
+      document.body.appendChild(fileInput);
+      
+      fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            // Replace the avatar with image
+            const imgUrl = e.target.result;
+            // Clear avatar circle content, create an img element inside
+            avatarCircle.innerHTML = '';
+            const newImg = document.createElement('img');
+            newImg.src = imgUrl;
+            newImg.style.width = '100%';
+            newImg.style.height = '100%';
+            newImg.style.borderRadius = '50%';
+            newImg.style.objectFit = 'cover';
+            avatarCircle.appendChild(newImg);
+            usingDefaultIcon = false;
+            // store in hidden img for consistency
+            hiddenImg.src = imgUrl;
+            hiddenImg.style.display = 'none';
+            
+            // Optional: show success message
+            const toast = document.createElement('div');
+            toast.innerText = 'Profile photo updated!';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = '#0f172a';
+            toast.style.color = 'white';
+            toast.style.padding = '8px 20px';
+            toast.style.borderRadius = '40px';
+            toast.style.fontSize = '0.8rem';
+            toast.style.zIndex = '1000';
+            toast.style.fontWeight = '500';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+          };
+          reader.readAsDataURL(file);
+        } else if (file) {
+          alert('Please select an image file (jpg, png, etc)');
+        }
+        document.body.removeChild(fileInput);
+      });
+      
+      fileInput.click();
+    }
+    
+    if (cameraBtn) {
+      cameraBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        triggerAvatarChange();
+      });
+    }
+    
+    // For consistency, the profile data is pre-filled from the right side fields.
+    // In real scenario, you'd fetch user data from an API. But we already match:
+    // We'll also ensure that if any external update happens, both sides stay in sync.
+    // The "Edit Profile" link will naturally lead to Editprofile page.
+    
+    // Optional: sync left side name and email if right side fields are editable? 
+    // But the fields in right are read-only (display only), so no need.
+    // However, to show that side-by-side can be dynamic, we add a little watcher 
+    // (just to illustrate that both columns reflect same data). Since no external editing,
+    // it's already consistent.
+    
+    // Extra: Add a micro interaction: if the user changes the name via edit profile page,
+    // but this is a static demo. We'll keep as is.
+    
+    // For demonstration, we also implement a "click on edit button" simulation? Not needed.
+    // But we ensure that the side-by-side layout is fully functional.
+    
+    // Accessibility: tooltip for camera
+    if(cameraBtn && !cameraBtn.getAttribute('data-tooltip')) {
+      cameraBtn.setAttribute('data-tooltip', 'Change photo');
+    }
+    
+    // Add ability to reflect changes if someone updates localStorage? not needed, just demo
+    console.log('Side-by-side profile ready — no sidebar / navbar / footer');
+  })();
+</script>
+
+
+</body>
+</html>

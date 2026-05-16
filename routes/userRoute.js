@@ -5,6 +5,7 @@ const user_Routes=express.Router()
 const userController=require('../controllers/userController')
 const userProfileController=require('../controllers/userProfileController')
 const addressController=require('../controllers/addressController')
+const CartController=require('../controllers/cartController')
 
 const auths=require('../middleware/auth')
 
@@ -43,6 +44,15 @@ user_Routes.post('/profile/addAddress', auths.loadloging,addressController.addAd
 user_Routes.get('/profile/EditeAddress/:id/edit', auths.loadloging, addressController.editAddress); 
 user_Routes.post('/profile/EditeAddress/:id/edit', auths.loadloging, addressController.updateAddress); 
 user_Routes.get('/profile/:id/delete', auths.loadloging, addressController.deleteAddress); 
+
+
+/////////////////cartRoutes///////////////
+user_Routes.get('/cart',auths.loadloging,CartController.getCart)
+user_Routes.post("/cart/add/:id",       auths.loadloging, CartController.addToCart);
+user_Routes.get("/cart/add/:id",        auths.loadloging, CartController.addToCart);
+user_Routes.get("/cart/update/:id",     auths.loadloging, CartController.updateQuantity);
+user_Routes.get("/cart/remove/:id",     auths.loadloging, CartController.removeItem);
+user_Routes.get("/cart/clear",          auths.loadloging, CartController.clearCart);
 
 
 module.exports = user_Routes
