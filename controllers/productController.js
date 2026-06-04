@@ -21,7 +21,6 @@ const path = require('path');
 
 exports.loadAddProduct = async (req, res) => {
   try {
-    //const categories = await Category.find({ isActive: true }).lean(); 
     const parents = await Category.find({ parent: null, isActive: true }).lean();
     const subCategories = await Category.find({ parent: { $ne: null }, isActive: true }).lean();
     res.render('admin/add-products', { 
@@ -52,7 +51,7 @@ res.render('admin/products', { products: productList, admin: true });
 
 exports.insertProduct = async (req, res) => {
   try {
-    // 1. Handle Images
+    
     const imageFiles = req.files ? req.files.map(file => file.filename) : [];
     if (imageFiles.length === 0) {
       return res.status(400).send("At least one image is required");

@@ -37,19 +37,15 @@
         <li class="nav-item"><a class="nav-link" href="/kids">Kids</a></li>
       </ul>
 
-      <!-- Search -->
-      <form class="form-inline my-2 my-lg-0 mr-3">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search" />
-          <div class="input-group-append">
-            <button class="btn btn-primary" type="submit">
-              <i class="fas fa-search"></i>
-            </button>
-          </div>
-        </div>
-      </form>
 
-      <!-- Cart -->
+<form class="form-inline my-2 my-lg-0 mr-3" action="/search" method="GET">
+  <input type="text" name="q" class="form-control" placeholder="Search...">
+  <button type="submit" class="btn">
+    <i class="fas fa-search"></i>
+  </button>
+</form>
+     
+      <!-- Cart --> 
       <a href="/cart" class="btn btn-outline-dark mr-3">
         <i class="fas fa-shopping-cart"></i>
         Cart <span class="badge badge-primary">0</span>

@@ -294,13 +294,13 @@ exports.loadHome = async (req, res) => {
       
       // Custom Logic for specific categories
       if (catName === 'men') {
-        categoryImage = 'https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+        categoryImage =  "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=800&q=80",
         shopLink = '/men'; // Route to your special Men page
       } else if (catName === 'women') {
-        categoryImage = 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+        categoryImage = "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80",
         shopLink = '/women'; // Route to your special Women page
       } else if (catName === 'kids') {
-        categoryImage = 'https://images.unsplash.com/photo-1514989940723-e8875ea6ab7d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+        categoryImage = "https://images.unsplash.com/photo-1514590734052-344a18719611?auto=format&fit=crop&w=800&q=80",
         shopLink = '/kids';
       }
 
@@ -316,11 +316,29 @@ exports.loadHome = async (req, res) => {
     const showOffer = !req.cookies?.offerClosed || req.cookies.offerClosed === "false";
     
     // 8. Hardcoded Partners
-    const partners = [
-      { name: "Nike", logo: "https://logos-world.net/wp-content/uploads/2020/04/Nike-Logo.png" },
-      { name: "Adidas", logo: "https://logos-world.net/wp-content/uploads/2020/04/Adidas-Logo.png" },
-      { name: "Puma", logo: "https://logos-world.net/wp-content/uploads/2020/04/Puma-Logo.png" }
-    ];
+   const partners = [
+  { 
+    name: "Nike", 
+    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg" 
+  },
+  { 
+    name: "Adidas", 
+    logo: "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg" 
+  },
+  { 
+    name: "Puma", 
+    logo: "https://upload.wikimedia.org/wikipedia/en/d/da/Puma_complete_logo.svg"
+  },
+  { 
+    name: "Reebok", 
+    logo: "https://upload.wikimedia.org/wikipedia/commons/5/53/Reebok_2019_logo.svg" 
+  },
+ 
+  { 
+    name: "Converse", 
+    logo: "https://upload.wikimedia.org/wikipedia/commons/3/30/Converse_logo.svg" 
+  }
+];
 
     // 9. Render the View
     res.render("user/home", {
@@ -477,10 +495,10 @@ exports.productsDetaling = async (req, res) => {
 
 
     const relatedProducts = await product.find({ 
-        category: productData.category, 
+        category: productData.category._id, 
         _id: { $ne: productId } 
     }).limit(4).lean();
-    res.render("user/productDetails", {
+    res.render("user/productDetaling", {
       product: productData,
       relatedProducts: relatedProducts,
       showNavbar: true,
@@ -531,7 +549,7 @@ exports.loadMen = async (req, res) => {
                 imagePath = p.images[0].startsWith('http') ? p.images[0] : `/uploads/${p.images[0]}`;
     
               }
-            return { ...p, mainImage: imagePath };
+            return { ...p, mainImage: imagePath ,_id: p._id.toString() };
         });
 
         res.render("user/men", pageData);
@@ -577,7 +595,7 @@ exports.loadWomen = async (req, res) => {
                 imagePath = p.images[0].startsWith('http') ? p.images[0] : `/uploads/${p.images[0]}`;
     
               }
-            return { ...p, displayImage: imagePath };
+            return { ...p, displayImage: imagePath ,_id: p._id.toString() };
         });
 
         res.render("user/women", pageData);
@@ -623,7 +641,7 @@ exports.loadkids = async (req, res) => {
     
               }
             return { ...p,
-               displayImage: imagePath };
+               displayImage: imagePath,_id: p._id.toString()  };
         });
 
         res.render("user/kids", pageData);
@@ -632,4 +650,45 @@ exports.loadkids = async (req, res) => {
         res.status(500).send("Error loading page");
     }
 };
+
+exports.searchProducts = async (req, res) => {
+  try {
+    const query = req.query.q;
+
+    
+    const matchedCategory = await Category.findOne({ 
+      name: { $regex: new RegExp(`^${query}$`, 'i') } 
+    });
+
+    let filter = {};
+
+    if (matchedCategory) {
+      
+      filter = { category: matchedCategory._id };
+    } else {
+      
+      filter = {
+        $or: [
+          { name: { $regex: query, $options: 'i' } },
+          { brand: { $regex: query, $options: 'i' } },
+          { description: { $regex: query, $options: 'i' } }
+        ]
+      };
+    }
+
+    const products = await product.find(filter).populate('category').lean();
+    
+
+    res.render('user/products', { 
+      products, 
+      searchQuery: query,
+      showNavbar: true, 
+      showfooter: true 
+    });
+  } catch (error) {
+    res.status(500).send("Search error: " + error.message);
+  }
+};
+
+
 

@@ -63,6 +63,33 @@ app.engine('hbs', exphbs.engine({
         month: 'short',
         day: 'numeric'
       });
+    },
+      mathFloor: function(n) {
+      return Math.floor(Math.abs(parseFloat(n) || 0));
+    },
+    
+    subtract: function(a, b) {
+      return (parseFloat(a) || 0) - (parseFloat(b) || 0);
+    },
+    
+    times: function(n, block) {
+      let accum = '';
+      n = Math.floor(Math.abs(parseFloat(n) || 0));
+      for(let i = 0; i < n; ++i) {
+        accum += block.fn(this);
+      }
+      return accum;
+    },
+    
+    hasHalfStar: function(rating) {
+      const remainder = (parseFloat(rating) || 0) % 1;
+      return remainder >= 0.25 && remainder <= 0.75;
+    },
+    
+    calculateDiscountedPrice: function(price, discount) {
+      const originalPrice = parseFloat(price) || 0;
+      const discountPercent = parseFloat(discount) || 0;
+      return Math.round(originalPrice * (100 - discountPercent) / 100);
     }
  
   }

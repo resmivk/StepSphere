@@ -151,18 +151,20 @@
           {{#each products}}
           <div class="col-md-4 col-sm-6 mb-4">
             <div class="card product-card h-100">
+              <a href="/products/{{this._id}}">
               <div class="product-img-wrap">
                 <img src="{{this.displayImage}}"
                      class="product-img"
                      alt="{{this.name}}"
                      onerror="this.src='/images/default-shoe.jpg'" />
               </div>
+              </a>
               <div class="card-body">
                 <p class="product-brand mb-1">{{this.brand}}</p>
                 <h5 class="card-title">{{this.name}}</h5>
                 <p class="product-price">₹{{this.price}}</p>
                 <div class="d-flex gap-2">
-                  <a href="/product/{{this._id}}" class="btn btn-outline-primary btn-sm flex-fill">
+                  <a href="/products/{{this._id}}" class="btn btn-outline-primary btn-sm flex-fill">
                     View
                   </a>
                   <form action="/cart/add/{{this._id}}" method="POST" class="flex-fill">

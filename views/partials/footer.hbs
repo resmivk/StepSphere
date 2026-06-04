@@ -1,115 +1,84 @@
-
-
-		 <footer class="bg-dark text-white pt-5">
-      <div class="container">
-        <!-- Newsletter Section -->
-        <div class="row mb-5">
-          <div class="col-lg-6 mx-auto text-center">
-            <h4>Stay Updated</h4>
-            <p class="text-white-50 mb-3">Subscribe to our newsletter for exclusive offers and updates.</p>
-            {{!-- <form class="form-inline justify-content-center">
-              <div class="input-group w-75">
-                <input type="email" class="form-control" placeholder="Your email" aria-label="Email">
-                <div class="input-group-append">
-                  <button class="btn btn-primary" type="submit">Subscribe</button>
-                </div>
-              </div>
-            </form> --}}
-            <form class="d-flex justify-content-center">
-  <div class="input-group input-group-lg" style="max-width: 500px;">
-    <input 
-      type="email" 
-      class="form-control rounded-start" 
-      placeholder="Enter your email" 
-      aria-label="Email" 
-      required
-    >
-    <button 
-      class="btn btn-primary rounded-end px-4" 
-      type="submit"
-    >
-      Subscribe
-    </button>
-  </div>
-</form>
-
-
+<!-- Add to <head> -->
+<footer class="bg-dark text-white pt-4 pb-3">
+  <div class="container">
+    <!-- Newsletter - more compact -->
+    <div class="row mb-3">
+      <div class="col-lg-6 mx-auto text-center">
+        <h5 class="mb-1">Stay Updated</h5>
+        <p class="text-white-50 small mb-2">Subscribe for exclusive offers & updates.</p>
+        <form class="d-flex justify-content-center" onsubmit="alert('Demo: ' + this.email.value); return false;">
+          <div class="input-group" style="max-width: 400px;">
+            <input type="email" class="form-control form-control-sm" placeholder="Email address" name="email" required>
+            <button class="btn btn-primary btn-sm" type="submit">Subscribe</button>
           </div>
-        </div>
+        </form>
+      </div>
+    </div>
 
-        <!-- Main Footer Content -->
-        <div class="row">
-          <!-- About Section -->
-          <div class="col-lg-3 col-md-6 mb-4">
-            <h5>About Footwear</h5>
-            <p class="text-white-50">Premium footwear for every step of your journey. Quality, comfort, and style since 2023.</p>
-            <div class="social-links mt-3">
-              <a href="#" class="text-white mr-3"><i class="fab fa-twitter"></i></a>
-              <a href="#" class="text-white mr-3"><i class="fab fa-facebook"></i></a>
-              <a href="#" class="text-white mr-3"><i class="fab fa-instagram"></i></a>
-              <a href="#" class="text-white mr-3"><i class="fab fa-pinterest"></i></a>
-              <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
-            </div>
-          </div>
-
-          <!-- Customer Care -->
-          <div class="col-lg-3 col-md-6 mb-4">
-            <h5>Customer Care</h5>
-            <ul class="list-unstyled">
-              <li><a href="#" class="text-white-50">Contact Us</a></li>
-              <li><a href="#" class="text-white-50">FAQs</a></li>
-              <li><a href="#" class="text-white-50">Returns & Exchanges</a></li>
-              <li><a href="#" class="text-white-50">Shipping Policy</a></li>
-              <li><a href="#" class="text-white-50">Size Guide</a></li>
-            </ul>
-          </div>
-
-          <!-- Information -->
-          <div class="col-lg-3 col-md-6 mb-4">
-            <h5>Information</h5>
-            <ul class="list-unstyled">
-              <li><a href="#" class="text-white-50">About Us</a></li>
-              <li><a href="#" class="text-white-50">Careers</a></li>
-              <li><a href="#" class="text-white-50">Privacy Policy</a></li>
-              <li><a href="#" class="text-white-50">Terms & Conditions</a></li>
-              <li><a href="#" class="text-white-50">Blog</a></li>
-            </ul>
-          </div>
-
-          <!-- Contact -->
-          <div class="col-lg-3 col-md-6 mb-4">
-            <h5>Contact</h5>
-            <address class="text-white-50">
-              <i class="fas fa-map-marker-alt mr-2"></i> 291 South 21st Street,<br>
-              <span class="ml-3">Suite 721, New York NY 10016</span><br>
-              <i class="fas fa-phone mr-2"></i> <a href="tel:+1235235598" class="text-white-50">+1 235 2355 98</a><br>
-              <i class="fas fa-envelope mr-2"></i> <a href="mailto:info@yoursite.com" class="text-white-50">info@yoursite.com</a>
-            </address>
-          </div>
-        </div>
-
-        <!-- Payment Methods & Trust Badges -->
-        <div class="row py-3">
-          <div class="col-12 text-center">
-            <h6 class="mb-3">We Accept:</h6>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" class="mr-2" style="height: 30px;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" class="mr-2" style="height: 30px;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" class="mr-2" style="height: 30px;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo.svg" alt="Amex" style="height: 30px;">
-          </div>
-        </div>
-
-        <!-- Copyright -->
-        <div class="row pt-3">
-          <div class="col-md-6 text-center text-md-left mb-3 mb-md-0">
-            <p class="text-white-50 mb-0">© 2023 <strong>Footwear</strong>. All rights reserved.</p>
-          </div>
-          <div class="col-md-6 text-center text-md-right">
-            <p class="text-white-50 mb-0">
-              Designed by <a href="https://colorlib.com" class="text-white">Colorlib</a> | 
-              <a href="#" class="text-white-50 ml-2">Sitemap</a>
-            </p>
-          </div>
+    <!-- Footer columns - smaller gaps -->
+    <div class="row gy-3">
+      <!-- About -->
+      <div class="col-lg-3 col-md-6">
+        <h6 class="mb-1">About Footwear</h6>
+        <p class="text-white-50 small mb-0">Premium footwear since 2023.</p>
+        <div class="social-links mt-1">
+          <a href="#" class="text-white me-2 small"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="text-white me-2 small"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="text-white me-2 small"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="text-white me-2 small"><i class="fab fa-youtube"></i></a>
         </div>
       </div>
-    </footer>
+
+      <!-- Customer Care -->
+      <div class="col-lg-3 col-md-6">
+        <h6 class="mb-1">Customer Care</h6>
+        <ul class="list-unstyled small mb-0">
+          <li><a href="#" class="text-white-50">Contact</a></li>
+          <li><a href="#" class="text-white-50">FAQs</a></li>
+          <li><a href="#" class="text-white-50">Returns</a></li>
+          <li><a href="#" class="text-white-50">Shipping</a></li>
+        </ul>
+      </div>
+
+      <!-- Information -->
+      <div class="col-lg-3 col-md-6">
+        <h6 class="mb-1">Information</h6>
+        <ul class="list-unstyled small mb-0">
+          <li><a href="#" class="text-white-50">About Us</a></li>
+          <li><a href="#" class="text-white-50">Privacy</a></li>
+          <li><a href="#" class="text-white-50">Terms</a></li>
+          <li><a href="#" class="text-white-50">Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="col-lg-3 col-md-6">
+        <h6 class="mb-1">Contact</h6>
+        <address class="text-white-50 small mb-0">
+          <i class="fas fa-map-marker-alt me-1"></i> calicut,kerala,india<br>
+          <i class="fas fa-phone me-1"></i> <a href="tel:+1235235598" class="text-white-50">+1 235 2355 98</a><br>
+          <i class="fas fa-envelope me-1"></i> <a href="mailto:info@yoursite.com" class="text-white-50">stepsphere@gmail.com</a>
+        </address>
+      </div>
+    </div>
+
+    <!-- Payment badges + copyright combined - more compact -->
+    <div class="row mt-3 pt-2 border-top border-secondary">
+      <div class="col-md-4 text-center text-md-start">
+        <p class="small text-white-50 mb-0">© 2026 Footwear. All rights reserved.</p>
+      </div>
+      <div class="col-md-4 text-center">
+        <div>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" height="20" class="me-1">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" height="20" class="me-1">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo.svg" alt="Amex" height="20">
+        </div>
+      </div>
+      <div class="col-md-4 text-center text-md-end">
+        <p class="small text-white-50 mb-0">
+          Designed by <a href="https://colorlib.com" class="text-white">Colorlib</a> | <a href="#" class="text-white-50">Sitemap</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

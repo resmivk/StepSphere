@@ -16,11 +16,16 @@ user_Routes.get('/verify',userController.verifyEmail)
 user_Routes.get('/login',auths.loadlogout,userController.loadLogin)
 user_Routes.post('/login',userController.verifyLogin)
 user_Routes.get('/logout',userController.userLogout)
-user_Routes.get('/home',auths.loadloging,userController.loadHome)
+
 user_Routes.get('/products',userController.showProducts);
+user_Routes.get('/products/:id', userController.productsDetaling)
+
 user_Routes.get('/men',userController.loadMen)
 user_Routes.get('/women',userController.loadWomen)
 user_Routes.get('/kids',userController.loadkids)
+user_Routes.get('/home',auths.loadloging,userController.loadHome)
+
+user_Routes.get('/search', userController.searchProducts);
 
 
 //// password
