@@ -125,11 +125,89 @@ border-radius:30px;
 font-weight:600;
 text-transform:uppercase;
 width:100%;
+transition: all 0.2s ease;
 }
 
 .btn-add-cart:hover{
 background:#138496;
 color:white;
+}
+
+/* Buy Now Button Style */
+.btn-buy-now{
+background:#28a745;
+color:white;
+padding:15px 30px;
+border:none;
+border-radius:30px;
+font-weight:600;
+text-transform:uppercase;
+width:100%;
+transition: all 0.2s ease;
+}
+
+.btn-buy-now:hover{
+background:#218838;
+color:white;
+}
+
+/* Button group layout for desktop and mobile */
+.action-buttons-group{
+display: flex;
+gap: 15px;
+margin-top: 10px;
+}
+
+.action-buttons-group .btn-add-cart,
+.action-buttons-group .btn-buy-now{
+flex: 1;
+}
+
+/* Small screen adjustment */
+@media (max-width: 576px) {
+.action-buttons-group{
+flex-direction: column;
+gap: 12px;
+}
+.action-buttons-group .btn-add-cart,
+.action-buttons-group .btn-buy-now{
+width: 100%;
+}
+}
+
+/* subtle loading overlay for buy now */
+.loading-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0,0,0,0.5);
+z-index: 9999;
+display: flex;
+align-items: center;
+justify-content: center;
+visibility: hidden;
+opacity: 0;
+transition: all 0.2s;
+}
+
+.loading-overlay.active {
+visibility: visible;
+opacity: 1;
+}
+
+.spinner-border-custom {
+width: 3rem;
+height: 3rem;
+border: 0.3em solid rgba(255,255,255,0.3);
+border-top-color: white;
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+to { transform: rotate(360deg); }
 }
 
 </style>
@@ -142,189 +220,315 @@ color:white;
 <div class="row">
 
 <!-- Product Images -->
-
 <div class="col-md-6">
-
 <div class="main-image-container">
-
 {{#if product.images.[0]}}
-
-<img src="/uploads/{{product.images.[0]}}" id="mainImage" class="main-image">
-
+<img src="/uploads/{{product.images.[0]}}" id="mainImage" class="main-image" alt="{{product.name}}">
 {{else}}
-
-<img src="/images/default-shoe.jpg" id="mainImage" class="main-image">
-
+<img src="/images/default-shoe.jpg" id="mainImage" class="main-image" alt="default shoe">
 {{/if}}
-
 </div>
-
 <div class="thumbnail-container">
-
 {{#each product.images}}
-
-<img src="/uploads/{{this}}" class="thumbnail {{#if @first}}active{{/if}}" onclick="changeImage(this.src,this)">
-
+<img src="/uploads/{{this}}" class="thumbnail {{#if @first}}active{{/if}}" onclick="changeImage(this.src,this)" alt="thumbnail">
 {{/each}}
-
 </div>
-
 </div>
-
 
 <!-- Product Info -->
-
 <div class="col-md-6">
-
 <div class="pl-md-4">
-
 <p class="product-brand">{{product.brand}}</p>
-
 <h1 class="product-title">{{product.name}}</h1>
-
 <div class="mb-3">
-
 <span class="product-price">₹{{product.price}}</span>
-
 {{#if product.oldPrice}}
 <span class="text-muted ml-2">
 <del>₹{{product.oldPrice}}</del>
 </span>
 {{/if}}
-
 </div>
 
-
 {{#if product.stock}}
-
 <p class="text-success">
 <i class="fas fa-check-circle"></i> In Stock
 </p>
-
 {{else}}
-
 <p class="text-danger">
 <i class="fas fa-times-circle"></i> Out of Stock
 </p>
-
 {{/if}}
 
-
 <div class="product-desc">
-
 <p>{{product.description}}</p>
-
 </div>
-
 <hr>
 
+<!-- ADD TO CART & BUY NOW FORM 
+     We keep a single hidden form but handle buy now separately via JavaScript 
+     to allow direct checkout while reusing size/quantity validations.
+-->
+<form id="cartForm" action="/cart/add/{{product._id}}" method="POST">
+  <div class="form-group">
+    <label class="font-weight-bold">Select Size:</label>
+    <div class="size-selector">
+      {{#each product.size}}
+      <div class="size-btn" onclick="selectSize(this,'{{this}}')">
+        {{this}}
+      </div>
+      {{/each}}
+    </div>
+    <input type="hidden" id="selectedSize" name="size">
+    <small id="sizeError" class="text-danger" style="display:none;">
+      Please select a size
+    </small>
+  </div>
 
-<!-- ADD TO CART FORM -->
+  <div class="form-group" style="width:150px">
+    <label class="font-weight-bold">Quantity:</label>
+    <input type="number" class="form-control" id="quantity"
+           name="quantity"
+           value="1"
+           min="1"
+           max="5">
+  </div>
 
-<form action="/cart/add/{{product._id}}" method="POST">
-
-<div class="form-group">
-
-<label class="font-weight-bold">Select Size:</label>
-
-<div class="size-selector">
-
-{{#each product.size}}
-
-<div class="size-btn" onclick="selectSize(this,'{{this}}')">
-{{this}}
-</div>
-
-{{/each}}
-
-</div>
-
-<input type="hidden" id="selectedSize" name="size">
-
-<small id="sizeError" class="text-danger" style="display:none;">
-Please select a size
-</small>
-
-</div>
-
-
-<div class="form-group" style="width:150px">
-
-<label class="font-weight-bold">Quantity:</label>
-
-<input type="number" class="form-control" id="quantity"
-name="quantity"
-value="1"
-min="1"
-max="5">
-
-</div>
-
-
-<button type="submit" class="btn btn-add-cart">
-
-<i class="fas fa-shopping-bag mr-2"></i>
-
-Add To Cart
-
-</button>
-
+  <!-- Two action buttons: Add to Cart + Buy Now inside a responsive group -->
+  <div class="action-buttons-group">
+    <button type="submit" class="btn btn-add-cart" id="addToCartBtn">
+      <i class="fas fa-shopping-bag mr-2"></i> Add To Cart
+    </button>
+    <button type="button" class="btn btn-buy-now" id="buyNowBtn">
+      <i class="fas fa-bolt mr-2"></i> Buy Now
+    </button>
+  </div>
 </form>
 
 </div>
-
+</div>
+</div>
 </div>
 
+<!-- Loading overlay for buy now action -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="spinner-border-custom"></div>
 </div>
-
-</div>
-
 
 <script>
-
-function changeImage(src,element){
-
-document.getElementById('mainImage').src=src;
-
-document.querySelectorAll('.thumbnail').forEach(img=>{
-img.classList.remove('active');
-});
-
-element.classList.add('active');
-
+// Image gallery handler
+function changeImage(src, element) {
+  document.getElementById('mainImage').src = src;
+  document.querySelectorAll('.thumbnail').forEach(img => {
+    img.classList.remove('active');
+  });
+  element.classList.add('active');
 }
 
-
-function selectSize(element,size){
-
-document.querySelectorAll('.size-btn').forEach(btn=>{
-btn.classList.remove('active');
-});
-
-element.classList.add('active');
-
-document.getElementById('selectedSize').value=size;
-
-document.getElementById('sizeError').style.display='none';
-
+// Size selection handler
+function selectSize(element, size) {
+  document.querySelectorAll('.size-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  element.classList.add('active');
+  document.getElementById('selectedSize').value = size;
+  document.getElementById('sizeError').style.display = 'none';
 }
 
-
-document.querySelector('form').addEventListener('submit',function(e){
-
-const size=document.getElementById('selectedSize').value;
-
-if(!size){
-
-e.preventDefault();
-
-document.getElementById('sizeError').style.display='block';
-
+// Helper: get current selected size, quantity, and validate
+function getSelectedSizeAndValidate() {
+  const size = document.getElementById('selectedSize').value;
+  const sizeError = document.getElementById('sizeError');
+  if (!size) {
+    sizeError.style.display = 'block';
+    // Also visually highlight that size selection is required
+    const sizeSelector = document.querySelector('.size-selector');
+    sizeSelector.style.border = '1px solid #dc3545';
+    sizeSelector.style.borderRadius = '8px';
+    sizeSelector.style.padding = '5px';
+    setTimeout(() => {
+      sizeSelector.style.border = '';
+      sizeSelector.style.padding = '';
+    }, 1000);
+    return null;
+  }
+  sizeError.style.display = 'none';
+  const quantityInput = document.getElementById('quantity');
+  let quantity = parseInt(quantityInput.value, 10);
+  if (isNaN(quantity) || quantity < 1) quantity = 1;
+  const maxStock = {{product.stock}} || 5;  // product.stock from backend (fallback to 5)
+  if (quantity > maxStock) {
+    alert(`Only ${maxStock} items available in stock.`);
+    quantity = maxStock;
+    quantityInput.value = maxStock;
+  }
+  return { size, quantity };
 }
 
+// Handle classic Add to Cart form submission (original behavior, but also ensure size exists)
+const cartForm = document.getElementById('cartForm');
+cartForm.addEventListener('submit', function(e) {
+  const size = document.getElementById('selectedSize').value;
+  if (!size) {
+    e.preventDefault();
+    document.getElementById('sizeError').style.display = 'block';
+    // highlight size selector for better UX
+    const sizeSelector = document.querySelector('.size-selector');
+    sizeSelector.style.border = '1px solid #dc3545';
+    sizeSelector.style.borderRadius = '8px';
+    sizeSelector.style.padding = '5px';
+    setTimeout(() => {
+      sizeSelector.style.border = '';
+      sizeSelector.style.padding = '';
+    }, 800);
+    return false;
+  }
+  // Additional check: if product out of stock (handle gracefully)
+  {{#unless product.stock}}
+    e.preventDefault();
+    alert('This product is currently out of stock.');
+    return false;
+  {{/unless}}
+  return true;
 });
 
+// ---------- BUY NOW LOGIC ----------
+// When user clicks Buy Now, we capture size & quantity, then redirect to checkout
+// Typically, you'd add item to cart then redirect to checkout page.
+// Approach: add product to cart via fetch POST (with same payload) then redirect to /checkout
+// OR directly call an endpoint that adds to cart and returns success, then redirect.
+// We'll implement an asynchronous add-to-cart using fetch, then window.location to '/checkout'.
+// This keeps consistent with existing server routes and avoids page refresh issues.
+
+const buyNowBtn = document.getElementById('buyNowBtn');
+const loadingOverlay = document.getElementById('loadingOverlay');
+
+buyNowBtn.addEventListener('click', async function(e) {
+  // First validate size and quantity
+  const validation = getSelectedSizeAndValidate();
+  if (!validation) {
+    // size missing: error already shown
+    return;
+  }
+  
+  // Out of stock check
+  {{#unless product.stock}}
+    alert('This product is out of stock. Cannot proceed with Buy Now.');
+    return;
+  {{/unless}}
+  
+  const size = validation.size;
+  let quantity = validation.quantity;
+  const productId = '{{product._id}}';
+  
+  // Show loading overlay to indicate processing
+  loadingOverlay.classList.add('active');
+  
+  try {
+    // Build payload same as cart/add POST
+    const formData = new URLSearchParams();
+    formData.append('size', size);
+    formData.append('quantity', quantity);
+    
+    // Send asynchronous request to add product to cart
+    const response = await fetch(`/cart/add/${productId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData.toString(),
+      credentials: 'same-origin'  // include session cookies
+    });
+    
+    // Handle response status
+    if (response.ok) {
+      // Successfully added to cart, now redirect to checkout page
+      // (Typical e-commerce: after "Buy Now" go to checkout or order review)
+      // If your app uses /checkout route, we redirect there.
+      // If you have a separate /buy-now endpoint, adjust accordingly.
+      // Most platforms redirect to /cart or /checkout. I'll assume checkout page.
+      window.location.href = '/checkout';
+    } else {
+      // If error, try to read response text
+      let errorMsg = 'Failed to add item to cart. Please try again.';
+      try {
+        const text = await response.text();
+        if (text.includes('out of stock')) errorMsg = 'Selected size is out of stock.';
+        else if (text.includes('login')) errorMsg = 'Please login to continue.';
+      } catch(e) {}
+      alert(errorMsg);
+      loadingOverlay.classList.remove('active');
+    }
+  } catch (error) {
+    console.error('Buy now error:', error);
+    alert('Network error. Please check your connection and try again.');
+    loadingOverlay.classList.remove('active');
+  }
+});
+
+// Additional improvement: If product out of stock, disable both action buttons and show message.
+{{#unless product.stock}}
+  document.querySelector('.btn-add-cart').disabled = true;
+  document.querySelector('.btn-buy-now').disabled = true;
+  document.querySelector('.btn-add-cart').style.opacity = '0.6';
+  document.querySelector('.btn-buy-now').style.opacity = '0.6';
+  document.querySelector('.btn-add-cart').style.cursor = 'not-allowed';
+  document.querySelector('.btn-buy-now').style.cursor = 'not-allowed';
+  // Add tooltip / message
+  const parentDiv = document.querySelector('.action-buttons-group');
+  if(parentDiv) {
+    const outMsg = document.createElement('div');
+    outMsg.className = 'text-danger mt-2';
+    outMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Product not available, cannot add to cart or buy now.';
+    parentDiv.parentNode.insertBefore(outMsg, parentDiv.nextSibling);
+  }
+{{/unless}}
+
+// Prefill size error on first load: remove any leftover styling
+window.addEventListener('DOMContentLoaded', function() {
+  // If any size was pre-selected via server? We'll optionally check if there's a default size from product.size array.
+  const sizeBtns = document.querySelectorAll('.size-btn');
+  if (sizeBtns.length > 0 && !document.getElementById('selectedSize').value) {
+    // optionally auto select first size for better UX? but user still needs to click.
+    // we don't auto-select to respect user intention, but we can make a subtle hint.
+    const sizeSelector = document.querySelector('.size-selector');
+    const hint = document.createElement('small');
+    hint.className = 'form-text text-muted';
+    hint.innerText = 'Click on a size above to select';
+    if(!document.querySelector('.size-hint')) {
+      hint.classList.add('size-hint');
+      sizeSelector.parentNode.appendChild(hint);
+    }
+  }
+  
+  // Restrict quantity input based on product stock if stock info exists
+  const quantityField = document.getElementById('quantity');
+  const maxStock = {{product.stock}} || 5;
+  if(quantityField) {
+    quantityField.setAttribute('max', maxStock);
+    quantityField.addEventListener('change', function() {
+      let val = parseInt(this.value, 10);
+      if(val > maxStock) {
+        this.value = maxStock;
+        alert(`Maximum quantity is ${maxStock} due to stock availability.`);
+      } else if(val < 1) {
+        this.value = 1;
+      }
+    });
+  }
+});
+
+// For dynamic redirect if your app uses different checkout route: e.g., /cart or /order
+// We'll also consider graceful fallback: if /checkout doesn't exist maybe redirect to /cart? but no need to overcomplicate.
+// Usually StepSphere might have /checkout page.
+// If you want "Buy Now" to directly go to checkout page after adding item, the implementation above is perfect.
+
+// Edge Case: if the main Add to Cart form is submitted without size, we also want to display error clearly, done above.
+// Additionally improve the size validation styling: remove error when user selects size.
+// Also support enter key on form to add to cart (existing behavior remains)
 </script>
 
+<!-- Ensure that if there are any server side template variables used above, they are properly rendered -->
+<!-- The Buy Now button will function seamlessly as long as the server endpoint /cart/add/:id supports POST requests -->
+<!-- The loading overlay prevents double clicks while processing buy now -->
 </body>
 </html>

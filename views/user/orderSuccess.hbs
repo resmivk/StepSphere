@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order Placed – StepSphere</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+  <style>
+    body { background: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+    .success-card { background: #fff; border-radius: 16px; box-shadow: 0 2px 20px rgba(0,0,0,0.08); padding: 48px 40px; max-width: 600px; margin: 60px auto; text-align: center; }
+    .success-icon { width: 80px; height: 80px; background: #d4edda; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+    .success-icon i { font-size: 2.2rem; color: #28a745; }
+    .order-id { background: #f0f4ff; border-radius: 8px; padding: 12px 20px; display: inline-block; font-weight: 600; color: #00b4d8; margin: 16px 0; letter-spacing: 1px; }
+    .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.95rem; }
+    .detail-row:last-child { border-bottom: none; }
+    .btn-home { background: #00b4d8; color: #fff; border: none; border-radius: 8px; padding: 12px 32px; font-weight: 600; text-decoration: none; display: inline-block; margin-top: 24px; transition: background 0.2s; }
+    .btn-home:hover { background: #0096c7; color: #fff; text-decoration: none; }
+    .btn-orders { background: transparent; color: #00b4d8; border: 2px solid #00b4d8; border-radius: 8px; padding: 12px 32px; font-weight: 600; text-decoration: none; display: inline-block; margin-top: 24px; margin-left: 12px; transition: all 0.2s; }
+    .btn-orders:hover { background: #00b4d8; color: #fff; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+{{> navbar}}
+
+<div class="container">
+  <div class="success-card">
+    <div class="success-icon">
+      <i class="fas fa-check"></i>
+    </div>
+    <h2 class="font-weight-bold mb-2">Order Placed Successfully!</h2>
+    <p class="text-muted">Thank you for shopping with StepSphere. Your order has been confirmed.</p>
+
+    <div class="order-id"># {{order._id}}</div>
+
+    <div class="text-left mt-4">
+      <div class="detail-row">
+        <span class="text-muted">Payment Method</span>
+        <span class="font-weight-600 text-capitalize">{{order.paymentMethod}}</span>
+      </div>
+      <div class="detail-row">
+        <span class="text-muted">Payment Status</span>
+        <span class="badge {{#if (eq order.paymentStatus 'paid')}}badge-success{{else}}badge-warning{{/if}} p-2">
+          {{order.paymentStatus}}
+        </span>
+      </div>
+      <div class="detail-row">
+        <span class="text-muted">Total Amount</span>
+        <span class="font-weight-700">₹{{order.totalAmount}}</span>
+      </div>
+      <div class="detail-row">
+        <span class="text-muted">Delivery Address</span>
+        <span class="text-right" style="max-width:60%">
+          {{order.address.fullName}}, {{order.address.street}}, {{order.address.city}}, {{order.address.state}} – {{order.address.pincode}}
+        </span>
+      </div>
+      <div class="detail-row">
+        <span class="text-muted">Order Status</span>
+        <span class="badge badge-primary p-2 text-capitalize">{{order.orderStatus}}</span>
+      </div>
+    </div>
+
+    <div>
+      <a href="/home" class="btn-home"><i class="fas fa-home mr-2"></i>Back to Home</a>
+      <a href="/orders" class="btn-orders"><i class="fas fa-box mr-2"></i>My Orders</a>
+    </div>
+  </div>
+</div>
+
+{{> footer}}
+
+</body>
+</html>

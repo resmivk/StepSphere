@@ -5,6 +5,7 @@ const productController = require('../controllers/productController');
 const adminController = require('../controllers/adminController');
 const customerController=require('../controllers/customerController')
  const categoryController=require('../controllers/categoryController')
+ const adminOrderController = require('../controllers/adminOrderController');
 const { isAdminLoggedin } = require('../middleware/adminAuth');
 
 
@@ -35,7 +36,7 @@ routes.post('/users/unblock/:id', isAdminLoggedin, adminController.unblockUser);
   routes.post('/edit-product/:id', productController.upload.array('images',5),productController.updateProduct);
   routes.get('/delete-product/:id', productController.deleteProduct);
 
-///// CATEGORY rOUTES
+///// CATEGORY ROUTES  ///////////////////
 
 routes.get('/categories/category',categoryController.loadCategories)
 routes.get('/categories/addcategory',categoryController.loadAddCategory)
@@ -44,5 +45,13 @@ routes.get('/categories/editCategory/:id', categoryController.editCategories);
 routes.post('/categories/editCategory/:id', categoryController.updateCategory);
 routes.get('/categories/deleteCategory/:id', categoryController.deleteCategory);
 routes.get('/categories/toggle/:id',      categoryController.toggleCategoryStatus);
+
+
+///////////////////ADMIN ORDERROUTES///////////////////
+
+
+routes.get('/orders', adminOrderController.adminOrders);
+routes.post('/orders/status/:id', adminOrderController.updateOrderStatus);
+routes.get('/orders/:id', adminOrderController.orderDetail); // optional detail page
 
 module.exports = routes;

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout – StepSphere</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+  <style>
+    body { background: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+    .checkout-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 16px rgba(0,0,0,0.07); padding: 30px; margin-bottom: 24px; }
+    .section-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 20px; color: #222; border-left: 4px solid #00b4d8; padding-left: 10px; }
+    .order-item { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+    .order-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
+    .order-item-name { font-weight: 600; font-size: 0.95rem; }
+    .order-item-meta { color: #888; font-size: 0.82rem; }
+    .price-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.95rem; }
+    .price-row.total { font-weight: 700; font-size: 1.1rem; border-top: 2px solid #eee; margin-top: 8px; padding-top: 14px; }
+    .btn-pay { background: #00b4d8; color: #fff; border: none; border-radius: 8px; padding: 14px; font-size: 1rem; font-weight: 600; width: 100%; letter-spacing: 0.5px; transition: background 0.2s; }
+    .btn-pay:hover { background: #0096c7; }
+    .form-control:focus { border-color: #00b4d8; box-shadow: 0 0 0 0.2rem rgba(0,180,216,0.15); }
+
+    /* Payment method options */
+    .payment-option { border: 2px solid #e9ecef; border-radius: 10px; padding: 14px 18px; cursor: pointer; transition: all 0.2s; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+    .payment-option:hover { border-color: #00b4d8; }
+    .payment-option.selected { border-color: #00b4d8; background: #f0fbfe; }
+    .payment-option input[type="radio"] { accent-color: #00b4d8; width: 18px; height: 18px; }
+    .payment-option-label { font-weight: 600; font-size: 0.95rem; margin: 0; cursor: pointer; }
+    .payment-option-sub { font-size: 0.8rem; color: #888; }
+  </style>
+</head>
+<body>
+
+{{> navbar}}
+
+<div class="container py-5">
+  <h2 class="mb-4 font-weight-bold">Checkout</h2>
+  <div class="row">
+
+    <!-- LEFT — Address Form -->
+    <div class="col-lg-7">
+      <div class="checkout-card">
+        <div class="section-title">Delivery Address</div>
+        <form id="checkoutForm">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Full Name</label>
+              <!-- Pre-filled from user session -->
+              <input type="text" class="form-control" name="fullName" required
+                     value="{{userName}}" placeholder="John Doe"/>
+            </div>
+            <div class="form-group col-md-6">
+              <label>Phone Number</label>
+              <input type="tel" class="form-control" name="phone" required
+                     value="{{userPhone}}" placeholder="9876543210"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Street Address</label>
+            <input type="text" class="form-control" name="street" required
+                   value="{{#if userAddress}}{{userAddress.street}}{{/if}}"
+                   placeholder="House No, Street, Area"/>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label>City</label>
+              <input type="text" class="form-control" name="city" required
+                     value="{{#if userAddress}}{{userAddress.city}}{{/if}}"
+                     placeholder="City"/>
+            </div>
+            <div class="form-group col-md-4">
+              <label>State</label>
+              <input type="text" class="form-control" name="state" required
+                     value="{{#if userAddress}}{{userAddress.state}}{{/if}}"
+                     placeholder="State"/>
+            </div>
+            <div class="form-group col-md-4">
+              <label>Pincode</label>
+              <input type="text" class="form-control" name="pincode" required
+                     value="{{#if userAddress}}{{userAddress.pincode}}{{/if}}"
+                     placeholder="673001"/>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="checkout-card">
+        <div class="section-title">Payment Method</div>
+
+        <div class="payment-option selected" id="opt-razorpay" onclick="selectPayment('razorpay')">
+          <input type="radio" name="paymentMethod" value="razorpay" id="razorpay" checked/>
+          <div>
+            <div class="payment-option-label"><i class="fas fa-credit-card mr-2 text-primary"></i>Pay Online</div>
+            <div class="payment-option-sub">Credit / Debit Card, UPI, Net Banking via Razorpay</div>
+          </div>
+        </div>
+
+        <div class="payment-option" id="opt-cod" onclick="selectPayment('cod')">
+          <input type="radio" name="paymentMethod" value="cod" id="cod"/>
+          <div>
+            <div class="payment-option-label"><i class="fas fa-money-bill-wave mr-2 text-success"></i>Cash on Delivery</div>
+            <div class="payment-option-sub">Pay when your order arrives at your door</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT — Order Summary -->
+    <div class="col-lg-5">
+      <div class="checkout-card">
+        <div class="section-title">Order Summary</div>
+
+        {{#each cartItems}}
+        <div class="order-item">
+          <img src="{{#if this.productId.images.[0]}}/uploads/{{this.productId.images.[0]}}{{else}}/images/default-shoe.jpg{{/if}}"
+               alt="{{this.productId.name}}"
+               onerror="this.src='/images/default-shoe.jpg'"/>
+          <div class="flex-grow-1">
+            <div class="order-item-name">{{this.productId.name}}</div>
+            <div class="order-item-meta">Qty: {{this.quantity}} {{#if this.size}}| Size: {{this.size}}{{/if}}</div>
+          </div>
+          <div class="font-weight-600">₹{{this.productId.price}}</div>
+        </div>
+        {{/each}}
+
+        <div class="mt-3">
+          <div class="price-row"><span>Subtotal</span><span>₹{{subtotal}}</span></div>
+          <div class="price-row"><span>Platform Fee</span><span>₹{{platformFee}}</span></div>
+          <div class="price-row total"><span>Total</span><span>₹{{totalAmount}}</span></div>
+        </div>
+
+        <button class="btn-pay mt-4" onclick="initiatePayment()">
+          <i class="fas fa-lock mr-2"></i> <span id="payBtnText">Pay ₹{{totalAmount}}</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- Razorpay SDK -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  // Highlight selected payment option
+  function selectPayment(method) {
+    document.getElementById('opt-razorpay').classList.remove('selected');
+    document.getElementById('opt-cod').classList.remove('selected');
+    document.getElementById('opt-' + method).classList.add('selected');
+    document.getElementById(method).checked = true;
+
+    // Update button text
+    if (method === 'cod') {
+      document.getElementById('payBtnText').textContent = 'Place Order (COD)';
+    } else {
+      document.getElementById('payBtnText').textContent = 'Pay ₹{{totalAmount}}';
+    }
+  }
+
+  async function initiatePayment() {
+    // Validate form
+    const form = document.getElementById('checkoutForm');
+    const inputs = form.querySelectorAll('[required]');
+    let valid = true;
+    inputs.forEach(input => {
+      if (!input.value.trim()) { input.classList.add('is-invalid'); valid = false; }
+      else input.classList.remove('is-invalid');
+    });
+    if (!valid) return alert('Please fill all address fields.');
+
+    // Collect address
+    const address = {
+      fullName: form.fullName.value,
+      phone: form.phone.value,
+      street: form.street.value,
+      city: form.city.value,
+      state: form.state.value,
+      pincode: form.pincode.value
+    };
+
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+    // ── COD Flow ──
+    if (paymentMethod === 'cod') {
+      const res = await fetch('/order/place', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address, paymentMethod: 'cod' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        window.location.href = '/order/success/' + data.orderId;
+      } else {
+        alert('Order failed: ' + data.message);
+      }
+      return;
+    }
+
+    // ── Razorpay Flow ──
+    const res = await fetch('/order/razorpay', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ totalAmount: {{totalAmount}} })
+    });
+    const data = await res.json();
+    if (!data.success) return alert('Failed to initiate payment.');
+
+    const options = {
+      key: '{{razorpayKeyId}}',
+      amount: data.order.amount,
+      currency: 'INR',
+      name: 'StepSphere',
+      description: 'Shoe Purchase',
+      order_id: data.order.id,
+      handler: async function (response) {
+        const placeRes = await fetch('/order/place', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            address,
+            paymentMethod: 'razorpay',
+            razorpayOrderId: response.razorpay_order_id,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpaySignature: response.razorpay_signature
+          })
+        });
+        const placeData = await placeRes.json();
+        if (placeData.success) {
+          window.location.href = '/order/success/' + placeData.orderId;
+        } else {
+          alert('Order placement failed: ' + placeData.message);
+        }
+      },
+      prefill: {
+        name: address.fullName,
+        contact: address.phone
+      },
+      theme: { color: '#00b4d8' }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  }
+</script>
+</body>
+</html>

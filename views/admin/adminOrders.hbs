@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Orders – Admin</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+  <style>
+    body { background: #f0f2f5; font-family: 'Segoe UI', sans-serif; }
+    .page-header { background: #fff; padding: 24px 32px; border-bottom: 1px solid #e5e7eb; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; }
+    .page-header h2 { font-weight: 700; margin: 0; }
+    .stats-row { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .stat-card { background: #fff; border-radius: 10px; padding: 18px 24px; flex: 1; min-width: 140px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+    .stat-card .stat-num { font-size: 1.8rem; font-weight: 700; }
+    .stat-card .stat-label { color: #888; font-size: 0.85rem; }
+    .orders-table { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden; }
+    .orders-table table { margin: 0; }
+    .orders-table thead th { background: #f8f9fa; font-weight: 600; font-size: 0.85rem; color: #555; border-bottom: 2px solid #eee; padding: 14px 16px; }
+    .orders-table tbody td { padding: 14px 16px; vertical-align: middle; font-size: 0.9rem; }
+    .order-id-cell { font-weight: 600; color: #00b4d8; font-size: 0.8rem; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .customer-name { font-weight: 600; }
+    .customer-email { color: #888; font-size: 0.8rem; }
+    .status-select { border: 1px solid #ddd; border-radius: 6px; padding: 5px 10px; font-size: 0.85rem; background: #fff; cursor: pointer; }
+    .status-select:focus { outline: none; border-color: #00b4d8; }
+    .badge-placed { background: #e3f2fd; color: #1565c0; }
+    .badge-processing { background: #fff3e0; color: #e65100; }
+    .badge-shipped { background: #e8f5e9; color: #2e7d32; }
+    .badge-delivered { background: #e8f5e9; color: #1b5e20; }
+    .badge-cancelled { background: #ffebee; color: #c62828; }
+    .items-preview { display: flex; gap: 6px; }
+    .items-preview img { width: 36px; height: 36px; object-fit: cover; border-radius: 6px; border: 1px solid #eee; }
+    .filter-bar { background: #fff; border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; box-shadow: 0 1px 8px rgba(0,0,0,0.05); display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .filter-bar select, .filter-bar input { border: 1px solid #ddd; border-radius: 6px; padding: 7px 12px; font-size: 0.88rem; }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <h2><i class="fas fa-box mr-2 text-primary"></i>Order Management</h2>
+  <a href="/admin/dashboard" class="btn btn-outline-secondary btn-sm">
+    <i class="fas fa-arrow-left mr-1"></i> Dashboard
+  </a>
+</div>
+
+<div class="container-fluid px-4">
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num text-primary">{{orders.length}}</div>
+      <div class="stat-label">Total Orders</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num text-warning">{{placedCount}}</div>
+      <div class="stat-label">Placed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num text-info">{{shippedCount}}</div>
+      <div class="stat-label">Shipped</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num text-success">{{deliveredCount}}</div>
+      <div class="stat-label">Delivered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num text-danger">{{cancelledCount}}</div>
+      <div class="stat-label">Cancelled</div>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <span class="font-weight-600 mr-2">Filter:</span>
+    <select id="statusFilter" onchange="filterOrders()">
+      <option value="all">All Status</option>
+      <option value="placed">Placed</option>
+      <option value="processing">Processing</option>
+      <option value="shipped">Shipped</option>
+      <option value="delivered">Delivered</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+    <input type="text" id="searchOrder" placeholder="Search by Order ID or Customer..." 
+           oninput="filterOrders()" style="min-width:260px;"/>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="orders-table">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Payment</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="ordersTableBody">
+        {{#each orders}}
+        <tr data-status="{{this.orderStatus}}">
+          <td><div class="order-id-cell" title="{{this._id}}">{{this._id}}</div></td>
+          <td>
+            <div class="customer-name">{{this.user.name}}</div>
+            <div class="customer-email">{{this.user.email}}</div>
+          </td>
+          <td>
+            <div class="items-preview">
+              {{#each this.items}}
+              <img src="{{#if this.image}}/uploads/{{this.image}}{{else}}/images/default-shoe.jpg{{/if}}"
+                   alt="{{this.name}}"
+                   title="{{this.name}}"
+                   onerror="this.src='/images/default-shoe.jpg'"/>
+              {{/each}}
+            </div>
+            <small class="text-muted">{{this.items.length}} item(s)</small>
+          </td>
+          <td class="font-weight-600">₹{{this.totalAmount}}</td>
+          <td>
+            <span class="badge {{#if (eq this.paymentStatus 'paid')}}badge-success{{else}}badge-warning{{/if}} p-1">
+              {{this.paymentStatus}}
+            </span>
+            <div class="text-muted" style="font-size:0.78rem;">{{this.paymentMethod}}</div>
+          </td>
+          <td style="font-size:0.85rem; color:#666;">{{this.createdAt}}</td>
+          <td>
+            <select class="status-select" onchange="updateStatus('{{this._id}}', this.value)">
+              <option value="placed" {{#if (eq this.orderStatus 'placed')}}selected{{/if}}>Placed</option>
+              <option value="processing" {{#if (eq this.orderStatus 'processing')}}selected{{/if}}>Processing</option>
+              <option value="shipped" {{#if (eq this.orderStatus 'shipped')}}selected{{/if}}>Shipped</option>
+              <option value="delivered" {{#if (eq this.orderStatus 'delivered')}}selected{{/if}}>Delivered</option>
+              <option value="cancelled" {{#if (eq this.orderStatus 'cancelled')}}selected{{/if}}>Cancelled</option>
+            </select>
+          </td>
+        </tr>
+        {{else}}
+        <tr>
+          <td colspan="7" class="text-center text-muted py-5">
+            <i class="fas fa-box-open fa-2x mb-3 d-block"></i>
+            No orders found
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+  async function updateStatus(orderId, status) {
+    try {
+      const res = await fetch(`/admin/orders/status/${orderId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      const data = await res.json();
+      if (data.success) {
+        // Update row data-status attribute
+        const row = document.querySelector(`tr[data-status]`);
+        showToast('Order status updated!');
+      } else {
+        alert('Failed to update status.');
+      }
+    } catch (err) {
+      alert('Error updating status.');
+    }
+  }
+
+  function filterOrders() {
+    const statusFilter = document.getElementById('statusFilter').value;
+    const search = document.getElementById('searchOrder').value.toLowerCase();
+    const rows = document.querySelectorAll('#ordersTableBody tr[data-status]');
+
+    rows.forEach(row => {
+      const status = row.getAttribute('data-status');
+      const text = row.textContent.toLowerCase();
+      const matchStatus = statusFilter === 'all' || status === statusFilter;
+      const matchSearch = text.includes(search);
+      row.style.display = matchStatus && matchSearch ? '' : 'none';
+    });
+  }
+
+  function showToast(msg) {
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#28a745;color:#fff;padding:12px 24px;border-radius:8px;font-weight:600;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+</script>
+</body>
+</html>

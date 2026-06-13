@@ -6,6 +6,7 @@ const userController=require('../controllers/userController')
 const userProfileController=require('../controllers/userProfileController')
 const addressController=require('../controllers/addressController')
 const CartController=require('../controllers/cartController')
+const orderController=require("../controllers/orderController")
 
 const auths=require('../middleware/auth')
 
@@ -58,6 +59,16 @@ user_Routes.get("/cart/add/:id",        auths.loadloging, CartController.addToCa
 user_Routes.get("/cart/update/:id",     auths.loadloging, CartController.updateQuantity);
 user_Routes.get("/cart/remove/:id",     auths.loadloging, CartController.removeItem);
 user_Routes.get("/cart/clear",          auths.loadloging, CartController.clearCart);
+
+////////////OrderController Routes/////////////////
+
+
+user_Routes.get('/checkout', auths.loadloging, orderController.loadCheckout);
+user_Routes.post('/order/razorpay', auths.loadloging, orderController.createRazorpayOrder);
+user_Routes.post('/order/place', auths.loadloging, orderController.placeOrder);
+user_Routes.get('/order/success/:id', auths.loadloging, orderController.orderSuccess);
+user_Routes.get('/orders', auths.loadloging, orderController.orderHistory);
+user_Routes.post('/order/cancel/:id', auths.loadloging, orderController.cancelOrder);
 
 
 module.exports = user_Routes
