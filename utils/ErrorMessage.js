@@ -128,7 +128,7 @@ exports.ErrorContent = async (req, res) => {
         <p class="description">The silhouette, colorway, or specific pair you are chasing is completely out of stock, dropped from our rotation, or never existed. Let’s get your stride back on track.</p>
         
         <div class="action-layer">
-          <a href="/user/home" class="btn btn-primary">Walk Back Home</a>
+          <a href="/" class="btn btn-primary">Walk Back Home</a>
         </div>
 
         <div class="metadata">
@@ -277,7 +277,7 @@ exports.userUnavailableError = async (req, res) => {
              class="btn btn-primary">
              Contact Concierge
           </a>
-          <a href="/user/logout" class="btn btn-secondary">Exit Session</a>
+          <a href="/logout" class="btn btn-secondary">Exit Session</a>
         </div>
 
         <p class="footer-note">StepSphere Footwear Network Security</p>

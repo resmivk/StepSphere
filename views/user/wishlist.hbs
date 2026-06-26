@@ -1,0 +1,93 @@
+{{> header}}
+
+<div class="wishlist-container">
+  <div class="wishlist-header">
+    <h2>My Wishlist</h2>
+    <span class="item-count">{{items.length}} item(s)</span>
+  </div>
+
+  {{#if items.length}}
+    <div class="wishlist-grid">
+      {{#each items}}
+        <div class="wish-card" id="wish-card-{{productId._id}}">
+          <button class="remove-btn" onclick="removeFromWishlist('{{productId._id}}')">
+            <i class="fas fa-times"></i>
+          </button>
+
+          <a href="/products/{{productId._id}}">
+            <div class="wish-img-wrap">
+              <img src="{{productId.images.[0]}}" alt="{{productId.name}}" />
+            </div>
+            <div class="wish-info">
+              <p class="wish-name">{{productId.name}}</p>
+              <p class="wish-price">₹{{productId.price}}</p>
+            </div>
+          </a>
+
+          <div class="wish-actions">
+            <button class="btn-cart" onclick="moveToCart('{{productId._id}}')">
+              <i class="fas fa-shopping-cart"></i> Move to Cart
+            </button>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <div class="empty-wishlist">
+      <i class="far fa-heart fa-4x"></i>
+      <p>Your wishlist is empty</p>
+      <a href="/" class="btn-shop">Continue Shopping</a>
+    </div>
+  {{/if}}
+</div>
+
+<style>
+  .wishlist-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+  .wishlist-header { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; }
+  .wishlist-header h2 { font-family: 'Rokkitt', serif; color: #17a2b8; margin: 0; }
+  .item-count { background: #17a2b8; color: #fff; border-radius: 20px; padding: 2px 12px; font-size: 0.85rem; }
+
+  .wishlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; }
+  .wish-card { position: relative; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow: hidden; transition: transform 0.2s; }
+  .wish-card:hover { transform: translateY(-4px); }
+  .wish-card a { text-decoration: none; color: inherit; }
+
+  .remove-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; color: #e74c3c; z-index: 2; }
+  .remove-btn:hover { background: #e74c3c; color: #fff; }
+
+  .wish-img-wrap { height: 200px; overflow: hidden; }
+  .wish-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+  .wish-info { padding: 12px 14px 4px; }
+  .wish-name { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 600; margin: 0 0 4px; }
+  .wish-price { color: #17a2b8; font-weight: 700; font-size: 1rem; margin: 0; }
+
+  .wish-actions { padding: 10px 14px 14px; }
+  .btn-cart { width: 100%; background: #17a2b8; color: #fff; border: none; border-radius: 6px; padding: 8px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn-cart:hover { background: #138496; }
+
+  .empty-wishlist { text-align: center; padding: 80px 20px; color: #aaa; }
+  .empty-wishlist p { font-size: 1.1rem; margin: 20px 0; }
+  .btn-shop { background: #17a2b8; color: #fff; padding: 10px 28px; border-radius: 6px; text-decoration: none; font-family: 'Montserrat', sans-serif; }
+</style>
+
+<script>
+  async function removeFromWishlist(productId) {
+    const res = await fetch(`/wishlist/remove/${productId}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById(`wish-card-${productId}`).remove();
+    }
+  }
+
+  async function moveToCart(productId) {
+    const res = await fetch(`/wishlist/move-to-cart/${productId}`, { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById(`wish-card-${productId}`).remove();
+      alert('Moved to cart!');
+    }
+  }
+</script>
+
+{{> footer}}

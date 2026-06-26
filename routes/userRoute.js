@@ -7,6 +7,7 @@ const userProfileController=require('../controllers/userProfileController')
 const addressController=require('../controllers/addressController')
 const CartController=require('../controllers/cartController')
 const orderController=require("../controllers/orderController")
+const wishlistController=require('../controllers/wishlistController')
 
 const auths=require('../middleware/auth')
 
@@ -60,8 +61,13 @@ user_Routes.get("/cart/update/:id",     auths.loadloging, CartController.updateQ
 user_Routes.get("/cart/remove/:id",     auths.loadloging, CartController.removeItem);
 user_Routes.get("/cart/clear",          auths.loadloging, CartController.clearCart);
 
-////////////OrderController Routes/////////////////
+///////////////////WhistListController Routes/////////////////////
+user_Routes.get('/', auths.loadloging, wishlistController.getWishlist);
+user_Routes.post('/add/:productId', auths.loadloging, wishlistController.addToWishlist);
+user_Routes.delete('/remove/:productId', auths.loadloging, wishlistController.removeFromWishlist);
+user_Routes.post('/move-to-cart/:productId', auths.loadloging, wishlistController.move_to_cart);
 
+////////////OrderController Routes/////////////////
 
 user_Routes.get('/checkout', auths.loadloging, orderController.loadCheckout);
 user_Routes.post('/order/razorpay', auths.loadloging, orderController.createRazorpayOrder);
