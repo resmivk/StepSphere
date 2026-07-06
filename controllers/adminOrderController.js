@@ -19,7 +19,7 @@ exports.adminOrders = async (req, res) => {
       })
     }));
 
-    res.render('admin/orders', {
+    res.render('admin/adminOrders', {
       orders: formattedOrders,
       placedCount:     orders.filter(o => o.orderStatus === 'placed').length,
       processingCount: orders.filter(o => o.orderStatus === 'processing').length,

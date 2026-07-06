@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
-
 const userSchema = new mongoose.Schema({
-    
+
     name:{
         type:String,
         required:true
@@ -16,7 +15,6 @@ const userSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
-    
     password:{
         type:String,
         required:true
@@ -26,21 +24,27 @@ const userSchema = new mongoose.Schema({
         default:false
     },
     is_Verified: {
-    type: Boolean,
-    default: false},
-     
-   emailVerificationToken: { 
-    type: String },
-   
-    token:{
-      type:String,
-      default:''
+        type: Boolean,
+        default: false
     },
-     isBlocked: {
-    type: Boolean,
-    default: false  
-  },
- cart: [
+    emailVerificationToken: { 
+        type: String 
+    },
+    token:{
+        type:String,
+        default:''
+    },
+    isBlocked: {
+        type: Boolean,
+        default: false  
+    },
+    resetToken: {
+        type: String
+    },
+    resetTokenExpiry: {
+        type: Date
+    },
+    cart: [
         {
             productId: {
                 type: mongoose.Schema.Types.ObjectId,
@@ -56,8 +60,6 @@ const userSchema = new mongoose.Schema({
             }
         }
     ]
-}, { timestamps: true
-  
-});
-module.exports = mongoose.model('User', userSchema);
+}, { timestamps: true });
 
+module.exports = mongoose.model('User', userSchema);

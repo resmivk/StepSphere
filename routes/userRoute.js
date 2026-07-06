@@ -65,7 +65,7 @@ user_Routes.get("/cart/clear",          auths.loadloging, CartController.clearCa
 user_Routes.get('/', auths.loadloging, wishlistController.getWishlist);
 user_Routes.post('/add/:productId', auths.loadloging, wishlistController.addToWishlist);
 user_Routes.delete('/remove/:productId', auths.loadloging, wishlistController.removeFromWishlist);
-user_Routes.post('/move-to-cart/:productId', auths.loadloging, wishlistController.move_to_cart);
+user_Routes.post('/move-to-cart/:productId',auths.loadloging,wishlistController.moveToCart);
 
 ////////////OrderController Routes/////////////////
 

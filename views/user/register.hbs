@@ -1,175 +1,384 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StepSphere - Registration</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link  rel="stylesheet" href="/style/user/users.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="/style/user/users.css">
 </head>
-     <div class="container">
-    <div class="brand-header">
-  <h1>
-    <i class="fas fa-shoe-prints"></i> <span>StepSphere</span>
-  </h1>
-  <p>Create your account</p>
-</div>
-    {{#if message}}
-      <div style="color: green; text-align: center; margin-bottom: 10px;">
+
+<body>
+
+
+
+  <!-- RIGHT: Registration form panel -->
+  <div class="auth-form-side">
+
+    <div class="container">
+
+      <div class="form-heading">
+        <h1>
+        <i class="fas fa-shoe-prints"></i>
+        <span>StepSphere</span>
+      </h1>
+      </div>
+
+      {{#if message}}
+      <div class="form-message {{#if error}}form-message-error{{else}}form-message-success{{/if}}">
         {{message}}
       </div>
-    {{/if}}
+      {{/if}}
 
-    
-    <form action="" method="post" novalidate>
-      <div class="form-group">
-        <p style="color: red;" id="validation" name="validation"></p>
-        <label for="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          class="form-control"
-          placeholder="Your Full Name"
-          
-          required
-        />
-      </div>
+      <form action="" method="POST" id="registerForm" novalidate>
 
-      <div class="form-group">
-        <label for="phone">Phone</label>
-        <div class="phone-input">
-          <select class="country-code">
-            <option value="+91">+91</option>
-          </select>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            class="form-control"
-            placeholder="Phone Number"
-            
-          />
+        <p id="validation" class="validation-message"></p>
+
+        <div class="form-group">
+          <label for="name">Name</label>
+
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-user input-icon"></i>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-control"
+              placeholder="Your Full Name"
+              required>
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          class="form-control"
-          placeholder="Your Email Address"
-          
-          required
-        />
-      </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          class="form-control"
-          placeholder="Create a Password"
-          
-          required
-        />
-        <div class="password-strength">
-          <div class="strength-bar" id="strengthBar"></div>
+          <div class="phone-input">
+
+            <select class="country-code" name="countryCode">
+              <option value="+91">+91</option>
+            </select>
+
+            <div class="input-icon-wrapper">
+              <i class="fa-solid fa-phone input-icon"></i>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="form-control"
+                placeholder="Phone Number"
+                required>
+            </div>
+
+          </div>
         </div>
-      </div>
 
-      <div>
-        <button type="submit" class="submit-button">Register</button>
+        <div class="form-group">
+          <label for="email">Email</label>
+
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-envelope input-icon"></i>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control"
+              placeholder="Your Email Address"
+              required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+
+          <div class="input-icon-wrapper password-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control"
+              placeholder="Create a Password"
+              required>
+
+            <span id="togglePassword" class="toggle-password">
+              <i class="fa-solid fa-eye-slash"></i>
+            </span>
+          </div>
+
+          <div class="password-strength">
+            <div class="strength-bar" id="strengthBar"></div>
+          </div>
+
+        </div>
+
+        <button type="submit" class="submit-button">
+          Register
+        </button>
+
         <p class="login-link">
-          Already have an account? <a href="/">Log in</a>
+          Already have an account?
+          <a href="/login">Log in</a>
         </p>
-      </div>
 
-      <div class="social-login">
-        <button class="social-button">Continue with Google</button>
-      </div>
-    </form>
-     </div>
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const passwordInput = document.getElementById('password');
-    const strengthBar = document.getElementById('strengthBar');
-    
-    // Password strength indicator
-    passwordInput.addEventListener('input', function() {
-      const strength = calculatePasswordStrength(this.value);
-      strengthBar.style.width = strength + '%';
-      strengthBar.style.backgroundColor = getStrengthColor(strength);
-    });
-    
-    function calculatePasswordStrength(password) {
-      let strength = 0;
-      if (password.length >= 8) strength += 25;
-      if (/[A-Z]/.test(password)) strength += 25;
-      if (/[0-9]/.test(password)) strength += 25;
-      if (/[^A-Za-z0-9]/.test(password)) strength += 25;
-      return Math.min(strength, 100);
+        <div class="divider">
+          <span>or</span>
+        </div>
+
+        <div class="social-login">
+          <button type="button" class="social-button">
+            <i class="fab fa-google"></i>
+            Continue with Google
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Layout-only styles: no colors, just structural positioning for the new two-panel layout.
+     Move these into users.css whenever you're ready. -->
+<style>
+  .auth-wrapper {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .auth-side {
+    flex: 1 1 40%;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+  }
+
+  .auth-side-content {
+    max-width: 380px;
+    margin: auto 0;
+  }
+
+  .auth-side .brand-header {
+    margin-bottom: 0;
+  }
+
+  .auth-side-tagline {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .auth-form-side {
+    flex: 1 1 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .form-heading {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .form-heading h2 {
+    margin: 0 0 6px 0;
+  }
+
+  .form-heading p {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .form-message {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .validation-message {
+    text-align: center;
+  }
+
+  /* Icon-inside-input structural pattern */
+  .input-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .input-icon-wrapper .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 14px;
+  }
+
+  .input-icon-wrapper .form-control {
+    width: 100%;
+    padding-left: 38px;
+  }
+
+  .input-icon-wrapper.password-wrapper .form-control {
+    padding-right: 38px;
+  }
+
+  .input-icon-wrapper .toggle-password {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+  .phone-input {
+    display: flex;
+    gap: 8px;
+  }
+
+  .phone-input .input-icon-wrapper {
+    flex: 1;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+  }
+
+  .divider span {
+    padding: 0 10px;
+    font-size: 13px;
+  }
+
+  /* Responsive: stack panels on smaller screens */
+  @media (max-width: 900px) {
+    .auth-wrapper {
+      flex-direction: column;
     }
-    
-    function getStrengthColor(strength) {
-      if (strength < 40) return '#ef4444'; // red
-      if (strength < 70) return '#f59e0b'; // amber
-      return '#10b981'; // green
+
+    .auth-side {
+      flex: none;
+      padding: 30px 20px;
     }
-    
-    // Form validation
-    form.addEventListener('submit', function(e) {
-      let isValid = true;
-      
-      // Name validation
-      const name = document.getElementById('name').value.trim();
-      if (name.length < 5 || name.length > 20) {
-        isValid = false;
-        //alert('Name must be between 5-20 characters');
-       let validation= document.getElementById("validation")
-       validation.textContent='Name must be between 5-20 characters'
-      }
-      
-      // Phone validation
-      const phone = document.getElementById('phone').value.trim();
-      if (!/^\d{10}$/.test(phone)) {
-        isValid = false;
-        //alert('Please enter a valid 10-digit phone number');
-        let validation= document.getElementById("validation")
-       validation.textContent='Please enter a valid 10-digit phone number'
-      }
-      
-      // Email validation
-      const email = document.getElementById('email').value.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        isValid = false;
-        //alert('Please enter a valid email address');
-        let validation= document.getElementById("validation")
-       validation.textContent='Please enter a valid email address';
-      }
-      
-      // Password validation
-      const password = passwordInput.value;
-      if (password.length < 8) {
-        isValid = false;
-       // alert('Password must be at least 8 characters long');
-        let validation= document.getElementById("validation")
-       validation.textContent='Password must be at least 8 characters long'
-      }
-      
-      if (!isValid) {
-        e.preventDefault();
-      }
+
+    .auth-form-side {
+      flex: none;
+    }
+  }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const form = document.getElementById("registerForm");
+    const passwordInput = document.getElementById("password");
+    const strengthBar = document.getElementById("strengthBar");
+    const validation = document.getElementById("validation");
+    const togglePassword = document.getElementById("togglePassword");
+
+    togglePassword.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+        passwordInput.type = isPassword ? "text" : "password";
+        togglePassword.innerHTML = isPassword
+            ? '<i class="fa-solid fa-eye"></i>'
+            : '<i class="fa-solid fa-eye-slash"></i>';
     });
-  });
+
+    passwordInput.addEventListener("input", () => {
+
+        const strength = calculatePasswordStrength(passwordInput.value);
+
+        strengthBar.style.width = strength + "%";
+        strengthBar.style.backgroundColor = getStrengthColor(strength);
+
+    });
+
+    function calculatePasswordStrength(password){
+
+        let strength = 0;
+
+        if(password.length >= 8) strength += 25;
+        if(/[A-Z]/.test(password)) strength += 25;
+        if(/[0-9]/.test(password)) strength += 25;
+        if(/[^A-Za-z0-9]/.test(password)) strength += 25;
+
+        return strength;
+    }
+
+    function getStrengthColor(strength){
+
+        if(strength < 40) return "#ef4444";
+
+        if(strength < 70) return "#f59e0b";
+
+        return "#10b981";
+    }
+
+    form.addEventListener("submit",(e)=>{
+
+        validation.textContent = "";
+
+        let isValid = true;
+
+        const name = document.getElementById("name").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = passwordInput.value;
+
+        if(name.length < 5 || name.length > 20){
+
+            validation.textContent = "Name must be between 5 and 20 characters.";
+            isValid = false;
+
+        }else if(!/^\d{10}$/.test(phone)){
+
+            validation.textContent = "Please enter a valid 10-digit phone number.";
+            isValid = false;
+
+        }else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+
+            validation.textContent = "Please enter a valid email address.";
+            isValid = false;
+
+        }else if(
+            !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)
+        ){
+
+            validation.textContent =
+            "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character.";
+
+            isValid = false;
+
+        }
+
+        if(!isValid){
+            e.preventDefault();
+        }
+
+    });
+
+});
 </script>
+
+</body>
 </html>

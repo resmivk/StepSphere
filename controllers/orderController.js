@@ -129,6 +129,7 @@ exports.orderSuccess = async (req, res) => {
     const order = await Order.findById(req.params.id).lean();
     res.render('user/orderSuccess', { 
       order, 
+      user: req.session.user,
       showNavbar: true, 
       showfooter: true 
     });

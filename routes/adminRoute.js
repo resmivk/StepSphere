@@ -50,8 +50,8 @@ routes.get('/categories/toggle/:id',      categoryController.toggleCategoryStatu
 ///////////////////ADMIN ORDERROUTES///////////////////
 
 
-routes.get('/orders', adminOrderController.adminOrders);
-routes.post('/orders/status/:id', adminOrderController.updateOrderStatus);
+routes.get('/adminOrders', adminOrderController.adminOrders);
+routes.post('/adminOrders/status/:id', adminOrderController.updateOrderStatus);
 routes.get('/orders/:id', adminOrderController.orderDetail); // optional detail page
 
 module.exports = routes;

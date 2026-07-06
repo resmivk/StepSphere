@@ -24,8 +24,53 @@ exports.loadRegister = (req, res) => {
 exports.insertUser = async (req, res) => {
   try {
     const { name, phone, email, password } = req.body;
+    const trimmedName = name?.trim();
+    const trimmedEmail = email?.trim();
+    const trimmedPhone = phone?.trim();
 
-    const existingUser = await User.findOne({ email });
+    if (!trimmedName || trimmedName.length < 5 || trimmedName.length > 20) {
+      return res.render("user/register", {
+        title: "register",
+        showNavbar: false,
+        footer: false,
+        message: "Name must be between 5-20 characters",
+        error: true
+      });
+    }
+
+    if (!/^\d{10}$/.test(trimmedPhone)) {
+      return res.render("user/register", {
+        title: "register",
+        showNavbar: false,
+        footer: false,
+        message: "Please enter a valid 10-digit phone number",
+        error: true
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      return res.render("user/register", {
+        title: "register",
+        showNavbar: false,
+        footer: false,
+        message: "Please enter a valid email address",
+        error: true
+      });
+    }
+
+    if (!password || password.length < 8) {
+      return res.render("user/register", {
+        title: "register",
+        showNavbar: false,
+        footer: false,
+        message: "Password must be at least 8 characters long",
+        error: true
+      });
+    }
+     
+     const existingUser = await User.findOne({ email: trimmedEmail });
+   
 
 
     if (existingUser && !existingUser.is_Verified) {
@@ -401,7 +446,7 @@ exports.forgotpassword = async (req, res) => {
       to: user.email,
       subject: "Password Reset",
       html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
-      from: `"Sike" <${process.env.MAIL_USER}>`
+      from: `"Stepsphere" <${process.env.MAIL_USER}>`
     };
 
     transporter.sendMail(mailOptions, (err, info) => {

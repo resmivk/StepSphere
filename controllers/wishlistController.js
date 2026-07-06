@@ -1,8 +1,8 @@
 const Wishlist = require('../models/wishlistModel');
 const Product = require('../models/productModel');
 
-// GET /wishlist
-const getWishlist = async (req, res) => {
+//////////wishlist///////////////////
+exports.getWishlist = async (req, res) => {
   try {
     const customerId = req.session.customer._id;
 
@@ -30,7 +30,7 @@ const getWishlist = async (req, res) => {
 };
 
 // POST /wishlist/add/:productId
-const addToWishlist = async (req, res) => {
+exports.addToWishlist = async (req, res) => {
   try {
     const customerId = req.session.customer._id;
     const { productId } = req.params;
@@ -58,7 +58,7 @@ const addToWishlist = async (req, res) => {
 };
 
 // DELETE /wishlist/remove/:productId
-const removeFromWishlist = async (req, res) => {
+exports.removeFromWishlist = async (req, res) => {
   try {
     const customerId = req.session.customer._id;
     const { productId } = req.params;
@@ -75,8 +75,8 @@ const removeFromWishlist = async (req, res) => {
   }
 };
 
-// POST /wishlist/move-to-cart/:productId
-const moveToCart = async (req, res) => {
+
+exports.moveToCart = async (req, res) => {
   try {
     const customerId = req.session.customer._id;
     const { productId } = req.params;
@@ -100,4 +100,3 @@ const moveToCart = async (req, res) => {
   }
 };
 
-module.exports = { getWishlist, addToWishlist, removeFromWishlist, moveToCart };

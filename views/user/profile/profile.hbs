@@ -1,10 +1,8 @@
-
 <style>
-  /* Scoped styles: .profile-component prefix ensures no conflicts with your site */
   .profile-component .profile-container {
-    max-width: 1100px;
+    max-width: 1200px;
     width: 100%;
-    margin: 2rem auto; /* Centers the card on your page */
+    margin: 2rem auto;
     background: #ffffff;
     border-radius: 32px;
     box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
@@ -68,10 +66,12 @@
   .profile-component .info-item { display: flex; align-items: center; border-bottom: 1px solid #eef2f6; padding-bottom: 0.75rem; }
   .profile-component .info-label { width: 160px; font-weight: 600; color: #334155; font-size: 0.9rem; }
   .profile-component .info-value { flex: 1; color: #1e293b; font-weight: 500; font-size: 1rem; }
+  .profile-component .info-value.empty { color: #94a3b8; font-style: italic; font-weight: 400; }
 
   .profile-component .edit-btn {
     display: inline-flex; align-items: center; gap: 10px; background: #0f172a; color: white;
     padding: 0.8rem 1.6rem; border-radius: 60px; text-decoration: none; font-weight: 600; transition: 0.2s;
+    border: none; cursor: pointer;
   }
   .profile-component .edit-btn:hover { background: #2dd4bf; color: #0f172a; }
 
@@ -86,37 +86,59 @@
 <div class="profile-component">
   <div class="profile-container">
     <div class="profile-split">
+
+      <!-- LEFT: Avatar + Name -->
       <div class="profile-left">
         <div class="profile-avatar">
           <div class="avatar-circle" id="avatarPreview">
-            <i class="fas fa-user-circle" id="avatarIcon"></i>
-            <img id="avatarImg" src="" alt="profile" style="display: none;">
+            {{#if user.profileImage}}
+              <img id="avatarImg" src="{{user.profileImage}}" alt="profile">
+              <i class="fas fa-user-circle" id="avatarIcon" style="display:none;"></i>
+            {{else}}
+              <i class="fas fa-user-circle" id="avatarIcon"></i>
+              <img id="avatarImg" src="" alt="profile" style="display: none;">
+            {{/if}}
           </div>
           <input type="file" id="secureFileInput" accept="image/*" style="display: none;">
           <span class="camera-icon" id="cameraTrigger"><i class="fas fa-camera"></i></span>
         </div>
-        <div class="profile-name-large"></div>
-        <div class="profile-email-large"></div>
+
+        <div class="profile-name-large">{{#if user.name}}{{user.name}}{{else}}Your Name{{/if}}</div>
+        <div class="profile-email-large">{{#if user.email}}{{user.email}}{{else}}No email added{{/if}}</div>
       </div>
 
+      <!-- RIGHT: Info -->
       <div class="profile-right">
-        <div class="info-section-title"><i class="fas fa-id-card" style="margin-right: 10px; color: #14b8a6;"></i> Personal Information</div>
+        <div class="info-section-title">
+          <i class="fas fa-id-card" style="margin-right: 10px; color: #14b8a6;"></i> Personal Information
+        </div>
+
         <dl class="info-grid">
           <div class="info-item">
             <dt class="info-label"><i class="fas fa-user" style="width: 20px;"></i> Full Name:</dt>
-            <dd class="info-value"></dd>
+            <dd class="info-value {{#unless user.name}}empty{{/unless}}">
+              {{#if user.name}}{{user.name}}{{else}}Not added{{/if}}
+            </dd>
           </div>
+
           <div class="info-item">
             <dt class="info-label"><i class="fas fa-mobile-alt" style="width: 20px;"></i> Mobile:</dt>
-            <dd class="info-value"></dd>
+            <dd class="info-value {{#unless user.phone}}empty{{/unless}}">
+              {{#if user.phone}}{{user.phone}}{{else}}Not added{{/if}}
+            </dd>
           </div>
+
           <div class="info-item">
             <dt class="info-label"><i class="fas fa-envelope" style="width: 20px;"></i> Email:</dt>
-            <dd class="info-value"></dd>
+            <dd class="info-value {{#unless user.email}}empty{{/unless}}">
+              {{#if user.email}}{{user.email}}{{else}}Not added{{/if}}
+            </dd>
           </div>
         </dl>
+
         <a href="/profile/Editprofile" class="edit-btn"><i class="fas fa-edit"></i> Edit Profile</a>
       </div>
+
     </div>
   </div>
 </div>
@@ -127,14 +149,14 @@
     const fileInput = document.getElementById('secureFileInput');
     const avatarIcon = document.getElementById('avatarIcon');
     const avatarImg = document.getElementById('avatarImg');
-    
+
     cameraBtn.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = (ev) => {
-          avatarIcon.style.display = 'none';
+          if (avatarIcon) avatarIcon.style.display = 'none';
           avatarImg.src = ev.target.result;
           avatarImg.style.display = 'block';
         };
