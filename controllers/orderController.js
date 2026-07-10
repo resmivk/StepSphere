@@ -149,7 +149,8 @@ exports.orderHistory = async (req, res) => {
     res.render('user/orderHistory', { 
       orders, 
       showNavbar: true, 
-      showfooter: true 
+      showfooter: true ,
+      user:req.session.user
     });
   } catch (error) {
     res.status(500).send("Error: " + error.message);

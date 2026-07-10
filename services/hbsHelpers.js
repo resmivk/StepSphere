@@ -47,5 +47,13 @@ module.exports = {
       month: 'short',
       day: 'numeric'
     });
-  }
+  },
+
+  //userOrderDetails
+  or: function () {
+    const args = Array.prototype.slice.call(arguments, 0, -1);
+    return args.some(Boolean);
+  },
+
+  
 };

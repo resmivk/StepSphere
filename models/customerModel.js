@@ -44,6 +44,13 @@ const userSchema = new mongoose.Schema({
     resetTokenExpiry: {
         type: Date
     },
+    googleId: {
+  type: String
+},
+password:{
+  type: String,
+  required: function() { return !this.googleId; } 
+},
     cart: [
         {
             productId: {

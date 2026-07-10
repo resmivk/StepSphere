@@ -17,25 +17,23 @@
 
 <body>
 
-
-
-  <!-- RIGHT: Registration form panel -->
-  <div class="auth-form-side">
+<div class="auth-form-side">
 
     <div class="container">
 
-      <div class="form-heading">
-        <h1>
-        <i class="fas fa-shoe-prints"></i>
-        <span>StepSphere</span>
+     <div class="brand-header">
+      <h1>
+        <i class="fas fa-shoe-prints"></i> Stepsphere
       </h1>
-      </div>
+      <p>Welcome back! Sign in to your account</p>
+    </div>
+    {{#if message}}
+    <div style="color: rgb(240, 5, 36); text-align: center; margin-bottom: 10px;">
+      {{message}}
+    </div>
+    {{/if}}
 
-      {{#if message}}
-      <div class="form-message {{#if error}}form-message-error{{else}}form-message-success{{/if}}">
-        {{message}}
-      </div>
-      {{/if}}
+
 
       <form action="" method="POST" id="registerForm" novalidate>
 
@@ -145,68 +143,33 @@
   </div>
 
 </div>
+</div>
 
-<!-- Layout-only styles: no colors, just structural positioning for the new two-panel layout.
-     Move these into users.css whenever you're ready. -->
+
 <style>
-  .auth-wrapper {
-    display: flex;
-    min-height: 100vh;
-    width: 100%;
-  }
-
-  .auth-side {
-    flex: 1 1 40%;
-    display: flex;
-    flex-direction: column;
-    padding: 40px;
-  }
-
-  .auth-side-content {
-    max-width: 380px;
-    margin: auto 0;
-  }
-
-  .auth-side .brand-header {
-    margin-bottom: 0;
-  }
-
-  .auth-side-tagline {
-    margin-top: 16px;
-    font-size: 15px;
-    line-height: 1.6;
-  }
-
-  .auth-form-side {
-    flex: 1 1 60%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-  }
-
-  .form-heading {
-    text-align: center;
-    margin-bottom: 24px;
-  }
-
-  .form-heading h2 {
-    margin: 0 0 6px 0;
-  }
-
-  .form-heading p {
-    margin: 0;
-    font-size: 14px;
-  }
-
-  .form-message {
-    text-align: center;
-    margin-bottom: 15px;
-  }
-
   .validation-message {
+    color: #dc2626 !important;  /* Red color for error messages */
+    font-size: 14px;
+    margin-bottom: 15px;
     text-align: center;
-  }
+    background-color: #fee2e2;
+    padding: 10px;
+    border-radius: 6px;
+    display: block;
+    min-height: 20px;
+}
+
+/* Also make sure the inline style for the message div works */
+#validation {
+    color: #dc2626 !important;
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-align: center;
+    background-color: #fee2e2;
+    padding: 10px;
+    border-radius: 6px;
+    min-height: 20px;
+}
 
   /* Icon-inside-input structural pattern */
   .input-icon-wrapper {
