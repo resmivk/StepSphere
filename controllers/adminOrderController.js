@@ -25,7 +25,8 @@ exports.adminOrders = async (req, res) => {
       processingCount: orders.filter(o => o.orderStatus === 'processing').length,
       shippedCount:    orders.filter(o => o.orderStatus === 'shipped').length,
       deliveredCount:  orders.filter(o => o.orderStatus === 'delivered').length,
-      cancelledCount:  orders.filter(o => o.orderStatus === 'cancelled').length
+      cancelledCount:  orders.filter(o => o.orderStatus === 'cancelled').length,
+      admin:true
     });
 
   } catch (error) {
@@ -70,7 +71,7 @@ exports.orderDetail = async (req, res) => {
       year: 'numeric'
     });
 
-    res.render('admin/orderDetail', { order });
+    res.render('admin/orderDetail', { order,admin:true });
 
   } catch (error) {
     console.error('orderDetail error:', error);

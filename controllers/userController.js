@@ -10,6 +10,7 @@ const Banner = require('../models/bannerModel')
 const user = process.env.MAIL_USER
 const pass = process.env.MAIL_PASS
 
+
  const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: { user, pass }
@@ -614,11 +615,11 @@ exports.forgotpassword = async (req, res) => {
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
         console.error("Email sending failed:", err);
-        return res.status(500).send("Failed to send email. Try again later.");
+        return res.status(500).json({sucess:false,message:"Failed to sent email.Try again later"});
       }
 
       console.log("Reset email sent:", info.response);
-      return res.send("Reset link sent to your email.");
+      return res.json({success:true,message:"Reset link sent to your email."});
     });
   } catch (error) {
     console.log("Error in forgotpassword:", error.message);
@@ -881,7 +882,8 @@ exports.searchProducts = async (req, res) => {
       products,
       searchQuery: query,
       showNavbar: true,
-      showfooter: true
+      showfooter: true,
+      user:req.session.user
     });
   } catch (error) {
     res.status(500).send("Search error: " + error.message);

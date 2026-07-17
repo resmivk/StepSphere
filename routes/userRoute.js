@@ -8,6 +8,7 @@ const addressController=require('../controllers/addressController')
 const CartController=require('../controllers/cartController')
 const orderController=require("../controllers/orderController")
 const wishlistController=require('../controllers/wishlistController')
+const passport=require('passport')
 
 const auths=require('../middleware/auth')
 
@@ -18,6 +19,19 @@ user_Routes.get('/verify',userController.verifyEmail)
 user_Routes.get('/login',auths.loadlogout,userController.loadLogin)
 user_Routes.post('/login',userController.verifyLogin)
 user_Routes.get('/logout',userController.userLogout)
+
+//// Google OAuth
+user_Routes.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+user_Routes.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/register' }),
+  (req, res) => {
+    req.session.userId = req.user._id.toString();
+    res.redirect('/home');
+  }
+);
 
 user_Routes.get('/products',userController.showProducts);
 user_Routes.get('/products/:id', userController.productsDetaling)

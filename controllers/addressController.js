@@ -69,7 +69,8 @@ exports.editAddress=async(req,res)=>{
      showNavbar: true,
      showprofileSidebar:true,
       showfooter: true,
-      address:addr
+      address:addr,
+      user:req.session.userId
       })   
      
   }

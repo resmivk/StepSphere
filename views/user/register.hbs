@@ -129,12 +129,14 @@
           <span>or</span>
         </div>
 
-        <div class="social-login">
-          <button type="button" class="social-button">
-            <i class="fab fa-google"></i>
-            Continue with Google
-          </button>
-        </div>
+        <div class="text-center mt-3">
+    <a href="/auth/google" class="btn btn-outline-dark w-100">
+        <img src="https://developers.google.com/identity/images/g-logo.png"
+             width="20"
+             style="margin-right:10px;">
+        Continue with Google
+    </a>
+</div>
 
       </form>
 
@@ -155,11 +157,14 @@
     background-color: #fee2e2;
     padding: 10px;
     border-radius: 6px;
-    display: block;
+    display: none;
     min-height: 20px;
 }
+   .validation-message:not(:empty) {
+    display: block;
+}
 
-/* Also make sure the inline style for the message div works */
+
 #validation {
     color: #dc2626 !important;
     font-size: 14px;
@@ -169,8 +174,12 @@
     padding: 10px;
     border-radius: 6px;
     min-height: 20px;
+    display:none;
 }
 
+#validation:not(:empty) {
+    display: block;
+}
   /* Icon-inside-input structural pattern */
   .input-icon-wrapper {
     position: relative;

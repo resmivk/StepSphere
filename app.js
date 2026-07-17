@@ -31,6 +31,12 @@ app.use(session({
   }
 }));
 
+// Passport (Google OAuth) 
+const passport = require('./config/passport');
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 // Middleware
 // 3. ADDED MORGAN REQUEST LOGGER
 app.use(logger('dev')); 

@@ -15,14 +15,7 @@ const userSchema = new mongoose.Schema({
         required:true,
         unique:true
     },
-    password:{
-        type:String,
-        required:true
-    },
-    blocked:{
-        type:String,
-        default:false
-    },
+
     is_Verified: {
         type: Boolean,
         default: false
