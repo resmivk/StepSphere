@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="/style/admin/adminlogin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -23,7 +24,7 @@
       <div class="alert-message">{{message}}</div>
     {{/if}}
 
-    <form action="/admin/adminlogin" method="POST" novalidate>
+    <form id="adminLoginForm" novalidate>
       <div class="form-group">
         <label for="email">Email</label>
         <i class="fas fa-envelope input-icon"></i>
@@ -61,21 +62,38 @@
 
 
   <script>
-    document.querySelector("form").addEventListener("submit", function (e) {
+    document.getElementById("adminLoginForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
-      let message = "";
 
       if (!/^\S+@\S+\.\S+$/.test(email)) {
-        message += "Please enter a valid email address.\n";
+        return Swal.fire("Invalid Email", "Please enter a valid email address.", "error");
       }
       if (password.length < 8) {
-        message += "Password must be at least 8 characters.\n";
+        return Swal.fire("Invalid Password", "Password must be at least 8 characters.", "error");
       }
 
-      if (message) {
-        alert(message);
-        e.preventDefault();
+      try {
+        const response = await fetch("/admin/adminlogin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (data.type === "success") {
+          Swal.fire("Success", data.message, "success").then(() => {
+            window.location.href = data.redirectUrl;
+          });
+        } else {
+          Swal.fire("Login Failed", data.message, "error");
+        }
+      } catch (error) {
+        console.log(error);
+        Swal.fire("Error", "Something went wrong. Please try again.", "error");
       }
     });
      </script>

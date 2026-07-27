@@ -21,144 +21,6 @@ exports.loadRegister = (req, res) => {
   res.render("user/register", { title: 'register', showNavbar: false, footer: false });
 };
 
-//////////////////INSERT USER/////////////////////
-// exports.insertUser = async (req, res) => {
-//   try {
-//     const { name, phone, email, password } = req.body;
-//     const trimmedName = name?.trim();
-//     const trimmedEmail = email?.trim();
-//     const trimmedPhone = phone?.trim();
-
-//     if (!trimmedName || trimmedName.length < 5 || trimmedName.length > 20) {
-//       return res.render("user/register", {
-//         title: "register",
-//         showNavbar: false,
-//         footer: false,
-//         message: "Name must be between 5-20 characters",
-//         error: true
-//       });
-//     }
-
-//     if (!/^\d{10}$/.test(trimmedPhone)) {
-//       return res.render("user/register", {
-//         title: "register",
-//         showNavbar: false,
-//         footer: false,
-//         message: "Please enter a valid 10-digit phone number",
-//         error: true
-//       });
-//     }
-
-//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     if (!emailRegex.test(trimmedEmail)) {
-//       return res.render("user/register", {
-//         title: "register",
-//         showNavbar: false,
-//         footer: false,
-//         message: "Please enter a valid email address",
-//         error: true
-//       });
-//     }
-
-//     if (!password || password.length < 8) {
-//       return res.render("user/register", {
-//         title: "register",
-//         showNavbar: false,
-//         footer: false,
-//         message: "Password must be at least 8 characters long",
-//         error: true
-//       });
-//     }
-     
-//      const existingUser = await User.findOne({ email: trimmedEmail });
-   
-
-
-//     if (existingUser && !existingUser.is_Verified) {
-
-//       const emailVerificationToken = crypto.randomBytes(16).toString("hex");
-
-//       existingUser.emailVerificationToken = emailVerificationToken;
-//       await existingUser.save();
-
-//       const verificationUrl = `http://localhost:3000/verify?token=${emailVerificationToken}`;
-
-//       const mailOptions = {
-//         from: `"Stepsphere" <${process.env.MAIL_USER}>`,
-//         to: email,
-//         subject: "Email Verification - Stepsphere",
-//         html: `
-//           <p>Hello ${existingUser.name},</p>
-//           <p>Your email is not verified yet. Please verify using the link below:</p>
-//           <a href="${verificationUrl}">Verify Email</a>
-//         `,
-//       };
-
-//       transporter.sendMail(mailOptions, (err) => {
-//         if (err) {
-//           console.error("Error resending verification email:", err);
-//           return res.render("user/register", {
-//             title: "register",
-//             showNavbar: false,
-//             footer: false,
-//             message: "Error sending verification email",
-//             error: true
-//           });
-//         }
-
-//         return res.render("user/register",{title:"register",showNavbar:false,footer:false, success:true,
-
-//         message:"Registration successful! Please check your email and verify your account."})
-
-//       return;
-//     });
-//   }
-
-//     if (existingUser) {
-//       return res.send("Email already registered and verified. Please login.");
-//     }
-
-//     const emailVerificationToken = crypto.randomBytes(16).toString("hex");
-//     const hashedPassword = await bcrypt.hash(password, 10);
-
-//     const newUser = new User({
-//       name,
-//       phone,
-//       email,
-//       password: hashedPassword,
-//       emailVerificationToken,
-//       is_Verified: false,
-//     });
-
-//     await newUser.save();
-
-//     const verificationUrl = `http://localhost:3000/verify?token=${emailVerificationToken}`;
-
-//     const mailOptions = {
-//       from: `"Stepsphere" <${process.env.MAIL_USER}>`,
-//       to: email,
-//       subject: "Verify Your Email for Stepsphere",
-//       html: `
-//         <p>Hello ${name},</p>
-//         <p>Please verify your email by clicking the link below:</p>
-//         <a href="${verificationUrl}">Verify Email</a>
-//       `,
-//     };
-
-//     transporter.sendMail(mailOptions, (err) => {
-//       if (err) {
-//         console.error("Error sending verification email:", err);
-//         return res.status(500).send("User registered but email could not be sent.");
-//       }
-
-//       return res.send("Registration successful! Verification email sent to your email.");
-//     });
-
-//   } catch (error) {
-//     console.log("Error in insertUser:", error.message);
-//     res.status(500).send("Internal Server Error");
-//   }
-// };
 exports.insertUser = async (req, res) => {
   try {
     const { name, phone, email, password } = req.body;
@@ -564,7 +426,7 @@ exports.loadHome = async (req, res) => {
 ////Logout
 exports.userLogout = async (req, res) => {
   try {
-    req.session.destroy();
+    req.session.userId = null;
 
     res.redirect("/home");
   } catch (error) {
@@ -889,6 +751,7 @@ exports.searchProducts = async (req, res) => {
     res.status(500).send("Search error: " + error.message);
   }
 };
+
 
 
 

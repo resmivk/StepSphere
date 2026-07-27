@@ -24,7 +24,8 @@ exports.loadAddProduct = async (req, res) => {
     const parents = await Category.find({ parent: null, isActive: true }).lean();
     const subCategories = await Category.find({ parent: { $ne: null }, isActive: true }).lean();
     res.render('admin/add-products', { 
-        admin: true, 
+        admin: true,
+        activePage: 'products', 
         subcategories: subCategories ,
         parents:parents
     });
@@ -41,7 +42,7 @@ exports.loadProducts = async (req, res) => {
     ...p,
     _id: p._id.toString()
 }));
-res.render('admin/products', { products: productList, admin: true });
+res.render('admin/products', { products: productList, admin: true, activePage: 'products' });
   } catch (error) {
     console.log(error);
   }
@@ -177,7 +178,7 @@ exports.updateProduct = async (req, res) => {
         const price = parseFloat(req.body.price);
         const stock = parseInt(req.body.stock);
 
-        // ✅ Validate price and stock
+        
         if (isNaN(price) || price <= 0) {
             return res.status(400).render('admin/edit-product', {
                 product: { ...req.body, _id: req.params.id },
@@ -209,7 +210,7 @@ exports.updateProduct = async (req, res) => {
             isBestSeller
         };
 
-        // ✅ Only update images if new ones uploaded
+        
         if (req.files && req.files.length > 0) {
             updateData.images = req.files.map(file => file.filename);
         }

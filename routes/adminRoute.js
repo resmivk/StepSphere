@@ -6,7 +6,7 @@ const adminController = require('../controllers/adminController');
 const customerController=require('../controllers/customerController')
  const categoryController=require('../controllers/categoryController')
  const adminOrderController = require('../controllers/adminOrderController');
-const { isAdminLoggedin } = require('../middleware/adminAuth');
+const { adminAuth } = require('../middleware/adminAuth');
 
 
 
@@ -22,36 +22,36 @@ routes.post('/adminlogin', adminController.verifyLogin);
 routes.get('/logout', adminController.userLogout);
 
 //  DASHBOARD & USERS
-routes.get('/admindashboard', isAdminLoggedin, adminController.loadDashboard);
-routes.get(['/customers', '/customer'], isAdminLoggedin, customerController.customerInfo);
-routes.post('/users/block/:id', isAdminLoggedin, adminController.blockUser);
-routes.post('/users/unblock/:id', isAdminLoggedin, adminController.unblockUser);
+routes.get('/admindashboard', adminAuth, adminController.loadDashboard);
+routes.get(['/customers', '/customer'], adminAuth, customerController.customerInfo);
+routes.post('/users/block/:id', adminAuth, adminController.blockUser);
+routes.post('/users/unblock/:id', adminAuth, adminController.unblockUser);
 
 //// PRODUCT ROUTES 
 
-  routes.get('/add-products', productController.loadAddProduct);
-  routes.post('/add-products', productController.upload.array('images',5), productController.insertProduct);
-  routes.get('/products', productController.loadProducts);
-  routes.get('/edit-product/:id', productController.loadEditProduct);
-  routes.post('/edit-product/:id', productController.upload.array('images',5),productController.updateProduct);
-  routes.get('/delete-product/:id', productController.deleteProduct);
+  routes.get('/add-products',adminAuth, productController.loadAddProduct);
+  routes.post('/add-products',adminAuth, productController.upload.array('images',5), productController.insertProduct);
+  routes.get('/products',adminAuth, productController.loadProducts);
+  routes.get('/edit-product/:id',adminAuth, productController.loadEditProduct);
+  routes.post('/edit-product/:id',adminAuth, productController.upload.array('images',5),productController.updateProduct);
+  routes.get('/delete-product/:id', adminAuth,productController.deleteProduct);
 
 ///// CATEGORY ROUTES  ///////////////////
 
-routes.get('/categories/category',categoryController.loadCategories)
-routes.get('/categories/addcategory',categoryController.loadAddCategory)
-routes.post('/categories/addcategory',    categoryController.insertCategory);
-routes.get('/categories/editCategory/:id', categoryController.editCategories);
-routes.post('/categories/editCategory/:id', categoryController.updateCategory);
-routes.get('/categories/deleteCategory/:id', categoryController.deleteCategory);
-routes.get('/categories/toggle/:id',      categoryController.toggleCategoryStatus);
+routes.get('/categories/category',adminAuth,categoryController.loadCategories)
+routes.get('/categories/addcategory',adminAuth,categoryController.loadAddCategory)
+routes.post('/categories/addcategory', adminAuth,   categoryController.insertCategory);
+routes.get('/categories/editCategory/:id',adminAuth, categoryController.editCategories);
+routes.post('/categories/editCategory/:id', adminAuth,categoryController.updateCategory);
+routes.get('/categories/deleteCategory/:id',adminAuth, categoryController.deleteCategory);
+routes.get('/categories/toggle/:id',     adminAuth, categoryController.toggleCategoryStatus);
 
 
 ///////////////////ADMIN ORDERROUTES///////////////////
 
 
-routes.get('/adminOrders', adminOrderController.adminOrders);
-routes.post('/adminOrders/status/:id', adminOrderController.updateOrderStatus);
-routes.get('/orders/:id', adminOrderController.orderDetail); // optional detail page
+routes.get('/adminOrders', adminAuth,adminOrderController.adminOrders);
+routes.post('/adminOrders/status/:id', adminAuth,adminOrderController.updateOrderStatus);
+routes.get('/orders/:id', adminAuth,adminOrderController.orderDetail); 
 
 module.exports = routes;
