@@ -57,9 +57,28 @@ exports.insertProduct = async (req, res) => {
     if (imageFiles.length === 0) {
       return res.status(400).send("At least one image is required");
     }
-
-   
-    let sizes = req.body.size;
+   const { name, brand, price, description, stock, category } = req.body;
+   if(!name||name.trim().length<3){
+      return res.status(400).send("Product name is required and should be at least 3 characters long"); 
+   }
+   if(!brand||brand.trim().length<2){
+      return res.status(400).send("Brand name is required and should be at least 2 characters long");
+   }  
+   const priceValue = parseFloat(price);
+   if(!price||isNaN(priceValue)|| priceValue <= 0){
+      return res.status(400).send("Price is required and should be a positive number");
+   }
+   const stockValue = parseInt(stock);
+   if(stock===undefined||isNaN(stockValue)|| stockValue < 0){
+      return res.status(400).send("Stock must be a valid number of 0 or more");
+   }
+   if(!description||description.trim().length<10){
+      return res.status(400).send("Description is required and should be at least 10 characters long");
+   }
+   if(!category||category.trim()===""){
+      return res.status(400).send("Category is required");
+   }  
+  let sizes = req.body.size;
     if (!sizes) {
       sizes = [];
     } else if (typeof sizes === "string") {
@@ -191,6 +210,22 @@ exports.updateProduct = async (req, res) => {
                 product: { ...req.body, _id: req.params.id },
                 admin: true,
                 error: 'Invalid stock value'
+            });
+        }
+        
+        if (!req.body.name || req.body.name.trim().length < 3) {
+            return res.status(400).render('admin/edit-product', {
+                product: { ...req.body, _id: req.params.id },
+                admin: true,        
+                error: 'Product name is required and should be at least 3 characters long'
+            });
+        }
+        
+        if (!req.body.category) {
+            return res.status(400).render('admin/edit-product', {
+                product: { ...req.body, _id: req.params.id },
+                admin: true,
+                error: 'Category is required'
             });
         }
 

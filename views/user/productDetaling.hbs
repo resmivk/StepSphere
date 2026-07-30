@@ -391,13 +391,6 @@ cartForm.addEventListener('submit', function(e) {
   return true;
 });
 
-// ---------- BUY NOW LOGIC ----------
-// When user clicks Buy Now, we capture size & quantity, then redirect to checkout
-// Typically, you'd add item to cart then redirect to checkout page.
-// Approach: add product to cart via fetch POST (with same payload) then redirect to /checkout
-// OR directly call an endpoint that adds to cart and returns success, then redirect.
-// We'll implement an asynchronous add-to-cart using fetch, then window.location to '/checkout'.
-// This keeps consistent with existing server routes and avoids page refresh issues.
 
 const buyNowBtn = document.getElementById('buyNowBtn');
 const loadingOverlay = document.getElementById('loadingOverlay');
@@ -517,18 +510,6 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// For dynamic redirect if your app uses different checkout route: e.g., /cart or /order
-// We'll also consider graceful fallback: if /checkout doesn't exist maybe redirect to /cart? but no need to overcomplicate.
-// Usually StepSphere might have /checkout page.
-// If you want "Buy Now" to directly go to checkout page after adding item, the implementation above is perfect.
-
-// Edge Case: if the main Add to Cart form is submitted without size, we also want to display error clearly, done above.
-// Additionally improve the size validation styling: remove error when user selects size.
-// Also support enter key on form to add to cart (existing behavior remains)
 </script>
-
-<!-- Ensure that if there are any server side template variables used above, they are properly rendered -->
-<!-- The Buy Now button will function seamlessly as long as the server endpoint /cart/add/:id supports POST requests -->
-<!-- The loading overlay prevents double clicks while processing buy now -->
 </body>
 </html>

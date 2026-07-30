@@ -8,263 +8,225 @@
   <title>Our Products | Shoe Store</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+ 
+  <style>* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    body {
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      min-height: 100vh;
-      padding: 2rem 1rem;
-    }
+body {
+  background: #f8f9fa;
+  font-family: 'Montserrat', sans-serif;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
 
-    /* Main Container */
-    .products-container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
+.products-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
 
-    /* Page Header */
-    .page-header {
-      text-align: center;
-      margin-bottom: 3rem;
-      position: relative;
-    }
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
 
-    .page-header h1 {
-      font-size: 3rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.5px;
-    }
+.page-header h1 {
+  font-family: 'Rokkitt', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 0.5rem;
+}
 
-    .page-header .subtitle {
-      color: #6c757d;
-      font-size: 1.1rem;
-      font-weight: 400;
-    }
+.page-header .subtitle {
+  color: #6c757d;
+  font-size: 1.05rem;
+}
 
-    .page-header .divider {
-      width: 80px;
-      height: 4px;
-      background: linear-gradient(90deg, #667eea, #764ba2);
-      margin: 1rem auto 0;
-      border-radius: 2px;
-    }
+.page-header .divider {
+  width: 60px;
+  height: 3px;
+  background: #17a2b8;
+  margin: 1rem auto 0;
+  border-radius: 2px;
+}
 
-    /* Product Card */
-    .product-card {
-      background: white;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
-      height: 100%;
-      position: relative;
-    }
+.product-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  cursor: pointer;
+  height: 100%;
+}
 
-    .product-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
 
-    /* Image Container */
-    .product-image-wrapper {
-      position: relative;
-      overflow: hidden;
-      background: #f8f9fa;
-      padding-top: 100%;
-    }
+.product-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: #f8f9fa;
+  padding-top: 100%;
+}
 
-    .product-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
+.product-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
 
-    .product-card:hover .product-image {
-      transform: scale(1.1);
-    }
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
 
-    /* Badge */
-    .product-badge {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(5px);
-      color: white;
-      padding: 0.3rem 0.8rem;
-      border-radius: 50px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      z-index: 2;
-      letter-spacing: 0.5px;
-    }
+.product-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: #17a2b8;
+  color: white;
+  padding: 0.25rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
 
-    /* Quick View Overlay */
-    .quick-view {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      text-align: center;
-      padding: 0.8rem;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-      font-size: 0.9rem;
-      font-weight: 600;
-      z-index: 2;
-    }
+.quick-view {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(23, 162, 184, 0.9);
+  color: white;
+  text-align: center;
+  padding: 0.6rem;
+  transform: translateY(100%);
+  transition: transform 0.25s ease;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
 
-    .product-card:hover .quick-view {
-      transform: translateY(0);
-    }
+.product-card:hover .quick-view {
+  transform: translateY(0);
+}
 
-    /* Card Body */
-    .product-info {
-      padding: 1.5rem;
-      background: white;
-    }
+.product-info {
+  padding: 1.25rem;
+}
 
-    .product-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #2d3748;
-      margin-bottom: 0.5rem;
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
+.product-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 0.4rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
-    .product-brand {
-      font-size: 0.85rem;
-      color: #a0aec0;
-      margin-bottom: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+.product-brand {
+  font-size: 0.8rem;
+  color: #adb5bd;
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 
-    .price-wrapper {
-      display: flex;
-      align-items: baseline;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
+.price-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
 
-    .current-price {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #2c7da0;
-    }
+.current-price {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #010c0e;
+}
 
-    .original-price {
-      font-size: 0.9rem;
-      color: #cbd5e0;
-      text-decoration: line-through;
-    }
+.original-price {
+  font-size: 0.85rem;
+  color: #ced4da;
+  text-decoration: line-through;
+}
 
-    .discount {
-      font-size: 0.8rem;
-      color: #e53e3e;
-      font-weight: 600;
-    }
+.discount {
+  font-size: 0.75rem;
+  color: #dc3545;
+  font-weight: 600;
+}
 
-    /* Rating Stars */
-    .product-rating {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
 
-    .stars {
-      color: #fbbf24;
-      font-size: 0.85rem;
-      letter-spacing: 2px;
-    }
+.stars {
+  color: #ffc107;
+  font-size: 0.8rem;
+}
 
-    .rating-count {
-      font-size: 0.8rem;
-      color: #a0aec0;
-    }
+.rating-count {
+  font-size: 0.75rem;
+  color: #adb5bd;
+}
 
-    /* Add to Cart Button */
-    .add-to-cart-btn {
-      width: 100%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      padding: 0.75rem;
-      border-radius: 50px;
-      color: white;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
+.add-to-cart-btn {
+  width: 100%;
+  background: #17a2b8;
+  border: none;
+  padding: 0.65rem;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: background 0.2s ease;
+}
 
-    .add-to-cart-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-    }
+.add-to-cart-btn:hover {
+  background: #6831c2;
+}
 
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 4rem;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
+.empty-state {
+  text-align: center;
+  padding: 4rem;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #eee;
+}
 
-    .empty-state i {
-      font-size: 4rem;
-      color: #cbd5e0;
-      margin-bottom: 1rem;
-    }
+.empty-state i {
+  font-size: 3rem;
+  color: #ced4da;
+  margin-bottom: 1rem;
+}
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      body {
-        padding: 1rem;
-      }
-
-      .page-header h1 {
-        font-size: 2rem;
-      }
-
-      .product-info {
-        padding: 1rem;
-      }
-
-      .current-price {
-        font-size: 1.2rem;
-      }
-    }
-  </style>
+@media (max-width: 768px) {
+  body { padding: 1rem; }
+  .page-header h1 { font-size: 1.8rem; }
+  .product-info { padding: 1rem; }
+  .current-price { font-size: 1.1rem; }
+}</style>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <body>
   <div class="products-container">
     <!-- Page Header -->
@@ -346,12 +308,38 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    function addToCart(productId) {
-      event.stopPropagation();
-      console.log('Added to cart:', productId);
-      alert('Product added to cart!');
+<script>
+  async function addToCart(productId) {
+    try {
+      const res = await fetch(`/cart/add/${productId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: 1 })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Added to Cart!',
+          text: data.message || 'Product has been added to your cart.',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      } else {
+        Swal.fire({
+          icon: data.redirect ? 'info' : 'error',
+          title: data.redirect ? 'Please Login' : 'Oops!',
+          text: data.message || 'Could not add product to cart.'
+        }).then(() => {
+          if (data.redirect) window.location.href = data.redirect;
+        });
+      }
+    } catch (err) {
+      console.error('Add to cart error:', err);
+      Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
     }
-  </script>
+  }
+</script>
 </body>
 </html>
