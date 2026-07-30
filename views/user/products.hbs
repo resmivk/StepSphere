@@ -93,8 +93,8 @@ body {
 .product-badge {
   position: absolute;
   top: 0.75rem;
-  right: 0.75rem;
-  background: #17a2b8;
+  left: 0.75rem;
+  background: rgba(23, 162, 184, 0.9);
   color: white;
   padding: 0.25rem 0.7rem;
   border-radius: 4px;
@@ -179,6 +179,33 @@ body {
   margin-bottom: 1rem;
 }
 
+.wishlist-overlay-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(6px);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4444;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.wishlist-overlay-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
 .stars {
   color: #ffc107;
   font-size: 0.8rem;
@@ -243,6 +270,9 @@ body {
           <div class="col-md-6 col-lg-4 col-xl-3">
             <div class="product-card" onclick="window.location.href='/products/{{this._id}}'">
               <div class="product-image-wrapper">
+                <button class="wishlist-overlay-btn" onclick="event.stopPropagation(); addToWishlist('{{this._id}}')" title="Add to Wishlist">
+                  <i class="far fa-heart"></i>
+                </button>
                 <img src="/uploads/{{this.images.[0]}}" class="product-image" alt="{{this.name}}" loading="lazy">
                 {{#if this.discount}}
                   <div class="product-badge">
@@ -250,7 +280,7 @@ body {
                   </div>
                 {{else}}
                   <div class="product-badge">
-                    NEW
+                    new arrival
                   </div>
                 {{/if}}
                 <div class="quick-view">
@@ -337,6 +367,35 @@ body {
       }
     } catch (err) {
       console.error('Add to cart error:', err);
+      Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
+    }
+  }
+
+  async function addToWishlist(productId) {
+    try {
+      const res = await fetch(`/wishlist/add/${productId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Saved to Wishlist!',
+          text: data.message || 'Product has been added to your wishlist.',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      } else {
+        Swal.fire({
+          icon: 'info',
+          title: 'Notice',
+          text: data.message || 'Please log in to save items to your wishlist.'
+        });
+      }
+    } catch (err) {
+      console.error('Add to wishlist error:', err);
       Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
     }
   }

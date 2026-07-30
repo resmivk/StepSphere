@@ -1,6 +1,7 @@
 exports.loadloging = async(req,res,next)=>{
     try{
-        if(req.session.userId){
+        if(req.session.user)
+            {
            return  next();
 
         }else{

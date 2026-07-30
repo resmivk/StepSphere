@@ -8,6 +8,7 @@ const addressController=require('../controllers/addressController')
 const CartController=require('../controllers/cartController')
 const orderController=require("../controllers/orderController")
 const wishlistController=require('../controllers/wishlistController')
+const walletController=require('../controllers/walletController')
 const passport=require('passport')
 
 const auths=require('../middleware/auth')
@@ -66,6 +67,11 @@ user_Routes.get('/profile/EditeAddress/:id/edit', auths.loadloging, addressContr
 user_Routes.post('/profile/EditeAddress/:id/edit', auths.loadloging, addressController.updateAddress); 
 user_Routes.get('/profile/:id/delete', auths.loadloging, addressController.deleteAddress); 
 
+//// Wallet Routes
+user_Routes.get('/profile/wallet', auths.loadloging, walletController.getWallet);
+user_Routes.post('/wallet/add-funds', auths.loadloging, walletController.addFunds);
+user_Routes.post('/wallet/pay', auths.loadloging, walletController.payWithWallet); 
+
 
 /////////////////cartRoutes///////////////
 user_Routes.get('/cart',auths.loadloging,CartController.getCart)
@@ -76,10 +82,10 @@ user_Routes.get("/cart/remove/:id",     auths.loadloging, CartController.removeI
 user_Routes.get("/cart/clear",          auths.loadloging, CartController.clearCart);
 
 ///////////////////WhistListController Routes/////////////////////
-user_Routes.get('/', auths.loadloging, wishlistController.getWishlist);
-user_Routes.post('/add/:productId', auths.loadloging, wishlistController.addToWishlist);
-user_Routes.delete('/remove/:productId', auths.loadloging, wishlistController.removeFromWishlist);
-user_Routes.post('/move-to-cart/:productId',auths.loadloging,wishlistController.moveToCart);
+user_Routes.get('/wishlist', auths.loadloging, wishlistController.getWishlist);
+user_Routes.post('/wishlist/add/:productId', auths.loadloging, wishlistController.addToWishlist);
+user_Routes.delete('/wishlist/remove/:productId', auths.loadloging, wishlistController.removeFromWishlist);
+user_Routes.post('/wishlist/move-to-cart/:productId', auths.loadloging, wishlistController.moveToCart);
 
 ////////////OrderController Routes/////////////////
 

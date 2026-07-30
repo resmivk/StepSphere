@@ -50,9 +50,14 @@
   </a>
 
   <div class="menu-title">Management</div>
-  <a href="#" class="menu-item"><i class="fas fa-chart-line"></i><span>Analytics</span></a>
-  <a href="#" class="menu-item"><i class="fas fa-truck"></i><span>Shipping</span></a>
-  <a href="#" class="menu-item"><i class="fas fa-percent"></i><span>Discounts</span></a>
+  <a href="/admin/coupons" class="menu-item {{#if (eq activePage 'coupons')}}active{{/if}}">
+    <i class="fas fa-ticket-alt"></i>
+    <span>Coupons</span>
+  </a>
+  <a href="/admin/offers" class="menu-item {{#if (eq activePage 'offers')}}active{{/if}}">
+    <i class="fas fa-percentage"></i>
+    <span>Offers</span>
+  </a>
 
   <div class="menu-title">Admin Registration</div>
   <a href="/admin/adminregister" class="menu-item {{#if (eq activePage 'addAdmin')}}active{{/if}}">

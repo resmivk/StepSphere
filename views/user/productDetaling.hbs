@@ -151,6 +151,27 @@ background:#218838;
 color:white;
 }
 
+/* Wishlist Button Style */
+.btn-wishlist{
+background:white;
+color:#dc3545;
+border:2px solid #dc3545;
+padding:15px 25px;
+border-radius:30px;
+font-weight:600;
+text-transform:uppercase;
+transition: all 0.2s ease;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.btn-wishlist:hover{
+background:#dc3545;
+color:white;
+}
+
 /* Button group layout for desktop and mobile */
 .action-buttons-group{
 display: flex;
@@ -293,13 +314,16 @@ to { transform: rotate(360deg); }
            max="5">
   </div>
 
-  <!-- Two action buttons: Add to Cart + Buy Now inside a responsive group -->
+  <!-- Action buttons: Add to Cart + Buy Now + Wishlist inside a responsive group -->
   <div class="action-buttons-group">
     <button type="submit" class="btn btn-add-cart" id="addToCartBtn">
       <i class="fas fa-shopping-bag mr-2"></i> Add To Cart
     </button>
     <button type="button" class="btn btn-buy-now" id="buyNowBtn">
       <i class="fas fa-bolt mr-2"></i> Buy Now
+    </button>
+    <button type="button" class="btn btn-wishlist" id="addToWishlistBtn" onclick="addToWishlist('{{product._id}}')">
+      <i class="far fa-heart mr-1"></i> Wishlist
     </button>
   </div>
 </form>
@@ -510,6 +534,23 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+async function addToWishlist(productId) {
+  try {
+    const res = await fetch(`/wishlist/add/${productId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert(data.message || 'Added to Wishlist!');
+    } else {
+      alert(data.message || 'Please log in to add items to your wishlist.');
+    }
+  } catch (err) {
+    console.error('Wishlist error:', err);
+    alert('Something went wrong while adding to wishlist.');
+  }
+}
 </script>
 </body>
 </html>

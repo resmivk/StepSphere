@@ -4,11 +4,11 @@ const routes = express.Router();
 const productController = require('../controllers/productController');
 const adminController = require('../controllers/adminController');
 const customerController=require('../controllers/customerController')
- const categoryController=require('../controllers/categoryController')
- const adminOrderController = require('../controllers/adminOrderController');
+const categoryController=require('../controllers/categoryController')
+const adminOrderController = require('../controllers/adminOrderController');
 const { adminAuth } = require('../middleware/adminAuth');
-
-
+const cuponController = require('../controllers/couponController');
+const offerController = require('../controllers/offerController');
 
 
 
@@ -53,5 +53,14 @@ routes.get('/categories/toggle/:id',     adminAuth, categoryController.toggleCat
 routes.get('/adminOrders', adminAuth,adminOrderController.adminOrders);
 routes.post('/adminOrders/status/:id', adminAuth,adminOrderController.updateOrderStatus);
 routes.get('/orders/:id', adminAuth,adminOrderController.orderDetail); 
+
+
+///////////////////cupon routes////////////////////
+routes.get('/coupons', adminAuth, cuponController.getCoupons);
+routes.post('/coupons', adminAuth, cuponController.createCoupon);
+routes.get('/coupons/toggle/:id', adminAuth, cuponController.toggleCouponStatus);
+routes.get('/coupons/delete/:id', adminAuth, cuponController.deleteCoupon);
+
+////////////////////offer routes////////////////////
 
 module.exports = routes;

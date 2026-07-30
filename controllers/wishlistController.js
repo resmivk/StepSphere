@@ -4,7 +4,11 @@ const Product = require('../models/productModel');
 //////////wishlist///////////////////
 exports.getWishlist = async (req, res) => {
   try {
-    const customerId = req.session.customer._id;
+    const customerId = req.session?.customer?._id || req.session?.user?._id || req.session?.userId;
+
+if (!customerId) {
+  return res.redirect('/login');
+}
 
     let wishlist = await Wishlist.findOne({ customerId })
       .populate('products.productId')
@@ -22,7 +26,9 @@ exports.getWishlist = async (req, res) => {
           }))
       : [];
 
-    res.render('wishlist', { items, title: 'My Wishlist' });
+    res.render('user/wishlist', { items, title: 'My Wishlist',
+      user:req.session.user
+     });
   } catch (err) {
     console.error('getWishlist error:', err);
     res.status(500).send('Server Error');
@@ -32,7 +38,11 @@ exports.getWishlist = async (req, res) => {
 // POST /wishlist/add/:productId
 exports.addToWishlist = async (req, res) => {
   try {
-    const customerId = req.session.customer._id;
+    const customerId = req.session?.customer?._id || req.session?.user?._id || req.session?.userId;
+
+if (!customerId) {
+  return res.redirect('/login');
+}
     const { productId } = req.params;
 
     let wishlist = await Wishlist.findOne({ customerId });
@@ -60,7 +70,11 @@ exports.addToWishlist = async (req, res) => {
 // DELETE /wishlist/remove/:productId
 exports.removeFromWishlist = async (req, res) => {
   try {
-    const customerId = req.session.customer._id;
+    const customerId = req.session?.customer?._id || req.session?.user?._id || req.session?.userId;
+
+if (!customerId) {
+  return res.redirect('/login');
+}
     const { productId } = req.params;
 
     await Wishlist.findOneAndUpdate(
@@ -78,7 +92,11 @@ exports.removeFromWishlist = async (req, res) => {
 
 exports.moveToCart = async (req, res) => {
   try {
-    const customerId = req.session.customer._id;
+    const customerId = req.session?.customer?._id || req.session?.user?._id || req.session?.userId;
+
+if (!customerId) {
+  return res.redirect('/login');
+}
     const { productId } = req.params;
 
     // Pull from wishlist

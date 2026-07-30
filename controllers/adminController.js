@@ -1,6 +1,7 @@
 const Admin = require("../models/adminModel");
 const Products = require("../models/productModel");
 const User = require("../models/customerModel");
+const Order = require("../models/orderModel");
 const bcrypt = require("bcrypt");
 
 ////// Registerload//////////////////
@@ -147,12 +148,89 @@ exports.userLogout = async (req, res) => {
 
 /////////////////////  dashboard /////////////////////
 
-exports.loadDashboard = (req, res) => {
-  res.render("admin/adminDashboard", {
-    admin: true,
-    title: "Dashboard",
-    activePage: "dashboard",
-  });
+exports.loadDashboard = async (req, res) => {
+  try {
+    const totalOrders = await Order.countDocuments();
+    const totalCustomers = await User.countDocuments();
+    const totalProducts = await Products.countDocuments();
+
+    const revenueAggregate = await Order.aggregate([
+      { $match: { orderStatus: { $ne: 'cancelled' } } },
+      { $group: { _id: null, total: { $sum: '$totalAmount' } } }
+    ]);
+    const totalRevenue = revenueAggregate.length > 0 ? revenueAggregate[0].total : 0;
+
+    const recentOrders = await Order.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .populate('user', 'name email')
+      .lean();
+
+    const statusCountsRaw = await Order.aggregate([
+      { $group: { _id: '$orderStatus', count: { $sum: 1 } } }
+    ]);
+
+    const statusMap = {
+      placed: 0,
+      processing: 0,
+      shipped: 0,
+      delivered: 0,
+      cancelled: 0
+    };
+    statusCountsRaw.forEach(item => {
+      if (item._id && statusMap.hasOwnProperty(item._id)) {
+        statusMap[item._id] = item.count;
+      }
+    });
+
+    const monthlySalesRaw = await Order.aggregate([
+      { $match: { orderStatus: { $ne: 'cancelled' } } },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' }
+          },
+          totalSales: { $sum: '$totalAmount' }
+        }
+      },
+      { $sort: { '_id.year': 1, '_id.month': 1 } },
+      { $limit: 6 }
+    ]);
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const chartLabels = monthlySalesRaw.map(item => `${monthNames[item._id.month - 1]} ${item._id.year}`);
+    const chartRevenueData = monthlySalesRaw.map(item => item.totalSales);
+
+    res.render('admin/adminDashboard', {
+      admin: true,
+      title: 'Dashboard',
+      activePage: 'dashboard',
+      totalRevenue: totalRevenue.toLocaleString('en-IN'),
+      totalOrders,
+      totalCustomers,
+      totalProducts,
+      recentOrders,
+      statusCountsJson: JSON.stringify(Object.values(statusMap)),
+      chartLabelsJson: JSON.stringify(chartLabels.length ? chartLabels : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']),
+      chartRevenueJson: JSON.stringify(chartRevenueData.length ? chartRevenueData : [0, 0, 0, 0, 0, 0])
+    });
+  } catch (error) {
+    console.error('loadDashboard error:', error);
+    res.render('admin/adminDashboard', {
+      admin: true,
+      title: 'Dashboard',
+      activePage: 'dashboard',
+      totalRevenue: '0',
+      totalOrders: 0,
+      totalCustomers: 0,
+      totalProducts: 0,
+      recentOrders: [],
+      statusCountsJson: JSON.stringify([0, 0, 0, 0, 0]),
+      chartLabelsJson: JSON.stringify(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']),
+      chartRevenueJson: JSON.stringify([0, 0, 0, 0, 0, 0])
+    });
+  }
 };
 //// Customer
 
