@@ -9,7 +9,7 @@ const adminOrderController = require('../controllers/adminOrderController');
 const { adminAuth } = require('../middleware/adminAuth');
 const cuponController = require('../controllers/couponController');
 const offerController = require('../controllers/offerController');
-
+const blockedCustomers=require('../middleware/checkedBlock')
 
 
 //  ADMIN AUTH ROUTES
@@ -62,5 +62,10 @@ routes.get('/coupons/toggle/:id', adminAuth, cuponController.toggleCouponStatus)
 routes.get('/coupons/delete/:id', adminAuth, cuponController.deleteCoupon);
 
 ////////////////////offer routes////////////////////
+routes.get('/offers', adminAuth, offerController.getOffers);
+routes.post('/offers/add', adminAuth, offerController.createOffer);
+routes.get('/offers/toggle/:id', adminAuth, offerController.toggleOfferStatus);
+routes.get('/offers/delete/:id', adminAuth, offerController.deleteOffer); 
+
 
 module.exports = routes;

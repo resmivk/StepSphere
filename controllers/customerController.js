@@ -27,19 +27,20 @@ exports.customerInfo = async (req, res) => {
         }
 
         // Get customers with pagination
-        const customers = await User.find().lean()
+        const customers = await User.find(query).lean()
             .limit(limit)
             .skip((currentPage - 1) * limit)
             .select('-password')
             .sort({ createdAt: -1 });
-        const totalCustomers = await User.countDocuments({ role: 'customer' });
+        const totalCustomers = await User.countDocuments({});
         const activeCustomers = await User.countDocuments({ 
-            
             isBlocked: false 
         });
         const blockedCustomers = await User.countDocuments({ 
-           
+            role: 'customer',
             isBlocked: true 
+
+          
         });
         
         const totalFilteredCustomers = await User.countDocuments(query);
@@ -77,5 +78,26 @@ exports.customerInfo = async (req, res) => {
         console.error("Error in customerInfo:", error);
         req.flash('error', 'Failed to load customers');
         res.redirect('/admin/adminDashboard');
+    }
+};
+exports.toggleBlockCustomer = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const customer = await User.findById(id);
+
+        if (!customer) {
+            req.flash('error', 'Customer not found');
+            return res.redirect('/admin/customers');
+        }
+
+        customer.isBlocked = !customer.isBlocked;
+        await customer.save();
+
+        req.flash('success', `Customer ${customer.isBlocked ? 'blocked' : 'unblocked'} successfully`);
+        res.redirect('/admin/customers');
+    } catch (error) {
+        console.error("Error in toggleBlockCustomer:", error);
+        req.flash('error', 'Failed to update customer status');
+        res.redirect('/admin/customers');
     }
 };

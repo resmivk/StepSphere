@@ -27,6 +27,7 @@ exports.loadCategories = async (req, res) => {
             categories: categoriesWithCount,
             search,
             admin: true,
+            activePage: 'categories',
             successMessage: req.query.success || null
         });
     } catch (error) {

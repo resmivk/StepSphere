@@ -12,6 +12,7 @@ const walletController=require('../controllers/walletController')
 const passport=require('passport')
 
 const auths=require('../middleware/auth')
+const blockedCustomers=require('../middleware/checkedBlock')
 
 user_Routes.get('/',auths.loadlogout,userController.loadHome)
 user_Routes.get('/register',auths.loadlogout,userController.loadRegister)
@@ -89,12 +90,14 @@ user_Routes.post('/wishlist/move-to-cart/:productId', auths.loadloging, wishlist
 
 ////////////OrderController Routes/////////////////
 
-user_Routes.get('/checkout', auths.loadloging, orderController.loadCheckout);
-user_Routes.post('/order/razorpay', auths.loadloging, orderController.createRazorpayOrder);
-user_Routes.post('/order/place', auths.loadloging, orderController.placeOrder);
-user_Routes.get('/order/success/:id', auths.loadloging, orderController.orderSuccess);
-user_Routes.get('/orders', auths.loadloging, orderController.orderHistory);
-user_Routes.post('/order/cancel/:id', auths.loadloging, orderController.cancelOrder);
+user_Routes.get('/checkout', auths.loadloging, blockedCustomers, orderController.loadCheckout);
+user_Routes.post('/order/razorpay', auths.loadloging, blockedCustomers, orderController.createRazorpayOrder);
+user_Routes.post('/order/place', auths.loadloging, blockedCustomers, orderController.placeOrder); 
+user_Routes.get('/order/success/:id', auths.loadloging, blockedCustomers, orderController.orderSuccess);
+user_Routes.get('/orders', auths.loadloging, blockedCustomers, orderController.orderHistory);
+user_Routes.post('/order/cancel/:id', auths.loadloging, blockedCustomers, orderController.cancelOrder);
 
+
+/////////////
 
 module.exports = user_Routes

@@ -16,6 +16,9 @@ exports.loadCheckout = async (req, res) => {
 
     const user = await User.findById(req.session.user._id)
       .populate('cart.productId').lean();
+      if (user.isBlocked) {
+      return res.status(403).send("Your account is blocked. You cannot access checkout.");
+    }
 
     const validCart = user.cart.filter(item => item.productId !== null);
 
@@ -37,6 +40,7 @@ exports.loadCheckout = async (req, res) => {
       userAddress: user.address || '' ,
       showNavbar: true,
       showfooter: true,
+      activePage: 'orders',
       user: req.session.user
     });
   } catch (error) {
@@ -64,6 +68,10 @@ exports.createRazorpayOrder = async (req, res) => {
 exports.placeOrder = async (req, res) => {
   try {
     if (!req.session.user) return res.status(401).json({ success: false });
+     const customer = await User.findById(req.session.user._id);
+    if (customer.isBlocked) {
+      return res.status(403).json({ success: false, message: 'Your account is blocked. You cannot place orders.' });
+    }
 
     const { address, paymentMethod, razorpayOrderId, razorpayPaymentId, razorpaySignature } = req.body;
 
@@ -112,7 +120,12 @@ exports.placeOrder = async (req, res) => {
 
     await order.save();
 
-    // Clear user cart
+for (const item of items) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stock: -item.quantity }
+      });
+    }
+
     await User.findByIdAndUpdate(req.session.user._id, {
       $set: { cart: [] }
     });
@@ -181,3 +194,5 @@ exports.cancelOrder = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+
