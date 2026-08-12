@@ -7,548 +7,579 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Rokkitt:wght@100;300;400;700&display=swap" rel="stylesheet">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-
-body{
-font-family:'Rokkitt',serif;
-background:#f8f9fa;
-color:#333;
+body {
+  font-family: 'Rokkitt', serif;
+  background: #f8f9fa;
+  color: #333;
 }
 
-h1,h2,h3,h4,h5{
-font-family:'Montserrat',sans-serif;
+h1, h2, h3, h4, h5 {
+  font-family: 'Montserrat', sans-serif;
 }
 
-.main-image-container{
-border-radius:10px;
-overflow:hidden;
-border:1px solid #eee;
-background:white;
-height:500px;
-display:flex;
-align-items:center;
-justify-content:center;
+.main-image-container {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  background: white;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.main-image{
-max-width:100%;
-max-height:100%;
-object-fit:contain;
-transition:0.3s;
+.main-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: 0.3s;
 }
 
-.main-image:hover{
-transform:scale(1.05);
+.main-image:hover {
+  transform: scale(1.05);
 }
 
-.thumbnail-container{
-display:flex;
-gap:10px;
-margin-top:15px;
+.thumbnail-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
 }
 
-.thumbnail{
-width:80px;
-height:80px;
-object-fit:cover;
-border:2px solid transparent;
-border-radius:5px;
-cursor:pointer;
-opacity:0.7;
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0.7;
 }
 
 .thumbnail.active,
-.thumbnail:hover{
-border-color:#17a2b8;
-opacity:1;
+.thumbnail:hover {
+  border-color: #17a2b8;
+  opacity: 1;
 }
 
-.product-brand{
-color:#17a2b8;
-font-weight:600;
-text-transform:uppercase;
-letter-spacing:1px;
+.product-brand {
+  color: #17a2b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.product-title{
-font-size:2.5rem;
-font-weight:700;
-margin:10px 0;
+.product-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 10px 0;
 }
 
-.product-price{
-font-size:2rem;
-font-weight:500;
+.product-price {
+  font-size: 2rem;
+  font-weight: 500;
 }
 
-.product-desc{
-font-size:1.1rem;
-line-height:1.6;
-color:#666;
-margin:20px 0;
+.product-desc {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #666;
+  margin: 20px 0;
 }
 
-.size-selector{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
+.size-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.size-btn{
-width:45px;
-height:45px;
-border:1px solid #ddd;
-background:white;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-font-weight:600;
+.size-btn {
+  width: 45px;
+  height: 45px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-.size-btn.active{
-background:#17a2b8;
-color:white;
-border-color:#17a2b8;
+.size-btn.active {
+  background: #17a2b8;
+  color: white;
+  border-color: #17a2b8;
 }
 
-.btn-add-cart{
-background:#17a2b8;
-color:white;
-padding:15px 30px;
-border:none;
-border-radius:30px;
-font-weight:600;
-text-transform:uppercase;
-width:100%;
-transition: all 0.2s ease;
+.btn-add-cart, .btn-buy-now {
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  flex: 1;
 }
 
-.btn-add-cart:hover{
-background:#138496;
-color:white;
+.btn-add-cart {
+  background: #17a2b8;
 }
 
-/* Buy Now Button Style */
-.btn-buy-now{
-background:#28a745;
-color:white;
-padding:15px 30px;
-border:none;
-border-radius:30px;
-font-weight:600;
-text-transform:uppercase;
-width:100%;
-transition: all 0.2s ease;
+.btn-add-cart:hover {
+  background: #138496;
+  color: white;
 }
 
-.btn-buy-now:hover{
-background:#218838;
-color:white;
+.btn-buy-now {
+  background: #28a745;
 }
 
-/* Wishlist Button Style */
-.btn-wishlist{
-background:white;
-color:#dc3545;
-border:2px solid #dc3545;
-padding:15px 25px;
-border-radius:30px;
-font-weight:600;
-text-transform:uppercase;
-transition: all 0.2s ease;
-cursor:pointer;
-display:flex;
-align-items:center;
-justify-content:center;
+.btn-buy-now:hover {
+  background: #218838;
+  color: white;
 }
 
-.btn-wishlist:hover{
-background:#dc3545;
-color:white;
+.btn-wishlist {
+  background: white;
+  color: #dc3545;
+  border: 2px solid #dc3545;
+  padding: 15px 25px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Button group layout for desktop and mobile */
-.action-buttons-group{
-display: flex;
-gap: 15px;
-margin-top: 10px;
+.btn-wishlist:hover {
+  background: #dc3545;
+  color: white;
 }
 
-.action-buttons-group .btn-add-cart,
-.action-buttons-group .btn-buy-now{
-flex: 1;
+.action-buttons-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
 }
 
-/* Small screen adjustment */
 @media (max-width: 576px) {
-.action-buttons-group{
-flex-direction: column;
-gap: 12px;
-}
-.action-buttons-group .btn-add-cart,
-.action-buttons-group .btn-buy-now{
-width: 100%;
-}
+  .action-buttons-group {
+    flex-direction: column;
+    gap: 12px;
+  }
 }
 
-/* subtle loading overlay for buy now */
 .loading-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0,0,0,0.5);
-z-index: 9999;
-display: flex;
-align-items: center;
-justify-content: center;
-visibility: hidden;
-opacity: 0;
-transition: all 0.2s;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.2s;
 }
 
 .loading-overlay.active {
-visibility: visible;
-opacity: 1;
+  visibility: visible;
+  opacity: 1;
 }
 
 .spinner-border-custom {
-width: 3rem;
-height: 3rem;
-border: 0.3em solid rgba(255,255,255,0.3);
-border-top-color: white;
-border-radius: 50%;
-animation: spin 0.8s linear infinite;
+  width: 3rem;
+  height: 3rem;
+  border: 0.3em solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
-to { transform: rotate(360deg); }
+  to { transform: rotate(360deg); }
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="container mb-5"> 
+<!-- Store details safely in HTML Data Attributes -->
+<div class="container mb-5" 
+     id="productData" 
+     data-id="{{product._id}}" 
+     data-stock="{{#if product.stock}}{{product.stock}}{{else}}0{{/if}}"> 
 
-<div class="row">
-
-<!-- Product Images -->
-<div class="col-md-6">
-<div class="main-image-container">
-{{#if product.images.[0]}}
-<img src="/uploads/{{product.images.[0]}}" id="mainImage" class="main-image" alt="{{product.name}}">
-{{else}}
-<img src="/images/default-shoe.jpg" id="mainImage" class="main-image" alt="default shoe">
-{{/if}}
-</div>
-<div class="thumbnail-container">
-{{#each product.images}}
-<img src="/uploads/{{this}}" class="thumbnail {{#if @first}}active{{/if}}" onclick="changeImage(this.src,this)" alt="thumbnail">
-{{/each}}
-</div>
-</div>
-
-<!-- Product Info -->
-<div class="col-md-6">
-<div class="pl-md-4">
-<p class="product-brand">{{product.brand}}</p>
-<h1 class="product-title">{{product.name}}</h1>
-<div class="mb-3">
-<span class="product-price">₹{{product.price}}</span>
-{{#if product.oldPrice}}
-<span class="text-muted ml-2">
-<del>₹{{product.oldPrice}}</del>
-</span>
-{{/if}}
-</div>
-
-{{#if product.stock}}
-<p class="text-success">
-<i class="fas fa-check-circle"></i> In Stock
-</p>
-{{else}}
-<p class="text-danger">
-<i class="fas fa-times-circle"></i> Out of Stock
-</p>
-{{/if}}
-
-<div class="product-desc">
-<p>{{product.description}}</p>
-</div>
-<hr>
-
-<!-- ADD TO CART & BUY NOW FORM 
-     We keep a single hidden form but handle buy now separately via JavaScript 
-     to allow direct checkout while reusing size/quantity validations.
--->
-<form id="cartForm" action="/cart/add/{{product._id}}" method="POST">
-  <div class="form-group">
-    <label class="font-weight-bold">Select Size:</label>
-    <div class="size-selector">
-      {{#each product.size}}
-      <div class="size-btn" onclick="selectSize(this,'{{this}}')">
-        {{this}}
+  <div class="row">
+    <!-- Product Images -->
+    <div class="col-md-6">
+      <div class="main-image-container">
+        {{#if product.images.[0]}}
+          <img src="/uploads/{{product.images.[0]}}" id="mainImage" class="main-image" alt="{{product.name}}">
+        {{else}}
+          <img src="/images/default-shoe.jpg" id="mainImage" class="main-image" alt="default shoe">
+        {{/if}}
       </div>
-      {{/each}}
+      <div class="thumbnail-container">
+        {{#each product.images}}
+          <img src="/uploads/{{this}}" class="thumbnail {{#if @first}}active{{/if}}" onclick="changeImage(this.src, this)" alt="thumbnail">
+        {{/each}}
+      </div>
     </div>
-    <input type="hidden" id="selectedSize" name="size">
-    <small id="sizeError" class="text-danger" style="display:none;">
-      Please select a size
-    </small>
+
+    <!-- Product Info -->
+    <div class="col-md-6">
+      <div class="pl-md-4">
+        <p class="product-brand">{{product.brand}}</p>
+        <h1 class="product-title">{{product.name}}</h1>
+        <div class="mb-3">
+          <span class="product-price">₹{{product.price}}</span>
+          {{#if product.oldPrice}}
+            <span class="text-muted ml-2"><del>₹{{product.oldPrice}}</del></span>
+          {{/if}}
+        </div>
+
+        {{#if product.stock}}
+          <p class="text-success"><i class="fas fa-check-circle"></i> In Stock</p>
+        {{else}}
+          <p class="text-danger"><i class="fas fa-times-circle"></i> Out of Stock</p>
+        {{/if}}
+
+        <div class="product-desc">
+          <p>{{product.description}}</p>
+        </div>
+        <hr>
+
+        <form id="cartForm" action="/cart/add/{{product._id}}" method="POST">
+          <div class="form-group">
+            <label class="font-weight-bold">Select Size:</label>
+            <div class="size-selector">
+              {{#each product.size}}
+                <div class="size-btn" onclick="selectSize(this, '{{this}}')">{{this}}</div>
+              {{/each}}
+            </div>
+            <input type="hidden" id="selectedSize" name="size">
+            <small id="sizeError" class="text-danger" style="display:none;">Please select a size</small>
+          </div>
+
+          <div class="form-group" style="width:150px">
+            <label class="font-weight-bold">Quantity:</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1">
+          </div>
+
+          <div class="action-buttons-group">
+            <button type="submit" class="btn btn-add-cart" id="addToCartBtn">
+              <i class="fas fa-shopping-bag mr-2"></i> Add To Cart
+            </button>
+            <button type="button" class="btn btn-buy-now" id="buyNowBtn">
+              <i class="fas fa-bolt mr-2"></i> Buy Now
+            </button>
+            <button type="button" class="btn btn-wishlist" id="addToWishlistBtn" onclick="addToWishlist()">
+              <i class="far fa-heart mr-1"></i> Wishlist
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
   </div>
-
-  <div class="form-group" style="width:150px">
-    <label class="font-weight-bold">Quantity:</label>
-    <input type="number" class="form-control" id="quantity"
-           name="quantity"
-           value="1"
-           min="1"
-           max="5">
-  </div>
-
-  <!-- Action buttons: Add to Cart + Buy Now + Wishlist inside a responsive group -->
-  <div class="action-buttons-group">
-    <button type="submit" class="btn btn-add-cart" id="addToCartBtn">
-      <i class="fas fa-shopping-bag mr-2"></i> Add To Cart
-    </button>
-    <button type="button" class="btn btn-buy-now" id="buyNowBtn">
-      <i class="fas fa-bolt mr-2"></i> Buy Now
-    </button>
-    <button type="button" class="btn btn-wishlist" id="addToWishlistBtn" onclick="addToWishlist('{{product._id}}')">
-      <i class="far fa-heart mr-1"></i> Wishlist
-    </button>
-  </div>
-</form>
-
-</div>
-</div>
-</div>
 </div>
 
-<!-- Loading overlay for buy now action -->
 <div id="loadingOverlay" class="loading-overlay">
   <div class="spinner-border-custom"></div>
 </div>
 
 <script>
-// Image gallery handler
+// Read clean values from HTML attributes
+const productDataset = document.getElementById('productData').dataset;
+const PRODUCT_ID = productDataset.id;
+const PRODUCT_STOCK = parseInt(productDataset.stock, 10) || 0;
+
 function changeImage(src, element) {
   document.getElementById('mainImage').src = src;
-  document.querySelectorAll('.thumbnail').forEach(img => {
-    img.classList.remove('active');
-  });
+  document.querySelectorAll('.thumbnail').forEach(img => img.classList.remove('active'));
   element.classList.add('active');
 }
 
-// Size selection handler
 function selectSize(element, size) {
-  document.querySelectorAll('.size-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
+  document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
   element.classList.add('active');
   document.getElementById('selectedSize').value = size;
   document.getElementById('sizeError').style.display = 'none';
 }
 
-// Helper: get current selected size, quantity, and validate
 function getSelectedSizeAndValidate() {
   const size = document.getElementById('selectedSize').value;
   const sizeError = document.getElementById('sizeError');
+  
   if (!size) {
     sizeError.style.display = 'block';
-    // Also visually highlight that size selection is required
     const sizeSelector = document.querySelector('.size-selector');
     sizeSelector.style.border = '1px solid #dc3545';
     sizeSelector.style.borderRadius = '8px';
     sizeSelector.style.padding = '5px';
+    
+    Swal.fire({
+      icon: 'warning',
+      title: 'Size Required',
+      text: 'Please select a shoe size before proceeding.',
+      confirmButtonColor: '#17a2b8'
+    });
+
     setTimeout(() => {
       sizeSelector.style.border = '';
       sizeSelector.style.padding = '';
-    }, 1000);
+    }, 1200);
     return null;
   }
+  
   sizeError.style.display = 'none';
   const quantityInput = document.getElementById('quantity');
   let quantity = parseInt(quantityInput.value, 10);
+  
   if (isNaN(quantity) || quantity < 1) quantity = 1;
-  const maxStock = {{product.stock}} || 5;  // product.stock from backend (fallback to 5)
-  if (quantity > maxStock) {
-    alert(`Only ${maxStock} items available in stock.`);
-    quantity = maxStock;
-    quantityInput.value = maxStock;
+  
+  if (quantity > PRODUCT_STOCK) {
+    Swal.fire({
+      icon: 'info',
+      title: 'Stock Limit Reached',
+      text: `Only ${PRODUCT_STOCK} item(s) are available in stock.`,
+      confirmButtonColor: '#17a2b8'
+    });
+    quantity = PRODUCT_STOCK;
+    quantityInput.value = PRODUCT_STOCK;
   }
+  
   return { size, quantity };
 }
 
-// Handle classic Add to Cart form submission (original behavior, but also ensure size exists)
-const cartForm = document.getElementById('cartForm');
-cartForm.addEventListener('submit', function(e) {
-  const size = document.getElementById('selectedSize').value;
-  if (!size) {
-    e.preventDefault();
-    document.getElementById('sizeError').style.display = 'block';
-    // highlight size selector for better UX
-    const sizeSelector = document.querySelector('.size-selector');
-    sizeSelector.style.border = '1px solid #dc3545';
-    sizeSelector.style.borderRadius = '8px';
-    sizeSelector.style.padding = '5px';
-    setTimeout(() => {
-      sizeSelector.style.border = '';
-      sizeSelector.style.padding = '';
-    }, 800);
-    return false;
-  }
-  // Additional check: if product out of stock (handle gracefully)
-  {{#unless product.stock}}
-    e.preventDefault();
-    alert('This product is currently out of stock.');
-    return false;
-  {{/unless}}
-  return true;
-});
-
-
-const buyNowBtn = document.getElementById('buyNowBtn');
-const loadingOverlay = document.getElementById('loadingOverlay');
-
-buyNowBtn.addEventListener('click', async function(e) {
-  // First validate size and quantity
-  const validation = getSelectedSizeAndValidate();
-  if (!validation) {
-    // size missing: error already shown
-    return;
-  }
-  
-  // Out of stock check
-  {{#unless product.stock}}
-    alert('This product is out of stock. Cannot proceed with Buy Now.');
-    return;
-  {{/unless}}
-  
-  const size = validation.size;
-  let quantity = validation.quantity;
-  const productId = '{{product._id}}';
-  
-  // Show loading overlay to indicate processing
-  loadingOverlay.classList.add('active');
-  
-  try {
-    // Build payload same as cart/add POST
-    const formData = new URLSearchParams();
-    formData.append('size', size);
-    formData.append('quantity', quantity);
-    
-    // Send asynchronous request to add product to cart
-    const response = await fetch(`/cart/add/${productId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: formData.toString(),
-      credentials: 'same-origin'  // include session cookies
-    });
-    
-    // Handle response status
-    if (response.ok) {
-      // Successfully added to cart, now redirect to checkout page
-      // (Typical e-commerce: after "Buy Now" go to checkout or order review)
-      // If your app uses /checkout route, we redirect there.
-      // If you have a separate /buy-now endpoint, adjust accordingly.
-      // Most platforms redirect to /cart or /checkout. I'll assume checkout page.
-      window.location.href = '/checkout';
-    } else {
-      // If error, try to read response text
-      let errorMsg = 'Failed to add item to cart. Please try again.';
-      try {
-        const text = await response.text();
-        if (text.includes('out of stock')) errorMsg = 'Selected size is out of stock.';
-        else if (text.includes('login')) errorMsg = 'Please login to continue.';
-      } catch(e) {}
-      alert(errorMsg);
-      loadingOverlay.classList.remove('active');
-    }
-  } catch (error) {
-    console.error('Buy now error:', error);
-    alert('Network error. Please check your connection and try again.');
-    loadingOverlay.classList.remove('active');
-  }
-});
-
-// Additional improvement: If product out of stock, disable both action buttons and show message.
-{{#unless product.stock}}
-  document.querySelector('.btn-add-cart').disabled = true;
-  document.querySelector('.btn-buy-now').disabled = true;
-  document.querySelector('.btn-add-cart').style.opacity = '0.6';
-  document.querySelector('.btn-buy-now').style.opacity = '0.6';
-  document.querySelector('.btn-add-cart').style.cursor = 'not-allowed';
-  document.querySelector('.btn-buy-now').style.cursor = 'not-allowed';
-  // Add tooltip / message
-  const parentDiv = document.querySelector('.action-buttons-group');
-  if(parentDiv) {
-    const outMsg = document.createElement('div');
-    outMsg.className = 'text-danger mt-2';
-    outMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Product not available, cannot add to cart or buy now.';
-    parentDiv.parentNode.insertBefore(outMsg, parentDiv.nextSibling);
-  }
-{{/unless}}
-
-// Prefill size error on first load: remove any leftover styling
-window.addEventListener('DOMContentLoaded', function() {
-  // If any size was pre-selected via server? We'll optionally check if there's a default size from product.size array.
-  const sizeBtns = document.querySelectorAll('.size-btn');
-  if (sizeBtns.length > 0 && !document.getElementById('selectedSize').value) {
-    // optionally auto select first size for better UX? but user still needs to click.
-    // we don't auto-select to respect user intention, but we can make a subtle hint.
-    const sizeSelector = document.querySelector('.size-selector');
-    const hint = document.createElement('small');
-    hint.className = 'form-text text-muted';
-    hint.innerText = 'Click on a size above to select';
-    if(!document.querySelector('.size-hint')) {
-      hint.classList.add('size-hint');
-      sizeSelector.parentNode.appendChild(hint);
-    }
-  }
-  
-  // Restrict quantity input based on product stock if stock info exists
+// Dom Ready Initializations
+document.addEventListener('DOMContentLoaded', function() {
+  const addToCartBtn = document.getElementById('addToCartBtn');
+  const buyNowBtn = document.getElementById('buyNowBtn');
   const quantityField = document.getElementById('quantity');
-  const maxStock = {{product.stock}} || 5;
-  if(quantityField) {
-    quantityField.setAttribute('max', maxStock);
-    quantityField.addEventListener('change', function() {
-      let val = parseInt(this.value, 10);
-      if(val > maxStock) {
-        this.value = maxStock;
-        alert(`Maximum quantity is ${maxStock} due to stock availability.`);
-      } else if(val < 1) {
-        this.value = 1;
+  const cartForm = document.getElementById('cartForm');
+
+  // Handle Out of stock disabling safely
+  if (PRODUCT_STOCK <= 0) {
+    addToCartBtn.disabled = true;
+    buyNowBtn.disabled = true;
+    addToCartBtn.style.opacity = '0.6';
+    buyNowBtn.style.opacity = '0.6';
+    addToCartBtn.style.cursor = 'not-allowed';
+    buyNowBtn.style.cursor = 'not-allowed';
+
+    const parentDiv = document.querySelector('.action-buttons-group');
+    if (parentDiv) {
+      const outMsg = document.createElement('div');
+      outMsg.className = 'text-danger mt-2';
+      outMsg.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Product currently unavailable.';
+      parentDiv.parentNode.insertBefore(outMsg, parentDiv.nextSibling);
+    }
+  } else {
+    quantityField.setAttribute('max', PRODUCT_STOCK);
+  }
+
+  // Quantity Change Guard
+  quantityField.addEventListener('change', function() {
+    let val = parseInt(this.value, 10);
+    if (val > PRODUCT_STOCK) {
+      this.value = PRODUCT_STOCK;
+      Swal.fire({
+        icon: 'warning',
+        title: 'Maximum Limit',
+        text: `Maximum available quantity is ${PRODUCT_STOCK}.`,
+        confirmButtonColor: '#17a2b8'
+      });
+    } else if (val < 1 || isNaN(val)) {
+      this.value = 1;
+    }
+  });
+
+  // Cart Form Submit Handler
+  cartForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    if (PRODUCT_STOCK <= 0) {
+      Swal.fire({ icon: 'warning', title: 'Out of Stock', text: 'This product is out of stock.' });
+      return;
+    }
+
+    const validation = getSelectedSizeAndValidate();
+    if (!validation) return;
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append('size', validation.size);
+      formData.append('quantity', validation.quantity);
+
+      const res = await fetch(`/cart/add/${PRODUCT_ID}`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
+        },
+        body: formData.toString(),
+        credentials: 'same-origin'
+      });
+
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const data = await res.json();
+        if (data.success) {
+          Swal.fire({ 
+            icon: 'success', 
+            title: 'Added to Cart!', 
+            text: data.message || 'Product successfully added to your cart.', 
+            timer: 1800, 
+            showConfirmButton: false 
+          });
+        } else {
+          Swal.fire({ 
+            icon: 'warning', 
+            title: 'Notice', 
+            text: data.message || 'Could not add to cart.',
+            confirmButtonColor: '#17a2b8'
+          }).then(() => {
+            if (data.redirect) window.location.href = data.redirect;
+          });
+        }
+      } else {
+        // Handle unauthenticated user redirecting to login page
+        Swal.fire({
+          icon: 'info',
+          title: 'Login Required',
+          text: 'Please log in to add items to your cart.',
+          confirmButtonColor: '#17a2b8'
+        }).then(() => {
+          window.location.href = '/login';
+        });
+      }
+    } catch (err) {
+      console.error('Add to cart error:', err);
+      Swal.fire({ icon: 'error', title: 'Something went wrong', text: 'Please try again later.' });
+    }
+  });
+
+  // Buy Now Handler
+  buyNowBtn.addEventListener('click', async function() {
+    if (PRODUCT_STOCK <= 0) {
+      Swal.fire({ icon: 'warning', title: 'Out of Stock', text: 'This product is out of stock.' });
+      return;
+    }
+
+    const validation = getSelectedSizeAndValidate();
+    if (!validation) return;
+
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    loadingOverlay.classList.add('active');
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append('size', validation.size);
+      formData.append('quantity', validation.quantity);
+
+      const response = await fetch(`/cart/add/${PRODUCT_ID}`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
+        },
+        body: formData.toString(),
+        credentials: 'same-origin'
+      });
+
+      loadingOverlay.classList.remove('active');
+
+      const contentType = response.headers.get('content-type');
+      if (response.ok && contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        if (data.success) {
+          window.location.href = '/checkout';
+        } else {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Action Failed',
+            text: data.message || 'Could not proceed to checkout.',
+            confirmButtonColor: '#17a2b8'
+          });
+        }
+      } else if (response.ok) {
+        window.location.href = '/checkout';
+      } else {
+        Swal.fire({
+          icon: 'info',
+          title: 'Login Required',
+          text: 'Please log in to continue with your purchase.',
+          confirmButtonColor: '#17a2b8'
+        }).then(() => {
+          window.location.href = '/login';
+        });
+      }
+    } catch (error) {
+      loadingOverlay.classList.remove('active');
+      console.error('Buy now error:', error);
+      Swal.fire({ icon: 'error', title: 'Network Error', text: 'Please check your connection and try again.' });
+    }
+  });
+});
+
+async function addToWishlist() {
+  try {
+    const res = await fetch(`/wishlist/add/${PRODUCT_ID}`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       }
     });
-  }
-});
-
-async function addToWishlist(productId) {
-  try {
-    const res = await fetch(`/wishlist/add/${productId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    const data = await res.json();
-    if (data.success) {
-      alert(data.message || 'Added to Wishlist!');
+    
+    const contentType = res.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      const data = await res.json();
+      if (data.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Saved to Wishlist!',
+          text: data.message || 'Item saved to your wishlist.',
+          timer: 1800,
+          showConfirmButton: false
+        });
+      } else {
+        Swal.fire({
+          icon: 'info',
+          title: 'Notice',
+          text: data.message || 'Unable to add to wishlist.',
+          confirmButtonColor: '#dc3545'
+        });
+      }
     } else {
-      alert(data.message || 'Please log in to add items to your wishlist.');
+      Swal.fire({
+        icon: 'info',
+        title: 'Login Required',
+        text: 'Please log in to add items to your wishlist.',
+        confirmButtonColor: '#dc3545'
+      }).then(() => {
+        window.location.href = '/login';
+      });
     }
   } catch (err) {
     console.error('Wishlist error:', err);
-    alert('Something went wrong while adding to wishlist.');
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Something went wrong while adding to wishlist.'
+    });
   }
 }
 </script>

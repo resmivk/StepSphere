@@ -2,12 +2,20 @@ const User = require("../models/customerModel");
 const Product = require("../models/productModel");
 const mongoose = require("mongoose");
 
+// Helper function to extract user ID from session regardless of session structure
+const getUserId = (req) => {
+  if (req.session?.user?._id) return req.session.user._id;
+  if (req.session?.user) return req.session.user;
+  if (req.session?.userId) return req.session.userId;
+  return null;
+};
+
 // ======================= VIEW CART =======================
 exports.getCart = async (req, res) => {
   try {
-    if (!req.session.user) return res.redirect("/login");
+    const userId = getUserId(req);
+    if (!userId) return res.redirect("/login");
 
-    const userId = req.session.user._id;
     const user = await User.findById(userId).populate("cart.productId").lean();
 
     if (!user) return res.redirect("/login");
@@ -25,16 +33,24 @@ exports.getCart = async (req, res) => {
     const totalAmount = subtotal + platformFee;
 
    
-    const cartItems = validCart.map((item) => ({
-      ...item,
-      _id: item._id.toString(),
-      productId: item.productId
-        ? {
-            ...item.productId,
-            _id: item.productId._id.toString(),
-          }
-        : null,
-    }));
+    const cartItems = validCart.map((item) => {
+      const p = item.productId;
+      let img = '/images/default-shoe.jpg';
+      if (p && p.images && p.images.length > 0 && p.images[0]) {
+        img = p.images[0].startsWith('/') || p.images[0].startsWith('http') ? p.images[0] : '/' + p.images[0];
+      }
+      return {
+        ...item,
+        _id: item._id.toString(),
+        productId: p
+          ? {
+              ...p,
+              _id: p._id.toString(),
+              displayImage: img
+            }
+          : null,
+      };
+    });
 
     res.render("user/cart", {
       userCart: cartItems,
@@ -43,7 +59,7 @@ exports.getCart = async (req, res) => {
       totalAmount,
       showNavbar: true,
       showfooter: true,
-      user: req.session.user,
+      user: req.session.user || { _id: userId },
     });
   } catch (error) {
     console.error("getCart error:", error);
@@ -52,60 +68,105 @@ exports.getCart = async (req, res) => {
 };
 
 // ======================= ADD TO CART =======================
+
 exports.addToCart = async (req, res) => {
   try {
-    if (!req.session.user) return res.json({success:false,redirect:"/login",message:"Please login to add items to cart"});
+    
+    const sendResponse = (success, message, redirectUrl =null,requireLogin=false,status=200)=> {
+     
+      if (req.xhr || req.headers.accept?.includes('json') || req.headers['content-type']?.includes('json')) {
+        return res.status(status).json({ success, message, redirect: redirectUrl,requireLogin });
+      }
+      
+      if (redirectUrl) {
+        return res.redirect(redirectUrl);
+      }
+      return res.status(status).json({ success, message ,requireLogin});
+    };
 
-    const productId = req.params.id;
-    const userId = req.session.user._id;
-    const quantity = parseInt(req.body.quantity) || 1;
-    const user = await User.findById(userId);
-    if (!user) return res.json({success:false,redirect:"/login",message:"Please login to add items to cart"});
-
-    const product = await Product.findById(productId);
-
-    if (!product) return res.json({success:false,message:"Product not found"});
-    if (!user.cart) user.cart = [];
-    // Check stock
-    if (product.stock <= 0) {
-      return res.json({success:false,message:"Product is out of stock"});
+    // 1. Session Check (Check both req.session.user and req.session.userId)
+    const userId = getUserId(req);
+    if (!userId) {
+      return sendResponse(false, "Please login to add items to cart", "/login", true, 200);
     }
 
-    // Check if already in cart
+    const productId = req.params.id;
+    const size = req.body?.size || "M";
+    const requestedQuantity = parseInt(req.body?.quantity, 10) || 1;
+
+    // 2. Validate Size
+    if (!size) {
+      return sendResponse(false, "Please select a size", null, false,400);
+    }
+
+    // 3. Check Product & Stock
+    const product = await Product.findById(productId);
+    if (!product) {
+      return sendResponse(false, "Product not found", "/cart",false, 404);
+    }
+
+    if (product.stock <= 0) {
+      return sendResponse(false, "Product is out of stock", "/cart",false, 400);
+    }
+
+    // 4. Fetch User Cart
+    const user = await User.findById(userId);
+    if (!user) {
+      return sendResponse(false, "User not found", "/login",true, 404);
+    }
+
+    if (!user.cart) user.cart = [];
+
     const existingItem = user.cart.find(
-      (item) => item.productId.toString() === productId,
+      item => item.productId.toString() === productId && item.size === size
     );
 
+    const currentQtyInCart = existingItem ? existingItem.quantity : 0;
+    const totalNewQuantity = currentQtyInCart + requestedQuantity;
+
+    
+    if (totalNewQuantity > 5) {
+      return sendResponse(false, "Cannot add more than 5 items of this product/size", "/cart", false, 400);
+    }
+
+    if (totalNewQuantity > product.stock) {
+      return sendResponse(false, `Only ${product.stock} items available in stock`, "/cart", false, 400);
+    }
+
+    // 6. Update Cart
     if (existingItem) {
-      // Max quantity check (limit to 5)
-      if (existingItem.quantity >= 5) {
-        return res.json({success:false,redirect:"/cart",message:"Maximum quantity reached"});
-      }
-      existingItem.quantity += quantity;
+      existingItem.quantity = totalNewQuantity;
     } else {
       user.cart.push({
-        productId: productId,
-        quantity: quantity,
-        price: product.price,
+        productId,
+        size,
+        quantity: requestedQuantity,
+        price: product.price
       });
     }
 
+    // Mark Mongoose array as modified to ensure persistence
+    user.markModified('cart');
     await user.save();
-    res.json({success:true,redirect:"/cart",message:"Item added to cart"});
+
+    return sendResponse(true, "Item added to cart", "/cart", false, 200);
+
   } catch (error) {
     console.error("addToCart error:", error);
-    res.json({success:false,message:"Error adding to cart"});
+    if (req.xhr || req.headers.accept?.includes('json')) {
+      return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+    return res.status(500).redirect("/cart");
   }
 };
-
 // ======================= UPDATE QUANTITY =======================
 exports.updateQuantity = async (req, res) => {
   try {
-    if (!req.session.user) return res.redirect("/login");
+    const userId = getUserId(req);
+    if (!userId) return res.redirect("/login");
 
     const { id } = req.params;
     const { action } = req.query;
-    const userId = req.session.user._id;
 
     const user = await User.findById(userId);
     const item = user.cart.find((item) => item.productId.toString() === id);
@@ -135,10 +196,10 @@ exports.updateQuantity = async (req, res) => {
 // ======================= REMOVE ITEM =======================
 exports.removeItem = async (req, res) => {
   try {
-    if (!req.session.user) return res.redirect("/login");
+    const userId = getUserId(req);
+    if (!userId) return res.redirect("/login");
 
     const productId = req.params.id;
-    const userId = req.session.user._id;
 
     await User.findByIdAndUpdate(userId, {
       $pull: {
@@ -158,9 +219,8 @@ exports.removeItem = async (req, res) => {
 // ======================= CLEAR CART =======================
 exports.clearCart = async (req, res) => {
   try {
-    if (!req.session.user) return res.redirect("/login");
-
-    const userId = req.session.user._id;
+    const userId = getUserId(req);
+    if (!userId) return res.redirect("/login");
 
     await User.findByIdAndUpdate(userId, {
       $set: { cart: [] },
@@ -176,9 +236,9 @@ exports.clearCart = async (req, res) => {
 // ======================= GET CART COUNT (API) =======================
 exports.getCartCount = async (req, res) => {
   try {
-    if (!req.session.user) return res.json({ count: 0 });
+    const userId = getUserId(req);
+    if (!userId) return res.json({ count: 0 });
 
-    const userId = req.session.user._id;
     const user = await User.findById(userId).lean();
 
     const count = user ? user.cart.length : 0;

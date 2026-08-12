@@ -1,17 +1,24 @@
 exports.loadloging = async(req,res,next)=>{
     try{
-        if(req.session.user)
-            {
-           return  next();
-
+        console.log("loadloging middleware called");
+        if(req.session.userId || req.session.user)
+        {
+           return next();
         }else{
-            res.redirect("/")
+            if (req.xhr || req.headers.accept?.includes('json') || req.headers['content-type']?.includes('json')) {
+                return res.status(200).json({
+                    success: false,
+                    requireLogin: true,
+                    message: "Please login to add items to cart",
+                    redirect: "/login"
+                });
+            }
+            return res.redirect("/login");
         }
-
     }
-
     catch(error){
-        console.log(error.message)
+        console.log(error.message);
+        next(error);
     }
 }
 
@@ -29,8 +36,8 @@ exports.loadlogout = async (req, res, next) => {
 
 
 exports.isAuthenticated = (req, res, next) => {
-  if (req.session.user) {
+  if (req.session.userId) {
     return next();
   }
-  return res.redirect('/');
+  return res.redirect('/login');
 };

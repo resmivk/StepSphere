@@ -58,6 +58,7 @@ routes.get('/orders/:id', adminAuth,adminOrderController.orderDetail);
 ///////////////////cupon routes////////////////////
 routes.get('/coupons', adminAuth, cuponController.getCoupons);
 routes.post('/coupons', adminAuth, cuponController.createCoupon);
+routes.post('/coupons/add', adminAuth, cuponController.createCoupon);
 routes.get('/coupons/toggle/:id', adminAuth, cuponController.toggleCouponStatus);
 routes.get('/coupons/delete/:id', adminAuth, cuponController.deleteCoupon);
 

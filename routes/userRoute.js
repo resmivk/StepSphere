@@ -9,6 +9,7 @@ const CartController=require('../controllers/cartController')
 const orderController=require("../controllers/orderController")
 const wishlistController=require('../controllers/wishlistController')
 const walletController=require('../controllers/walletController')
+const couponController=require('../controllers/couponController')
 const passport=require('passport')
 
 const auths=require('../middleware/auth')
@@ -35,8 +36,10 @@ user_Routes.get('/auth/google/callback',
   }
 );
 
-user_Routes.get('/products',userController.showProducts);
-user_Routes.get('/products/:id', userController.productsDetaling)
+user_Routes.get('/products', userController.showProducts);
+user_Routes.get('/product', userController.showProducts);
+user_Routes.get('/products/:id', userController.productsDetaling);
+user_Routes.get('/product/:id', userController.productsDetaling);
 
 user_Routes.get('/men',userController.loadMen)
 user_Routes.get('/women',userController.loadWomen)
@@ -96,6 +99,9 @@ user_Routes.post('/order/place', auths.loadloging, blockedCustomers, orderContro
 user_Routes.get('/order/success/:id', auths.loadloging, blockedCustomers, orderController.orderSuccess);
 user_Routes.get('/orders', auths.loadloging, blockedCustomers, orderController.orderHistory);
 user_Routes.post('/order/cancel/:id', auths.loadloging, blockedCustomers, orderController.cancelOrder);
+
+//////////// Coupon Routes /////////////
+user_Routes.post('/coupon/apply', auths.loadloging, couponController.applyCoupon);
 
 
 /////////////

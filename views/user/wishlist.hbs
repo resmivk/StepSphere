@@ -1,4 +1,4 @@
-{{> navbar}}
+
 
 <div class="wishlist-page-wrapper">
   <div class="wishlist-container">
@@ -32,7 +32,7 @@
 
             <a href="/products/{{productId._id}}" class="wish-card-link">
               <div class="wish-img-wrap">
-                <img src="{{productId.images.[0]}}" alt="{{productId.name}}" loading="lazy" />
+                <img src="{{productId.displayImage}}" alt="{{productId.name}}" loading="lazy" onerror="this.src='/uploads/default-shoe.jpg'" />
               </div>
               <div class="wish-info">
                 <h3 class="wish-name">{{productId.name}}</h3>
@@ -511,4 +511,3 @@
   }
 </script>
 
-{{> footer}}

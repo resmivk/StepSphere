@@ -1,6 +1,7 @@
 const Order = require('../models/orderModel');
 const User = require('../models/customerModel');
 const Product = require('../models/productModel');
+const Wallet = require('../models/walletModel');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 
@@ -29,11 +30,15 @@ exports.loadCheckout = async (req, res) => {
     const platformFee = 20;
     const totalAmount = subtotal + platformFee;
 
+    const userWallet = await Wallet.findOne({ userId: req.session.user._id }).lean();
+    const walletBalance = userWallet ? userWallet.balance : 0;
+
     res.render('user/checkout', {
       cartItems: validCart,
       subtotal,
       platformFee,
       totalAmount,
+      walletBalance: walletBalance.toFixed(2),
       razorpayKeyId: process.env.RAZORPAY_KEY_ID,
       userName: user.name,
       userPhone: user.phone || '',
@@ -106,6 +111,22 @@ exports.placeOrder = async (req, res) => {
     const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const totalAmount = subtotal + 20; // platform fee
 
+    // Handle Wallet payment
+    if (paymentMethod === 'wallet') {
+      const wallet = await Wallet.findOne({ userId: req.session.user._id });
+      if (!wallet || wallet.balance < totalAmount) {
+        return res.status(400).json({ success: false, message: 'Insufficient wallet balance for this order.' });
+      }
+      wallet.balance -= totalAmount;
+      wallet.transactions.push({
+        amount: totalAmount,
+        type: 'debit',
+        description: 'Payment for order checkout',
+        date: new Date()
+      });
+      await wallet.save();
+    }
+
     // Save order
     const order = new Order({
       user: req.session.user._id,
@@ -113,7 +134,7 @@ exports.placeOrder = async (req, res) => {
       address,
       totalAmount,
       paymentMethod,
-      paymentStatus: paymentMethod === 'razorpay' ? 'paid' : 'pending',
+      paymentStatus: (paymentMethod === 'razorpay' || paymentMethod === 'wallet') ? 'paid' : 'pending',
       razorpayOrderId: razorpayOrderId || '',
       razorpayPaymentId: razorpayPaymentId || ''
     });
