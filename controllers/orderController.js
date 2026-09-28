@@ -11,13 +11,60 @@ const razorpay = new Razorpay({
 });
 
 // Show checkout page
+// exports.loadCheckout = async (req, res) => {
+//   try {
+//     if (!req.session.user) return res.redirect('/login');
+
+//     const user = await User.findById(req.session.user._id)
+//       .populate('cart.productId').lean();
+//       if (user.isBlocked) {
+//       return res.status(403).send("Your account is blocked. You cannot access checkout.");
+//     }
+
+//     const validCart = user.cart.filter(item => item.productId !== null);
+
+//     if (validCart.length === 0) return res.redirect('/cart');
+
+//     const subtotal = validCart.reduce((sum, item) => 
+//       sum + item.productId.price * item.quantity, 0);
+//     const platformFee = 20;
+//     const totalAmount = subtotal + platformFee;
+
+//     const userWallet = await Wallet.findOne({ userId: req.session.user._id }).lean();
+//     const walletBalance = userWallet ? userWallet.balance : 0;
+
+//     res.render('user/checkout', {
+//       cartItems: validCart,
+//       subtotal,
+//       platformFee,
+//       totalAmount,
+//       walletBalance: walletBalance.toFixed(2),
+//       razorpayKeyId: process.env.RAZORPAY_KEY_ID,
+//       userName: user.name,
+//       userPhone: user.phone || '',
+//       userAddress: user.address || '' ,
+//       showNavbar: true,
+//       showfooter: true,
+//       activePage: 'orders',
+//       user: req.session.user
+//     });
+//   } catch (error) {
+//     res.status(500).send("Error: " + error.message);
+//   }
+// };
+// Show checkout page
 exports.loadCheckout = async (req, res) => {
   try {
-    if (!req.session.user) return res.redirect('/login');
+    // Check both session structures
+    const userId = req.session?.user?._id || req.session?.userId;
+    if (!userId) return res.redirect('/login');
 
-    const user = await User.findById(req.session.user._id)
+    const user = await User.findById(userId)
       .populate('cart.productId').lean();
-      if (user.isBlocked) {
+
+    if (!user) return res.redirect('/login');
+
+    if (user.isBlocked) {
       return res.status(403).send("Your account is blocked. You cannot access checkout.");
     }
 
@@ -30,7 +77,7 @@ exports.loadCheckout = async (req, res) => {
     const platformFee = 20;
     const totalAmount = subtotal + platformFee;
 
-    const userWallet = await Wallet.findOne({ userId: req.session.user._id }).lean();
+    const userWallet = await Wallet.findOne({ userId }).lean();
     const walletBalance = userWallet ? userWallet.balance : 0;
 
     res.render('user/checkout', {
@@ -38,7 +85,7 @@ exports.loadCheckout = async (req, res) => {
       subtotal,
       platformFee,
       totalAmount,
-      walletBalance: walletBalance.toFixed(2),
+      walletBalance: Number(walletBalance).toFixed(2),
       razorpayKeyId: process.env.RAZORPAY_KEY_ID,
       userName: user.name,
       userPhone: user.phone || '',
@@ -46,7 +93,7 @@ exports.loadCheckout = async (req, res) => {
       showNavbar: true,
       showfooter: true,
       activePage: 'orders',
-      user: req.session.user
+      user: req.session.user || { _id: userId, name: user.name, email: user.email }
     });
   } catch (error) {
     res.status(500).send("Error: " + error.message);

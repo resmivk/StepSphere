@@ -1,6 +1,6 @@
 exports.loadloging = async(req,res,next)=>{
     try{
-        console.log("loadloging middleware called");
+        
         if(req.session.userId || req.session.user)
         {
            return next();
@@ -9,7 +9,7 @@ exports.loadloging = async(req,res,next)=>{
                 return res.status(200).json({
                     success: false,
                     requireLogin: true,
-                    message: "Please login to add items to cart",
+                    message: "Please login to continue",
                     redirect: "/login"
                 });
             }
