@@ -4,6 +4,7 @@ const Product = require('../models/productModel');
 const Wallet = require('../models/walletModel');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
+const PDFDocument=require('pdfkit')
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -72,7 +73,7 @@ exports.loadCheckout = async (req, res) => {
 
     if (validCart.length === 0) return res.redirect('/cart');
 
-    const subtotal = validCart.reduce((sum, item) => 
+    const subtotal = validCart.reduce((sum, item) =>
       sum + item.productId.price * item.quantity, 0);
     const platformFee = 20;
     const totalAmount = subtotal + platformFee;
@@ -89,7 +90,7 @@ exports.loadCheckout = async (req, res) => {
       razorpayKeyId: process.env.RAZORPAY_KEY_ID,
       userName: user.name,
       userPhone: user.phone || '',
-      userAddress: user.address || '' ,
+      userAddress: user.address || '',
       showNavbar: true,
       showfooter: true,
       activePage: 'orders',
@@ -120,7 +121,7 @@ exports.createRazorpayOrder = async (req, res) => {
 exports.placeOrder = async (req, res) => {
   try {
     if (!req.session.user) return res.status(401).json({ success: false });
-     const customer = await User.findById(req.session.user._id);
+    const customer = await User.findById(req.session.user._id);
     if (customer.isBlocked) {
       return res.status(403).json({ success: false, message: 'Your account is blocked. You cannot place orders.' });
     }
@@ -188,7 +189,7 @@ exports.placeOrder = async (req, res) => {
 
     await order.save();
 
-for (const item of items) {
+    for (const item of items) {
       await Product.findByIdAndUpdate(item.product, {
         $inc: { stock: -item.quantity }
       });
@@ -208,11 +209,11 @@ for (const item of items) {
 exports.orderSuccess = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).lean();
-    res.render('user/orderSuccess', { 
-      order, 
+    res.render('user/orderSuccess', {
+      order,
       user: req.session.user,
-      showNavbar: true, 
-      showfooter: true 
+      showNavbar: true,
+      showfooter: true
     });
   } catch (error) {
     res.status(500).send("Error: " + error.message);
@@ -222,16 +223,29 @@ exports.orderSuccess = async (req, res) => {
 // Order history
 exports.orderHistory = async (req, res) => {
   try {
-    if (!req.session.user) return res.redirect('/login');
+    const userId=req.session.user?._id||req.session.userId
+    if (!userId) return res.redirect('/login');
 
-    const orders = await Order.find({ user: req.session.user._id })
+    const orders = await Order.find({ user:userId })
       .sort({ createdAt: -1 }).lean();
+      
+    const formattedOrders=orders.map(order=>({
+      ...order,
+      orderDate:new Date(order.createdAt).toLocaleDateString('en-In',{
+        day:'numeric',
+        month:'short',
+        year:'numeric'
 
-    res.render('user/orderHistory', { 
-      orders, 
-      showNavbar: true, 
-      showfooter: true ,
-      user:req.session.user
+      })
+    }))
+
+    
+
+    res.render('user/orderHistory', {
+      orders:formattedOrders,
+      showNavbar: true,
+      showfooter: true,
+      user: req.session.user
     });
   } catch (error) {
     res.status(500).send("Error: " + error.message);
@@ -242,25 +256,60 @@ exports.orderHistory = async (req, res) => {
 exports.cancelOrder = async (req, res) => {
   try {
     const { reason } = req.body;
-    const order = await Order.findOne({ 
-      _id: req.params.id, 
-      user: req.session.user._id 
-    });
+    const orderId = req.params.id;
+    const userId = req.session.user._id;
 
-    if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
-
-    if (['shipped', 'delivered'].includes(order.orderStatus)) {
-      return res.status(400).json({ success: false, message: 'Cannot cancel this order' });
+    if (!reason || !reason.trim()) {
+      return res.status(400).json({ success: false, message: 'please provide a cancellation reason' })
     }
-
+    const order = await Order.findOne({ _id: orderId, user: userId })
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" })
+    }
+    if (order.orderStatus === 'cancelled') {
+      return res.status(400).json({ success: false, message: 'Order is already cancelled' })
+    }
+    if (['shipped', 'delivered'].includes(order.orderStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot cancel order.It is already ${order.orderStatus} '
+      })
+    }
+    for (const item of order.items) {
+      await Product.findByIdAndUpdate(item.product, { $inc: { stock: item.quantity } })
+    }
+    if (order.paymentStatus === 'paid') {
+      let wallet = await Wallet.findOne({ userId })
+      if (!wallet) {
+        wallet = new Wallet({ userId, balance: 0, transactions: [] })
+      }
+      wallet.balance += order.totalAmount;
+      wallet.transactions.push({
+        amount: order.totalAmount,
+        type: 'credit',
+        description: `Refund for cancelled order #${order._id}`,
+        date: new Date()
+      })
+      await wallet.save();
+      order.paymentStatus = 'refunded'
+    }
     order.orderStatus = 'cancelled';
-    order.cancelReason = reason;
-    await order.save();
-
-    res.json({ success: true, message: 'Order cancelled successfully' });
+    order.cancelReason = reason.trim();
+    await order.save()
+    res.json({
+      success: true,
+      message: order.paymentStatus === 'refunded' ? 'order cancelled successfully. Refound credited to your wallet'
+        : 'Order cancelled successfully'
+    })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+exports.downloadInovice= async(req,res)=>{
+  try{
+    const userId=req.session.user?._id || req.session.userId;
+    const{id}=req.params
+  }
+}
 
 
