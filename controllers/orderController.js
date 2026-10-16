@@ -272,7 +272,7 @@ exports.cancelOrder = async (req, res) => {
     if (['shipped', 'delivered'].includes(order.orderStatus)) {
       return res.status(400).json({
         success: false,
-        message: 'Cannot cancel order.It is already ${order.orderStatus} '
+        message: `Cannot cancel order. It is already ${order.orderStatus}`
       })
     }
     for (const item of order.items) {
@@ -305,11 +305,6 @@ exports.cancelOrder = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-exports.downloadInovice= async(req,res)=>{
-  try{
-    const userId=req.session.user?._id || req.session.userId;
-    const{id}=req.params
-  }
-}
+
 
 

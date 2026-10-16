@@ -10,6 +10,7 @@ const orderController=require("../controllers/orderController")
 const wishlistController=require('../controllers/wishlistController')
 const walletController=require('../controllers/walletController')
 const couponController=require('../controllers/couponController')
+const invoiceController=require('../controllers/invoiceController')
 const passport=require('passport')
 
 const auths=require('../middleware/auth')
@@ -104,6 +105,7 @@ user_Routes.post('/order/cancel/:id', auths.loadloging, blockedCustomers, orderC
 user_Routes.post('/coupon/apply', auths.loadloging, couponController.applyCoupon);
 
 
-/////////////
+/////////////invoice///////////
+user_Routes.get('/order/invoice/:id',auths.loadloging,blockedCustomers,invoiceController.downloadUserInvoice)
 
 module.exports = user_Routes

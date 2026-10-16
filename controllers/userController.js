@@ -76,9 +76,9 @@ exports.insertUser = async (req, res) => {
       const emailVerificationToken = crypto.randomBytes(16).toString("hex");
       existingUser.emailVerificationToken = emailVerificationToken;
       await existingUser.save();
-
-      const verificationUrl = `http://localhost:3000/verify?token=${emailVerificationToken}`;
-
+      const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+   
+      const verificationUrl = `${baseUrl}/verify?token=${emailVerificationToken}`;
       const mailOptions = {
         from: `"Stepsphere" <${process.env.MAIL_USER}>`,
         to: trimmedEmail,
@@ -465,8 +465,8 @@ exports.forgotpassword = async (req, res) => {
     user.resetTokenExpiry = Date.now() + 3600000;
     await user.save();
 
-    const resetLink = `http://localhost:3000/reset-password/${token}`;
-
+  
+const resetLink = `${baseUrl}/reset-password/${token}`;
     const mailOptions = {
       to: user.email,
       subject: "Password Reset",

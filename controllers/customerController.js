@@ -1,4 +1,4 @@
-const user=require("../controllers/customerController")
+
 const User=require("../models/customerModel")
 
 

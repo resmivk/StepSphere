@@ -13,13 +13,13 @@ const nocache = require('nocache');
 require("dotenv").config({ quiet: true });
 
 const app = express();
-
+app.set('trust proxy', 1);
 // 2. ADDED NOCACHE MIDDLEWARE
 app.use(nocache());
 
 // Session configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: false,
   resave: false,
   saveUninitialized: false,
   rolling: true,
