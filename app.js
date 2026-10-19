@@ -19,7 +19,7 @@ app.use(nocache());
 
 // Session configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'stepsphere_secret_key_2026',
   resave: false,
   saveUninitialized: false,
   rolling: true,
