@@ -19,7 +19,7 @@ app.use(nocache());
 
 // Session configuration
 app.use(session({
-  secret: false,
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   rolling: true,
