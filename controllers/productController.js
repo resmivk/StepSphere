@@ -129,6 +129,7 @@ if (!req.body.name || !req.body.price || !req.body.category) {
 exports.loadEditProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate('category').lean();
+    console.log('category:', product.category, 'subCategory:', product.subCategory);
     if (!product) return res.status(404).render('error', { message: 'Product not found' });
 
     const parents = await Category.find({ parent: null, isActive: true }).lean();
