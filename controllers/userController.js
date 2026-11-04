@@ -76,7 +76,7 @@ exports.insertUser = async (req, res) => {
       const emailVerificationToken = crypto.randomBytes(16).toString("hex");
       existingUser.emailVerificationToken = emailVerificationToken;
       await existingUser.save();
-      const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+      const baseUrl = process.env.BASE_URL || 'https://localhost:3000';
    
       const verificationUrl = `${baseUrl}/verify?token=${emailVerificationToken}`;
       const mailOptions = {
